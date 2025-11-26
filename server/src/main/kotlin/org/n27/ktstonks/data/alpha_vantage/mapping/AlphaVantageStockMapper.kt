@@ -17,6 +17,7 @@ internal fun AlphaVantageStock.toDomainEntity(price: Double?, expectedEpsGrowth:
     currentIntrinsicValue = eps?.toDouble()?.getIntrinsicValue(),
     forwardIntrinsicValue = expectedEpsGrowth?.let { eps?.toDouble()?.getIntrinsicValue(it) },
     currency = currency,
+    lastUpdated = System.currentTimeMillis(),
 )
 
 private fun Double.getIntrinsicValue(expectedEpsGrowth: Double = 0.0) = expectedEpsGrowth.toMultiplier() * 12.5 * this
