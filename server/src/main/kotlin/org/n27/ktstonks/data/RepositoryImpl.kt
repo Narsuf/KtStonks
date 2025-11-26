@@ -2,12 +2,17 @@ package org.n27.ktstonks.data
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import org.jetbrains.exposed.sql.selectAll
 import org.n27.ktstonks.data.alpha_vantage.AlphaVantageApi
 import org.n27.ktstonks.data.alpha_vantage.mapping.toDomainEntity
 import org.n27.ktstonks.data.alpha_vantage.mapping.toExpectedEpsGrowth
 import org.n27.ktstonks.data.alpha_vantage.mapping.toPrice
+import org.n27.ktstonks.data.db.dbQuery
+import org.n27.ktstonks.data.db.mappers.toStocks
+import org.n27.ktstonks.data.db.tables.StockTable
 import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.Repository
+import org.n27.ktstonks.domain.model.Stocks
 
 class RepositoryImpl(private val api: AlphaVantageApi) : Repository {
 
@@ -22,6 +27,14 @@ class RepositoryImpl(private val api: AlphaVantageApi) : Repository {
             val estimates = epsDeferred.await()
 
             stock.toDomainEntity(globalQuote.toPrice(), estimates.toExpectedEpsGrowth())
+        }
+    }
+
+    override suspend fun getStocks(): Result<Stocks> = runCatching {
+        dbQuery {
+            StockTable
+                .selectAll()
+                .toStocks()
         }
     }
 }

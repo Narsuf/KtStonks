@@ -4,6 +4,7 @@ import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.routing.*
+import org.jetbrains.exposed.sql.Database
 import org.koin.ktor.ext.get
 import org.koin.ktor.plugin.Koin
 import org.n27.ktstonks.di.mainModule
@@ -18,6 +19,8 @@ fun Application.module() {
     install(Koin) {
         modules(mainModule)
     }
+
+    get<Database>()
 
     routing { stockRoutes(get()) }
 }
