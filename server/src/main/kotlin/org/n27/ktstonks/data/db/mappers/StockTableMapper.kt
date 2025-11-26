@@ -30,5 +30,6 @@ internal fun ResultRow.toStock() = Stock(
     currentIntrinsicValue = this[StockTable.currentIntrinsicValue],
     forwardIntrinsicValue = this[StockTable.forwardIntrinsicValue],
     currency = this[StockTable.currency],
-    lastUpdated = this[StockTable.lastUpdated]
+    lastUpdated = this[StockTable.lastUpdated],
+    isWatchlisted = this[StockTable.isWatchlisted],
 )

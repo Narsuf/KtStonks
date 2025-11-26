@@ -42,4 +42,20 @@ class UseCase(
             failure(NoSuchElementException("Stock with symbol $symbol not found"))
         }
     }
+
+    suspend fun getWatchlist(page: Int = 0, pageSize: Int): Result<Stocks> = repository.getWatchlist(page, pageSize)
+
+    suspend fun addStockToWatchlist(symbol: String): Result<Unit> {
+        return getStock(symbol).fold(
+            onSuccess = { repository.addToWatchlist(symbol) },
+            onFailure = { failure(it) }
+        )
+    }
+
+    suspend fun removeStockFromWatchlist(symbol: String): Result<Unit> {
+        return getStock(symbol).fold(
+            onSuccess = { repository.removeFromWatchlist(symbol) },
+            onFailure = { failure(it) }
+        )
+    }
 }

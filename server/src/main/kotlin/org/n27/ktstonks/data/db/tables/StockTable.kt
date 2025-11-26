@@ -16,6 +16,7 @@ object StockTable : Table("stocks") {
     val forwardIntrinsicValue = double("forward_intrinsic_value").nullable()
     val currency = varchar("currency", 10).nullable()
     val lastUpdated = long("last_updated")
+    val isWatchlisted = bool("is_watchlisted").default(false)
 
     override val primaryKey = PrimaryKey(symbol)
 }

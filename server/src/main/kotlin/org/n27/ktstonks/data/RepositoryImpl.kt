@@ -68,6 +68,26 @@ class RepositoryImpl(private val api: AlphaVantageApi) : Repository {
         }
     }
 
+    override suspend fun getWatchlist(page: Int, pageSize: Int): Result<Stocks> = runCatching {
+        dbQuery {
+            StockTable
+                .select { StockTable.isWatchlisted eq true }
+                .toStocks(page, pageSize)
+        }
+    }
+
+    override suspend fun addToWatchlist(symbol: String): Result<Unit> = runCatching {
+        dbQuery {
+            StockTable.update(where = { StockTable.symbol eq symbol }) { it[isWatchlisted] = true }
+        }
+    }
+
+    override suspend fun removeFromWatchlist(symbol: String): Result<Unit> = runCatching {
+        dbQuery {
+            StockTable.update(where = { StockTable.symbol eq symbol }) { it[isWatchlisted] = false }
+        }
+    }
+
     private fun <T> UpdateBuilder<T>.fromStock(stock: Stock) {
         this[StockTable.companyName] = stock.companyName
         this[StockTable.logoUrl] = stock.logoUrl
@@ -81,5 +101,6 @@ class RepositoryImpl(private val api: AlphaVantageApi) : Repository {
         this[StockTable.forwardIntrinsicValue] = stock.forwardIntrinsicValue
         this[StockTable.currency] = stock.currency
         this[StockTable.lastUpdated] = stock.lastUpdated
+        this[StockTable.isWatchlisted] = stock.isWatchlisted
     }
 }

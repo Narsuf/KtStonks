@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GlobalQuoteResponse(
-    @SerialName("Global Quote") val globalQuote: GlobalQuote
+    @SerialName("Global Quote") val globalQuote: GlobalQuote,
 ) {
     @Serializable
     data class GlobalQuote(

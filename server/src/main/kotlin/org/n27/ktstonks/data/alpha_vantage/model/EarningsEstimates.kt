@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class EarningsEstimates(
     @SerialName("symbol") val symbol: String,
-    @SerialName("estimates") val annualEarnings: List<Estimate>
+    @SerialName("estimates") val annualEarnings: List<Estimate>,
 ) {
     @Serializable
     data class Estimate(
