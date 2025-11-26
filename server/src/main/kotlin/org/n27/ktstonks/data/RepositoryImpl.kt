@@ -15,6 +15,9 @@ import org.n27.ktstonks.data.db.tables.StockTable
 import org.n27.ktstonks.domain.Repository
 import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.model.Stocks
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.statements.UpdateBuilder
 
 class RepositoryImpl(private val api: AlphaVantageApi) : Repository {
 
@@ -47,5 +50,35 @@ class RepositoryImpl(private val api: AlphaVantageApi) : Repository {
                     (StockTable.symbol like "%$query%") or (StockTable.companyName like "%$query%")
                 }.toStocks()
         }
+    }
+
+    override suspend fun saveStock(stock: Stock): Result<Unit> = runCatching {
+        dbQuery {
+            val existingStock = StockTable.select { StockTable.symbol eq stock.symbol }.singleOrNull()
+
+            if (existingStock != null) {
+                StockTable.update(where = { StockTable.symbol eq stock.symbol }) { it.fromStock(stock) }
+            } else {
+                StockTable.insert {
+                    it[symbol] = stock.symbol
+                    it.fromStock(stock)
+                }
+            }
+        }
+    }
+
+    private fun <T> UpdateBuilder<T>.fromStock(stock: Stock) {
+        this[StockTable.companyName] = stock.companyName
+        this[StockTable.logoUrl] = stock.logoUrl
+        this[StockTable.price] = stock.price
+        this[StockTable.dividendYield] = stock.dividendYield
+        this[StockTable.eps] = stock.eps
+        this[StockTable.pe] = stock.pe
+        this[StockTable.earningsQuarterlyGrowth] = stock.earningsQuarterlyGrowth
+        this[StockTable.expectedEpsGrowth] = stock.expectedEpsGrowth
+        this[StockTable.currentIntrinsicValue] = stock.currentIntrinsicValue
+        this[StockTable.forwardIntrinsicValue] = stock.forwardIntrinsicValue
+        this[StockTable.currency] = stock.currency
+        this[StockTable.lastUpdated] = stock.lastUpdated
     }
 }

@@ -10,4 +10,6 @@ interface Repository {
     suspend fun getStocks(): Result<Stocks>
 
     suspend fun searchStocks(query: String): Result<Stocks>
+
+    suspend fun saveStock(stock: Stock): Result<Unit>
 }
