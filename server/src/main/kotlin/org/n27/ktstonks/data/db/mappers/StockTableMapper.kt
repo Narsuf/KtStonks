@@ -10,7 +10,7 @@ internal fun Query.toStocks() = Stocks(
     items = map { it.toStock() },
 )
 
-private fun ResultRow.toStock() = Stock(
+internal fun ResultRow.toStock() = Stock(
     symbol = this[StockTable.symbol],
     companyName = this[StockTable.companyName],
     logoUrl = this[StockTable.logoUrl],

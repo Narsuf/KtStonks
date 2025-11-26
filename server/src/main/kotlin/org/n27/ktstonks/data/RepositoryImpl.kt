@@ -2,22 +2,19 @@ package org.n27.ktstonks.data
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import org.jetbrains.exposed.sql.or
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.n27.ktstonks.data.alpha_vantage.AlphaVantageApi
 import org.n27.ktstonks.data.alpha_vantage.mapping.toDomainEntity
 import org.n27.ktstonks.data.alpha_vantage.mapping.toExpectedEpsGrowth
 import org.n27.ktstonks.data.alpha_vantage.mapping.toPrice
 import org.n27.ktstonks.data.db.dbQuery
+import org.n27.ktstonks.data.db.mappers.toStock
 import org.n27.ktstonks.data.db.mappers.toStocks
 import org.n27.ktstonks.data.db.tables.StockTable
 import org.n27.ktstonks.domain.Repository
 import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.model.Stocks
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.update
-import org.jetbrains.exposed.sql.statements.UpdateBuilder
 
 class RepositoryImpl(private val api: AlphaVantageApi) : Repository {
 
@@ -36,19 +33,23 @@ class RepositoryImpl(private val api: AlphaVantageApi) : Repository {
     }
 
     override suspend fun getStocks(): Result<Stocks> = runCatching {
+        dbQuery { StockTable.selectAll().toStocks() }
+    }
+
+    override suspend fun searchStocks(symbol: String): Result<Stocks> = runCatching {
         dbQuery {
             StockTable
-                .selectAll()
+                .select { (StockTable.symbol like "%$symbol%") or (StockTable.companyName like "%$symbol%") }
                 .toStocks()
         }
     }
 
-    override suspend fun searchStocks(query: String): Result<Stocks> = runCatching {
+    override suspend fun getDbStock(symbol: String): Result<Stock?> = runCatching {
         dbQuery {
             StockTable
-                .select {
-                    (StockTable.symbol like "%$query%") or (StockTable.companyName like "%$query%")
-                }.toStocks()
+                .select { StockTable.symbol eq symbol }
+                .map { it.toStock() }
+                .singleOrNull()
         }
     }
 

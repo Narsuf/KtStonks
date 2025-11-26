@@ -7,13 +7,6 @@ import kotlinx.serialization.json.Json
 import org.n27.ktstonks.domain.UseCase
 
 fun Route.stockRoutes(useCase: UseCase) {
-    get("/stocks") {
-        useCase.getStocks().fold(
-            onSuccess = { call.respondText(Json.encodeToString(it), ContentType.Application.Json) },
-            onFailure = { call.respondText("Error fetching data: ${it.message}", status = HttpStatusCode.InternalServerError) }
-        )
-    }
-
     get("/stock/{symbol}") {
         val symbol = call.parameters["symbol"]
             ?: return@get call.respondText(
@@ -21,13 +14,20 @@ fun Route.stockRoutes(useCase: UseCase) {
                 status = HttpStatusCode.BadRequest,
             )
 
-        useCase.execute(symbol).fold(
+        useCase.getStock(symbol).fold(
             onSuccess = { call.respondText(Json.encodeToString(it), ContentType.Application.Json) },
             onFailure = { call.respondText("Error fetching data: ${it.message}", status = HttpStatusCode.InternalServerError) }
         )
     }
 
-    get("/search/stock/{symbol}") {
+    get("/stocks") {
+        useCase.getStocks().fold(
+            onSuccess = { call.respondText(Json.encodeToString(it), ContentType.Application.Json) },
+            onFailure = { call.respondText("Error fetching data: ${it.message}", status = HttpStatusCode.InternalServerError) }
+        )
+    }
+
+    get("/search/stocks/{symbol}") {
         val symbol = call.parameters["symbol"]
             ?: return@get call.respondText(
                 text = "No symbol provided for search",

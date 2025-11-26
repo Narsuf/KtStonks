@@ -30,6 +30,8 @@ val mainModule = module {
         }
     }
 
+    single { initDatabase() }
+
     single {
         val apiKey = System.getenv("ALPHAVANTAGE_API_KEY") ?: error("API key not configured")
         AlphaVantageApi(
@@ -44,8 +46,6 @@ val mainModule = module {
     single { JsonReader }
 
     single { UseCase(get(), get()) }
-
-    single { initDatabase() }
 }
 
 private fun initDatabase(): Database {
