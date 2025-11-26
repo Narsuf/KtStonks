@@ -3,8 +3,7 @@ package org.n27.ktstonks.domain
 import org.n27.ktstonks.data.json.JsonReader
 import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.model.Stocks
-import java.time.Instant
-import java.time.ZoneId
+import org.n27.ktstonks.extensions.isToday
 import kotlin.Result.Companion.failure
 import kotlin.Result.Companion.success
 
@@ -22,10 +21,10 @@ class UseCase(
             repository.getStock(symbol).onSuccess { repository.saveStock(it) }
     }
 
-    suspend fun getStocks(): Result<Stocks> = repository.getStocks()
+    suspend fun getStocks(page: Int = 0, pageSize: Int): Result<Stocks> = repository.getStocks(page, pageSize)
 
-    suspend fun searchStock(symbol: String): Result<Stocks> {
-        val dbStocks = repository.searchStocks(symbol).getOrNull()?.items
+    suspend fun searchStock(symbol: String, page: Int = 0, pageSize: Int): Result<Stocks> {
+        val dbStocks = repository.searchStocks(symbol, page, pageSize).getOrNull()?.items
 
         if (!dbStocks.isNullOrEmpty()) return success(Stocks(dbStocks))
 
@@ -43,10 +42,4 @@ class UseCase(
             failure(NoSuchElementException("Stock with symbol $symbol not found"))
         }
     }
-}
-
-private fun Long.isToday(): Boolean {
-    val lastUpdatedDate = Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDate()
-    val today = Instant.now().atZone(ZoneId.systemDefault()).toLocalDate()
-    return lastUpdatedDate.isEqual(today)
 }

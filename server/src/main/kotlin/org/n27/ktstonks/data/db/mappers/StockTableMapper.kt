@@ -6,9 +6,16 @@ import org.n27.ktstonks.data.db.tables.StockTable
 import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.model.Stocks
 
-internal fun Query.toStocks() = Stocks(
-    items = map { it.toStock() },
-)
+internal fun Query.toStocks(page: Int, pageSize: Int) = run {
+    val stocks = count()
+    val hasNextPage = (page + 1) * pageSize < stocks
+    val offset = (page * pageSize).toLong()
+    val nextPageValue = if (hasNextPage) page + 1 else null
+    Stocks(
+        items = limit(pageSize, offset).map { it.toStock() },
+        nextPage = nextPageValue
+    )
+}
 
 internal fun ResultRow.toStock() = Stock(
     symbol = this[StockTable.symbol],

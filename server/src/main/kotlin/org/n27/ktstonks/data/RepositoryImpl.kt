@@ -32,15 +32,15 @@ class RepositoryImpl(private val api: AlphaVantageApi) : Repository {
         }
     }
 
-    override suspend fun getStocks(): Result<Stocks> = runCatching {
-        dbQuery { StockTable.selectAll().toStocks() }
+    override suspend fun getStocks(page: Int, pageSize: Int): Result<Stocks> = runCatching {
+        dbQuery { StockTable.selectAll().toStocks(page, pageSize) }
     }
 
-    override suspend fun searchStocks(symbol: String): Result<Stocks> = runCatching {
+    override suspend fun searchStocks(symbol: String, page: Int, pageSize: Int): Result<Stocks> = runCatching {
         dbQuery {
             StockTable
                 .select { (StockTable.symbol like "%$symbol%") or (StockTable.companyName like "%$symbol%") }
-                .toStocks()
+                .toStocks(page, pageSize)
         }
     }
 

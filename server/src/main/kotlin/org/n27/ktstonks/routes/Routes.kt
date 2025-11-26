@@ -1,9 +1,11 @@
 package org.n27.ktstonks.routes
 
 import io.ktor.http.*
+import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
+import org.n27.ktstonks.DEFAULT_PAGE_SIZE
 import org.n27.ktstonks.domain.UseCase
 
 fun Route.stockRoutes(useCase: UseCase) {
@@ -21,7 +23,10 @@ fun Route.stockRoutes(useCase: UseCase) {
     }
 
     get("/stocks") {
-        useCase.getStocks().fold(
+        val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 0
+        val pageSize = call.request.queryParameters["pageSize"]?.toIntOrNull() ?: DEFAULT_PAGE_SIZE
+
+        useCase.getStocks(page, pageSize).fold(
             onSuccess = { call.respondText(Json.encodeToString(it), ContentType.Application.Json) },
             onFailure = { call.respondText("Error fetching data: ${it.message}", status = HttpStatusCode.InternalServerError) }
         )
@@ -33,8 +38,10 @@ fun Route.stockRoutes(useCase: UseCase) {
                 text = "No symbol provided for search",
                 status = HttpStatusCode.BadRequest,
             )
+        val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 0
+        val pageSize = call.request.queryParameters["pageSize"]?.toIntOrNull() ?: DEFAULT_PAGE_SIZE
 
-        useCase.searchStock(symbol).fold(
+        useCase.searchStock(symbol, page, pageSize).fold(
             onSuccess = { call.respondText(Json.encodeToString(it), ContentType.Application.Json) },
             onFailure = { call.respondText("Error searching for stock: ${it.message}", status = HttpStatusCode.InternalServerError) }
         )
