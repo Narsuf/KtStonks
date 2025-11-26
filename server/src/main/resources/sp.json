@@ -1,0 +1,16 @@
+[
+  "MSFT", "AAPL", "NVDA", "AMZN", "GOOGL", "LLY", "TSLA", "AVGO", "JNJ", "UNH", "WFC", "V", "JPM", "WMT", "MA",
+  "XOM", "KO", "COST", "CSCO", "GOOG", "ADBE", "A", "ABBV", "ABT", "ACN", "AES", "AFL", "AIG", "AKAM", "ALK", "ALLE",
+  "AMD", "AMCR", "AMT", "AEP", "APD", "AWK", "AXP", "BA", "BAC", "BBY", "BIIB", "BKR", "BLL", "BMY", "C", "CAG", "CAH",
+  "CAT", "CBRE", "CCI", "CCL", "CHTR", "CI", "CINF", "CL", "CLX", "CMA", "CMCSA", "CMG", "COP", "CTAS", "CTVA", "CVS",
+  "CVX", "CRM", "CSX", "D", "DAL", "DE", "DELL", "DFS", "DHR", "DIS", "DISH", "DLTR", "DNR", "DTE", "DUK", "DVA", "EMR",
+  "EOG", "EQIX", "ES", "ETN", "EXC", "F", "FDX", "FE", "FIS", "FITB", "FRC", "FTI", "GD", "GE", "GIS", "GM", "GPC",
+  "GPN", "GS", "HAL", "HAS", "HCA", "HD", "HES", "HIG", "HPE", "HPQ", "HUM", "IBM", "ICE", "IDXX", "INTC", "IP", "IPG",
+  "ITW", "JBHT", "JEF", "K", "KEY", "KHC", "KMI", "KSS", "L", "LEG", "LEN", "LH", "LMT", "LOW", "LUV", "LVS", "MAR",
+  "MAS", "MCD", "MCHP", "MCK", "MCO", "MDLZ", "MET", "MGM", "MMC", "MMM", "MO", "MRO", "MS", "MSI", "NCLH", "NFLX",
+  "NKE", "NI", "NSC", "NVR", "OXY", "OMC", "ON", "ORLY", "PEAK", "PEG", "PEP", "PFE", "PG", "PGR", "PH", "PM", "PNR",
+  "PPL", "PSX", "PVH", "PYPL", "QCOM", "QRVO", "RCL", "REGN", "RF", "RHI", "RNG", "ROK", "ROP", "ROST", "RTX", "SBUX",
+  "SJM", "SLB", "SNA", "SNPS", "SO", "SPG", "SRE", "STT", "STX", "SYF", "SYK", "TGT", "TDY", "TIF", "TJX", "TMUS",
+  "TSN", "TT", "UAA", "UAL", "UHS", "UPS", "URI", "USB", "VFC", "VNO", "VZ", "WAB", "WBA", "WDC", "WM", "WMB", "WYNN",
+  "XEL", "YUM", "ZBH", "ZION", "ZTS"
+]

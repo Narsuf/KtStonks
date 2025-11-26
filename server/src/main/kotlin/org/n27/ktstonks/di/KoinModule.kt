@@ -13,6 +13,7 @@ import org.n27.ktstonks.ALPHA_VANTAGE_BASE_URL
 import org.n27.ktstonks.data.RepositoryImpl
 import org.n27.ktstonks.data.alpha_vantage.AlphaVantageApi
 import org.n27.ktstonks.data.db.tables.StockTable
+import org.n27.ktstonks.data.json.JsonReader
 import org.n27.ktstonks.domain.Repository
 import org.n27.ktstonks.domain.UseCase
 
@@ -40,7 +41,9 @@ val mainModule = module {
 
     single<Repository> { RepositoryImpl(get()) }
 
-    single { UseCase(get()) }
+    single { JsonReader }
+
+    single { UseCase(get(), get()) }
 
     single { initDatabase() }
 }

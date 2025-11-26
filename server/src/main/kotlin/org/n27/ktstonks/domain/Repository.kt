@@ -8,4 +8,6 @@ interface Repository {
     suspend fun getStock(symbol: String): Result<Stock>
 
     suspend fun getStocks(): Result<Stocks>
+
+    suspend fun searchStocks(query: String): Result<Stocks>
 }

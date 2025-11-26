@@ -26,4 +26,17 @@ fun Route.stockRoutes(useCase: UseCase) {
             onFailure = { call.respondText("Error fetching data: ${it.message}", status = HttpStatusCode.InternalServerError) }
         )
     }
+
+    get("/search/stock/{symbol}") {
+        val symbol = call.parameters["symbol"]
+            ?: return@get call.respondText(
+                text = "No symbol provided for search",
+                status = HttpStatusCode.BadRequest,
+            )
+
+        useCase.searchStock(symbol).fold(
+            onSuccess = { call.respondText(Json.encodeToString(it), ContentType.Application.Json) },
+            onFailure = { call.respondText("Error searching for stock: ${it.message}", status = HttpStatusCode.InternalServerError) }
+        )
+    }
 }
