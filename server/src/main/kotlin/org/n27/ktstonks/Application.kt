@@ -4,10 +4,10 @@ import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.routing.*
-import org.n27.ktstonks.data.RepositoryImpl
+import org.koin.ktor.ext.get
+import org.koin.ktor.plugin.Koin
+import org.n27.ktstonks.di.mainModule
 import org.n27.ktstonks.routes.stockRoutes
-import org.n27.ktstonks.data.alpha_vantage.AlphaVantageApi
-import org.n27.ktstonks.domain.UseCase
 
 fun main() {
     embeddedServer(Netty, port = SERVER_PORT, module = Application::module)
@@ -15,10 +15,9 @@ fun main() {
 }
 
 fun Application.module() {
-    val apiKey = System.getenv("ALPHAVANTAGE_API_KEY") ?: error("API key not configured")
-    val api = AlphaVantageApi.create(apiKey)
-    val repository = RepositoryImpl(api)
-    val useCase = UseCase(repository)
+    install(Koin) {
+        modules(mainModule)
+    }
 
-    routing { stockRoutes(useCase) }
+    routing { stockRoutes(get()) }
 }

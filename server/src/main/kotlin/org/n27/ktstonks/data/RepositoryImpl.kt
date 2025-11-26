@@ -7,9 +7,9 @@ import org.n27.ktstonks.data.alpha_vantage.mapping.toDomainEntity
 import org.n27.ktstonks.data.alpha_vantage.mapping.toExpectedEpsGrowth
 import org.n27.ktstonks.data.alpha_vantage.mapping.toPrice
 import org.n27.ktstonks.domain.model.Stock
-import org.n27.ktstonks.domain.StockRepository
+import org.n27.ktstonks.domain.Repository
 
-class RepositoryImpl(private val api: AlphaVantageApi) : StockRepository {
+class RepositoryImpl(private val api: AlphaVantageApi) : Repository {
 
     override suspend fun getStock(symbol: String): Result<Stock> = runCatching {
         coroutineScope {
