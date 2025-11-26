@@ -12,10 +12,10 @@ internal fun AlphaVantageStock.toDomainEntity(price: Double?, expectedEpsGrowth:
     dividendYield = dividendYield?.toDoubleOrNull(),
     eps = eps?.toDoubleOrNull(),
     pe = if (price != null && eps != null) price / eps.toDouble() else null,
-    earningsQuarterlyGrowth = earningsGrowthYOY?.toDoubleOrNull(),
+    earningsQuarterlyGrowth = earningsGrowthYOY?.let { it.toDouble() * 100 },
     expectedEpsGrowth = expectedEpsGrowth,
     currentIntrinsicValue = eps?.toDouble()?.getIntrinsicValue(),
-    expectedIntrinsicValue = expectedEpsGrowth?.let { eps?.toDouble()?.getIntrinsicValue(it) },
+    forwardIntrinsicValue = expectedEpsGrowth?.let { eps?.toDouble()?.getIntrinsicValue(it) },
     currency = currency,
 )
 

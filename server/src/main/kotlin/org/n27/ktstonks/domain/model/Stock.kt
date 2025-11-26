@@ -14,6 +14,6 @@ data class Stock(
     val earningsQuarterlyGrowth: Double?,
     val expectedEpsGrowth: Double?,
     val currentIntrinsicValue: Double?,
-    val expectedIntrinsicValue: Double?,
+    val forwardIntrinsicValue: Double?,
     val currency: String?,
 )
