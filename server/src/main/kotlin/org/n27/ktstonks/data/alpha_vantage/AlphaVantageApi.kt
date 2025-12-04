@@ -6,11 +6,6 @@ import io.ktor.client.request.*
 import org.n27.ktstonks.data.alpha_vantage.model.AlphaVantageStock
 import org.n27.ktstonks.data.alpha_vantage.model.EarningsEstimates
 import org.n27.ktstonks.data.alpha_vantage.model.GlobalQuoteResponse
-import org.n27.ktstonks.data.db.api_usage.ApiUsageDao
-import org.n27.ktstonks.domain.exceptions.ApiLimitExceededException
-import java.time.LocalDate
-
-private const val API_LIMIT = 25
 
 class AlphaVantageApi(
     private val client: HttpClient,

@@ -2,12 +2,12 @@ package org.n27.ktstonks.data
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import org.n27.ktstonks.MAX_CALLS_PER_DAY
 import org.n27.ktstonks.data.alpha_vantage.AlphaVantageApi
 import org.n27.ktstonks.data.alpha_vantage.mapping.toDomainEntity
 import org.n27.ktstonks.data.alpha_vantage.mapping.toExpectedEpsGrowth
 import org.n27.ktstonks.data.alpha_vantage.mapping.toPrice
 import org.n27.ktstonks.data.db.api_usage.ApiUsageDao
-import org.n27.ktstonks.data.db.api_usage.MAX_CALLS_PER_DAY
 import org.n27.ktstonks.data.db.stock.StockDao
 import org.n27.ktstonks.data.json.JsonReader
 import org.n27.ktstonks.domain.Repository

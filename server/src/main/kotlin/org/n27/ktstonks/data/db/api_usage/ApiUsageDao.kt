@@ -6,10 +6,7 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
-import org.n27.ktstonks.data.db.api_usage.ApiUsages
 import java.time.LocalDate
-
-const val MAX_CALLS_PER_DAY = 25
 
 class ApiUsageDao {
     fun getUsage(date: LocalDate): Int = transaction {
