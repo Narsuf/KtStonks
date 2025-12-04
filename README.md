@@ -1,21 +1,5 @@
-This is a Kotlin Multiplatform project targeting Server.
+[![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
-* [/server](./server/src/main/kotlin) is for the Ktor server application.
+Ktor service to provide information about stocks.
 
-### Build and Run Server
-
-To build and run the development version of the server, use the run configuration from the run widget
-in your IDE’s toolbar or run it directly from the terminal:
-
-- on macOS/Linux
-  ```shell
-  ./gradlew :server:run
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :server:run
-  ```
-
----
-
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+Using [Alpha Vantage](https://www.alphavantage.co/) API.
