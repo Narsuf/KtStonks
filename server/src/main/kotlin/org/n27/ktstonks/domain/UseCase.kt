@@ -34,10 +34,7 @@ class UseCase(
         return if (matchingSymbol != null) {
             repository.getStock(matchingSymbol)
                 .onSuccess { repository.saveStock(it) }
-                .fold(
-                    onSuccess = { success(Stocks(listOf(it))) },
-                    onFailure = { failure(it) }
-                )
+                .map { Stocks(listOf(it)) }
         } else {
             failure(NoSuchElementException("Stock with symbol $symbol not found"))
         }
