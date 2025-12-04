@@ -12,8 +12,9 @@ import org.koin.dsl.module
 import org.n27.ktstonks.ALPHA_VANTAGE_BASE_URL
 import org.n27.ktstonks.data.RepositoryImpl
 import org.n27.ktstonks.data.alpha_vantage.AlphaVantageApi
+import org.n27.ktstonks.data.db.api_usage.ApiUsageDao
+import org.n27.ktstonks.data.db.api_usage.tables.ApiUsages
 import org.n27.ktstonks.data.db.tables.StockTable
-import org.n27.ktstonks.data.json.JsonReader
 import org.n27.ktstonks.domain.Repository
 import org.n27.ktstonks.domain.UseCase
 
@@ -31,21 +32,21 @@ val mainModule = module {
     }
 
     single { initDatabase() }
+    single { ApiUsageDao() }
 
     single {
         val apiKey = System.getenv("ALPHAVANTAGE_API_KEY") ?: error("API key not configured")
         AlphaVantageApi(
             client = get(),
             apiKey = apiKey,
-            baseUrl = ALPHA_VANTAGE_BASE_URL
+            baseUrl = ALPHA_VANTAGE_BASE_URL,
+            apiUsageDao = get()
         )
     }
 
     single<Repository> { RepositoryImpl(get()) }
 
-    single { JsonReader }
-
-    single { UseCase(get(), get()) }
+    single { UseCase(get()) }
 }
 
 private fun initDatabase(): Database {
@@ -55,7 +56,7 @@ private fun initDatabase(): Database {
     )
 
     transaction(db) {
-        SchemaUtils.create(StockTable)
+        SchemaUtils.create(StockTable, ApiUsages)
     }
 
     return db

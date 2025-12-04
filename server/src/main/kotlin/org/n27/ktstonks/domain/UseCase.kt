@@ -1,16 +1,12 @@
 package org.n27.ktstonks.domain
 
-import org.n27.ktstonks.data.json.JsonReader
 import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.model.Stocks
 import org.n27.ktstonks.extensions.isToday
 import kotlin.Result.Companion.failure
 import kotlin.Result.Companion.success
 
-class UseCase(
-    private val repository: Repository,
-    private val jsonReader: JsonReader,
-) {
+class UseCase(private val repository: Repository) {
     suspend fun getStock(symbol: String): Result<Stock> {
         val dbStock = repository.getDbStock(symbol).getOrNull()
         val isStockUpdated = dbStock?.lastUpdated?.isToday() ?: false
@@ -28,8 +24,8 @@ class UseCase(
 
         if (!dbStocks.isNullOrEmpty()) return success(Stocks(dbStocks))
 
-        val symbols = jsonReader.getSymbols()
-        val matchingSymbol = symbols.firstOrNull { it.equals(symbol, ignoreCase = true) }
+        val symbols = repository.getSymbols().getOrNull()
+        val matchingSymbol = symbols?.items?.firstOrNull { it.equals(symbol, ignoreCase = true) }
 
         return if (matchingSymbol != null) {
             repository.getStock(matchingSymbol)

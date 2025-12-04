@@ -2,8 +2,12 @@ package org.n27.ktstonks.data
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.or
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
+import org.jetbrains.exposed.sql.update
 import org.n27.ktstonks.data.alpha_vantage.AlphaVantageApi
 import org.n27.ktstonks.data.alpha_vantage.mapping.toDomainEntity
 import org.n27.ktstonks.data.alpha_vantage.mapping.toExpectedEpsGrowth
@@ -12,9 +16,11 @@ import org.n27.ktstonks.data.db.dbQuery
 import org.n27.ktstonks.data.db.mappers.toStock
 import org.n27.ktstonks.data.db.mappers.toStocks
 import org.n27.ktstonks.data.db.tables.StockTable
+import org.n27.ktstonks.data.json.JsonReader
 import org.n27.ktstonks.domain.Repository
 import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.model.Stocks
+import org.n27.ktstonks.domain.model.Symbols
 
 class RepositoryImpl(private val api: AlphaVantageApi) : Repository {
 
@@ -87,6 +93,8 @@ class RepositoryImpl(private val api: AlphaVantageApi) : Repository {
             StockTable.update(where = { StockTable.symbol eq symbol }) { it[isWatchlisted] = false }
         }
     }
+
+    override suspend fun getSymbols(): Result<Symbols> = runCatching { Symbols(JsonReader.getSymbols()) }
 
     private fun <T> UpdateBuilder<T>.fromStock(stock: Stock) {
         this[StockTable.companyName] = stock.companyName
