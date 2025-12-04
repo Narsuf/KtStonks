@@ -1,4 +1,4 @@
-# GET Election details
+# GET Stock details
 Returns all the information available from a specific stock.
 
 ## Endpoint
