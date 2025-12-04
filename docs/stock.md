@@ -1,4 +1,4 @@
-# GET Stock details
+# GET Stock
 Returns all the information available from a specific stock.
 
 ## Endpoint
