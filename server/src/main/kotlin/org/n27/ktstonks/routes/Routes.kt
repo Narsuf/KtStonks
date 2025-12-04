@@ -22,20 +22,13 @@ fun Route.stockRoutes(useCase: UseCase) {
 
     get("/stocks") {
         val (page, pageSize) = call.getPageAndSize()
-        useCase.getStocks(page, pageSize).fold(
-            onSuccess = { call.respondSuccess(it) },
-            onFailure = { call.respondError(it) }
-        )
-    }
+        val filterWatchlist = call.request.queryParameters["filterWatchlist"]?.toBoolean() ?: false
+        val symbol = call.request.queryParameters["symbol"]
 
-    get("/search/{symbol}") {
-        call.withSymbol("No symbol provided for search") { symbol ->
-            val (page, pageSize) = call.getPageAndSize()
-            useCase.searchStock(symbol, page, pageSize).fold(
-                onSuccess = { call.respondSuccess(it) },
-                onFailure = { call.respondError(it, "Error searching for stock") }
-            )
-        }
+        useCase.getStocks(page, pageSize, filterWatchlist, symbol).fold(
+            onSuccess = { call.respondSuccess(it) },
+            onFailure = { call.respondError(it, "Error searching for stock") }
+        )
     }
 
     route("/watchlist") {

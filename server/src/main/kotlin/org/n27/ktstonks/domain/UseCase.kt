@@ -17,9 +17,27 @@ class UseCase(private val repository: Repository) {
             repository.getStock(symbol).onSuccess { repository.saveStock(it) }
     }
 
-    suspend fun getStocks(page: Int = 0, pageSize: Int): Result<Stocks> = repository.getStocks(page, pageSize)
+    suspend fun getStocks(
+        page: Int,
+        pageSize: Int,
+        filterWatchlist: Boolean,
+        symbol: String? = null,
+    ): Result<Stocks> {
+        val result = if (symbol.isNullOrEmpty())
+            repository.getStocks(page, pageSize)
+        else
+            getStocksBySymbol(page, pageSize, symbol)
 
-    suspend fun searchStock(symbol: String, page: Int = 0, pageSize: Int): Result<Stocks> {
+        return if (filterWatchlist) {
+            result.map { stocks ->
+                stocks.copy(items = stocks.items.filter { !it.isWatchlisted })
+            }
+        } else {
+            result
+        }
+    }
+
+    private suspend fun getStocksBySymbol(page: Int, pageSize: Int, symbol: String): Result<Stocks> {
         val dbStocks = repository.searchStocks(symbol, page, pageSize).getOrNull()?.items
 
         if (!dbStocks.isNullOrEmpty()) return success(Stocks(dbStocks))
