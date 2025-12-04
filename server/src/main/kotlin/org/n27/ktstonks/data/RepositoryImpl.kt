@@ -12,6 +12,8 @@ import org.n27.ktstonks.data.alpha_vantage.AlphaVantageApi
 import org.n27.ktstonks.data.alpha_vantage.mapping.toDomainEntity
 import org.n27.ktstonks.data.alpha_vantage.mapping.toExpectedEpsGrowth
 import org.n27.ktstonks.data.alpha_vantage.mapping.toPrice
+import org.n27.ktstonks.data.db.api_usage.ApiUsageDao
+import org.n27.ktstonks.data.db.api_usage.MAX_CALLS_PER_DAY
 import org.n27.ktstonks.data.db.dbQuery
 import org.n27.ktstonks.data.db.mappers.toStock
 import org.n27.ktstonks.data.db.mappers.toStocks
@@ -21,11 +23,24 @@ import org.n27.ktstonks.domain.Repository
 import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.model.Stocks
 import org.n27.ktstonks.domain.model.Symbols
+import java.time.LocalDate
 
-class RepositoryImpl(private val api: AlphaVantageApi) : Repository {
+class RepositoryImpl(
+    private val api: AlphaVantageApi,
+    private val apiUsageDao: ApiUsageDao,
+) : Repository {
 
     override suspend fun getStock(symbol: String): Result<Stock> = runCatching {
-        coroutineScope {
+        val today = LocalDate.now()
+        val currentUsage = apiUsageDao.getUsage(today)
+
+        if (currentUsage + 3 > MAX_CALLS_PER_DAY) {
+            throw IllegalStateException(
+                "API call limit exceeded for today. Current usage: $currentUsage/$MAX_CALLS_PER_DAY"
+            )
+        }
+
+        val stockResult = coroutineScope {
             val stockDeferred = async { api.getStock(symbol) }
             val quoteDeferred = async { api.getGlobalQuote(symbol) }
             val epsDeferred = async { api.getEpsEstimate(symbol) }
@@ -36,6 +51,10 @@ class RepositoryImpl(private val api: AlphaVantageApi) : Repository {
 
             stock.toDomainEntity(globalQuote.toPrice(), estimates.toExpectedEpsGrowth())
         }
+
+        apiUsageDao.incrementUsage(today, 3)
+
+        stockResult
     }
 
     override suspend fun getStocks(page: Int, pageSize: Int): Result<Stocks> = runCatching {

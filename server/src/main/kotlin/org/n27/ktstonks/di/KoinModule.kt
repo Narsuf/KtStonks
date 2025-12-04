@@ -40,11 +40,10 @@ val mainModule = module {
             client = get(),
             apiKey = apiKey,
             baseUrl = ALPHA_VANTAGE_BASE_URL,
-            apiUsageDao = get()
         )
     }
 
-    single<Repository> { RepositoryImpl(get()) }
+    single<Repository> { RepositoryImpl(get(), get()) }
 
     single { UseCase(get()) }
 }

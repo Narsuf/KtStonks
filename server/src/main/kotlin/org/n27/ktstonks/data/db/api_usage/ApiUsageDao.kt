@@ -9,6 +9,8 @@ import org.jetbrains.exposed.sql.update
 import org.n27.ktstonks.data.db.api_usage.tables.ApiUsages
 import java.time.LocalDate
 
+const val MAX_CALLS_PER_DAY = 25
+
 class ApiUsageDao {
     fun getUsage(date: LocalDate): Int = transaction {
         val usage = ApiUsages
@@ -24,18 +26,18 @@ class ApiUsageDao {
         }
     }
 
-    fun incrementUsage(date: LocalDate) {
+    fun incrementUsage(date: LocalDate, count: Int) {
         transaction {
             val usage = ApiUsages.select { ApiUsages.date eq date.toString() }.singleOrNull()
 
             if (usage == null) {
                 ApiUsages.insert {
                     it[ApiUsages.date] = date.toString()
-                    it[count] = 1
+                    it[ApiUsages.count] = count
                 }
             } else {
                 ApiUsages.update({ ApiUsages.date eq date.toString() }) {
-                    it[count] = usage[count] + 1
+                    it[ApiUsages.count] = usage[ApiUsages.count] + count
                 }
             }
         }

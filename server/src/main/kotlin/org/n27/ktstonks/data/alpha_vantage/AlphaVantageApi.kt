@@ -16,17 +16,9 @@ class AlphaVantageApi(
     private val client: HttpClient,
     private val apiKey: String,
     private val baseUrl: String,
-    private val apiUsageDao: ApiUsageDao
 ) {
 
     private suspend inline fun <reified T> fetch(function: String, symbol: String): T {
-        val today = LocalDate.now()
-        val usage = apiUsageDao.getUsage(today)
-
-        if (usage >= API_LIMIT) throw ApiLimitExceededException("API limit of $API_LIMIT reached for today.")
-
-        apiUsageDao.incrementUsage(today)
-
         val url = "$baseUrl?function=$function&symbol=$symbol&apikey=$apiKey"
         return client.get(url).body()
     }
