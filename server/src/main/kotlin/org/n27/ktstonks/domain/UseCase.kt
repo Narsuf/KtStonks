@@ -58,7 +58,22 @@ class UseCase(private val repository: Repository) {
         page: Int,
         pageSize: Int,
         forceUpdate: Boolean,
-    ): Result<Stocks> = repository.getWatchlist(page, pageSize, forceUpdate)
+    ): Result<Stocks> = runCatching {
+        if (forceUpdate) {
+            val allWatchlistStocks = repository.getWatchlist(page = 0, pageSize = Int.MAX_VALUE).getOrThrow().items
+            val outdatedStocks = allWatchlistStocks
+                .filter { !it.lastUpdated.isToday() }
+                .sortedBy { it.lastUpdated }
+
+            outdatedStocks.forEach loop@{ stock ->
+                repository.getStock(stock.symbol)
+                    .onSuccess { repository.saveStock(it) }
+                    .onFailure { if (it is IllegalStateException) return@loop }
+            }
+        }
+
+        repository.getWatchlist(page, pageSize).getOrThrow()
+    }
 
     suspend fun addStockToWatchlist(symbol: String): Result<Unit> {
         return getStock(symbol).fold(

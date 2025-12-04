@@ -13,7 +13,7 @@ interface Repository {
     suspend fun saveStock(stock: Stock): Result<Unit>
 
     suspend fun addToWatchlist(symbol: String): Result<Unit>
-    suspend fun getWatchlist(page: Int, pageSize: Int, forceUpdate: Boolean): Result<Stocks>
+    suspend fun getWatchlist(page: Int, pageSize: Int): Result<Stocks>
     suspend fun removeFromWatchlist(symbol: String): Result<Unit>
 
     suspend fun getSymbols(): Result<Symbols>

@@ -70,25 +70,7 @@ class RepositoryImpl(
     override suspend fun getWatchlist(
         page: Int,
         pageSize: Int,
-        forceUpdate: Boolean,
-    ): Result<Stocks> = runCatching {
-        if (forceUpdate) {
-            val allWatchlistStocks = stockDao.getWatchlist(0, Int.MAX_VALUE).items
-            val outdatedStocks = allWatchlistStocks
-                .filter { !it.lastUpdated.isToday() }
-                .sortedBy { it.lastUpdated }
-
-            outdatedStocks.forEach { stock ->
-                getStock(stock.symbol)
-                    .onSuccess { saveStock(it) }
-                    .onFailure {
-                        if (it is IllegalStateException) return@runCatching stockDao.getWatchlist(page, pageSize)
-                    }
-            }
-        }
-
-        stockDao.getWatchlist(page, pageSize)
-    }
+    ): Result<Stocks> = runCatching { stockDao.getWatchlist(page, pageSize) }
 
     override suspend fun removeFromWatchlist(
         symbol: String,
