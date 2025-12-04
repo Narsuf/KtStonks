@@ -1,8 +1,8 @@
-package org.n27.ktstonks.data.db.tables
+package org.n27.ktstonks.data.db.stock
 
 import org.jetbrains.exposed.sql.Table
 
-object StockTable : Table("stocks") {
+object StocksTable : Table("stocks") {
     val symbol = varchar("symbol", 20)
     val companyName = varchar("company_name", 255)
     val logoUrl = varchar("logo_url", 2048).nullable()

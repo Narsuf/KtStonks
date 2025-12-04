@@ -13,9 +13,9 @@ import org.n27.ktstonks.ALPHA_VANTAGE_BASE_URL
 import org.n27.ktstonks.data.RepositoryImpl
 import org.n27.ktstonks.data.alpha_vantage.AlphaVantageApi
 import org.n27.ktstonks.data.db.api_usage.ApiUsageDao
-import org.n27.ktstonks.data.db.api_usage.tables.ApiUsages
+import org.n27.ktstonks.data.db.api_usage.ApiUsages
 import org.n27.ktstonks.data.db.stock.StockDao
-import org.n27.ktstonks.data.db.tables.StockTable
+import org.n27.ktstonks.data.db.stock.StocksTable
 import org.n27.ktstonks.domain.Repository
 import org.n27.ktstonks.domain.UseCase
 
@@ -57,7 +57,7 @@ private fun initDatabase(): Database {
     )
 
     transaction(db) {
-        SchemaUtils.create(StockTable, ApiUsages)
+        SchemaUtils.create(StocksTable, ApiUsages)
     }
 
     return db

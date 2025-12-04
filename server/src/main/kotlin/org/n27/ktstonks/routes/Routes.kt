@@ -11,24 +11,12 @@ import org.n27.ktstonks.extensions.respondSuccess
 
 fun Route.stockRoutes(useCase: UseCase) {
 
-    route("/stock") {
-        get("/{symbol}") {
-            call.withSymbol { symbol ->
-                useCase.getStock(symbol).fold(
-                    onSuccess = { call.respondSuccess(it) },
-                    onFailure = { call.respondError(it) }
-                )
-            }
-        }
-
-        get("/search/{symbol}") {
-            call.withSymbol("No symbol provided for search") { symbol ->
-                val (page, pageSize) = call.getPageAndSize()
-                useCase.searchStock(symbol, page, pageSize).fold(
-                    onSuccess = { call.respondSuccess(it) },
-                    onFailure = { call.respondError(it, "Error searching for stock") }
-                )
-            }
+    get("stock/{symbol}") {
+        call.withSymbol { symbol ->
+            useCase.getStock(symbol).fold(
+                onSuccess = { call.respondSuccess(it) },
+                onFailure = { call.respondError(it) }
+            )
         }
     }
 
@@ -38,6 +26,16 @@ fun Route.stockRoutes(useCase: UseCase) {
             onSuccess = { call.respondSuccess(it) },
             onFailure = { call.respondError(it) }
         )
+    }
+
+    get("/search/{symbol}") {
+        call.withSymbol("No symbol provided for search") { symbol ->
+            val (page, pageSize) = call.getPageAndSize()
+            useCase.searchStock(symbol, page, pageSize).fold(
+                onSuccess = { call.respondSuccess(it) },
+                onFailure = { call.respondError(it, "Error searching for stock") }
+            )
+        }
     }
 
     route("/watchlist") {

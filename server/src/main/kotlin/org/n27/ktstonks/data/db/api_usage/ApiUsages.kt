@@ -1,4 +1,4 @@
-package org.n27.ktstonks.data.db.api_usage.tables
+package org.n27.ktstonks.data.db.api_usage
 
 import org.jetbrains.exposed.sql.Table
 
