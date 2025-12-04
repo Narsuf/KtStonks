@@ -14,6 +14,7 @@ import org.n27.ktstonks.domain.Repository
 import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.model.Stocks
 import org.n27.ktstonks.domain.model.Symbols
+import org.n27.ktstonks.extensions.isToday
 import java.time.LocalDate
 
 class RepositoryImpl(
@@ -69,7 +70,25 @@ class RepositoryImpl(
     override suspend fun getWatchlist(
         page: Int,
         pageSize: Int,
-    ): Result<Stocks> = runCatching { stockDao.getWatchlist(page, pageSize) }
+        forceUpdate: Boolean,
+    ): Result<Stocks> = runCatching {
+        if (forceUpdate) {
+            val allWatchlistStocks = stockDao.getWatchlist(0, Int.MAX_VALUE).items
+            val outdatedStocks = allWatchlistStocks
+                .filter { !it.lastUpdated.isToday() }
+                .sortedBy { it.lastUpdated }
+
+            outdatedStocks.forEach { stock ->
+                getStock(stock.symbol)
+                    .onSuccess { saveStock(it) }
+                    .onFailure {
+                        if (it is IllegalStateException) return@runCatching stockDao.getWatchlist(page, pageSize)
+                    }
+            }
+        }
+
+        stockDao.getWatchlist(page, pageSize)
+    }
 
     override suspend fun removeFromWatchlist(
         symbol: String,

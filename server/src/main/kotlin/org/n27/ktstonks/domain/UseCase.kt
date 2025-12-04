@@ -54,7 +54,11 @@ class UseCase(private val repository: Repository) {
         }
     }
 
-    suspend fun getWatchlist(page: Int = 0, pageSize: Int): Result<Stocks> = repository.getWatchlist(page, pageSize)
+    suspend fun getWatchlist(
+        page: Int,
+        pageSize: Int,
+        forceUpdate: Boolean,
+    ): Result<Stocks> = repository.getWatchlist(page, pageSize, forceUpdate)
 
     suspend fun addStockToWatchlist(symbol: String): Result<Unit> {
         return getStock(symbol).fold(

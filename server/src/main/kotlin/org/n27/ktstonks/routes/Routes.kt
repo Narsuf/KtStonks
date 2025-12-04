@@ -34,7 +34,8 @@ fun Route.stockRoutes(useCase: UseCase) {
     route("/watchlist") {
         get {
             val (page, pageSize) = call.getPageAndSize()
-            useCase.getWatchlist(page, pageSize).fold(
+            val forceUpdate = call.request.queryParameters["forceUpdate"]?.toBoolean() ?: false
+            useCase.getWatchlist(page, pageSize, forceUpdate).fold(
                 onSuccess = { call.respondSuccess(it) },
                 onFailure = { call.respondError(it, "Error fetching watchlist") }
             )
