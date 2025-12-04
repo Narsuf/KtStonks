@@ -4,9 +4,10 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.serialization.json.Json
 import org.n27.ktstonks.DEFAULT_PAGE_SIZE
 import org.n27.ktstonks.domain.UseCase
+import org.n27.ktstonks.extensions.respondError
+import org.n27.ktstonks.extensions.respondSuccess
 
 fun Route.stockRoutes(useCase: UseCase) {
 
@@ -14,7 +15,7 @@ fun Route.stockRoutes(useCase: UseCase) {
         get("/{symbol}") {
             call.withSymbol { symbol ->
                 useCase.getStock(symbol).fold(
-                    onSuccess = { call.respond(it) },
+                    onSuccess = { call.respondSuccess(it) },
                     onFailure = { call.respondError(it) }
                 )
             }
@@ -24,7 +25,7 @@ fun Route.stockRoutes(useCase: UseCase) {
             call.withSymbol("No symbol provided for search") { symbol ->
                 val (page, pageSize) = call.getPageAndSize()
                 useCase.searchStock(symbol, page, pageSize).fold(
-                    onSuccess = { call.respond(it) },
+                    onSuccess = { call.respondSuccess(it) },
                     onFailure = { call.respondError(it, "Error searching for stock") }
                 )
             }
@@ -34,7 +35,7 @@ fun Route.stockRoutes(useCase: UseCase) {
     get("/stocks") {
         val (page, pageSize) = call.getPageAndSize()
         useCase.getStocks(page, pageSize).fold(
-            onSuccess = { call.respond(it) },
+            onSuccess = { call.respondSuccess(it) },
             onFailure = { call.respondError(it) }
         )
     }
@@ -43,7 +44,7 @@ fun Route.stockRoutes(useCase: UseCase) {
         get {
             val (page, pageSize) = call.getPageAndSize()
             useCase.getWatchlist(page, pageSize).fold(
-                onSuccess = { call.respond(it) },
+                onSuccess = { call.respondSuccess(it) },
                 onFailure = { call.respondError(it, "Error fetching watchlist") }
             )
         }
@@ -82,15 +83,4 @@ private fun ApplicationCall.getPageAndSize(): Pair<Int, Int> {
     val page = request.queryParameters["page"]?.toIntOrNull() ?: 0
     val pageSize = request.queryParameters["pageSize"]?.toIntOrNull() ?: DEFAULT_PAGE_SIZE
     return page to pageSize
-}
-
-private suspend inline fun <reified T> ApplicationCall.respond(body: T) = respondText(
-    text = Json.encodeToString(body), contentType = ContentType.Application.Json
-)
-
-private suspend fun ApplicationCall.respondError(
-    exception: Throwable,
-    message: String = "Error fetching data"
-) {
-    respondText(text = "$message: ${exception.message}", status = HttpStatusCode.InternalServerError)
 }
