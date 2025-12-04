@@ -22,7 +22,7 @@ internal fun AlphaVantageStock.toDomainEntity(price: Double?, expectedEpsGrowth:
 
 private fun Double.getIntrinsicValue(expectedEpsGrowth: Double = 0.0) = expectedEpsGrowth.toMultiplier() * 12.5 * this
 
-private fun Double.toMultiplier(): Double = 100 + this / 100
+private fun Double.toMultiplier(): Double = 1 + this / 100
 
 private fun getLogoFromWebsite(website: String?): String? {
     if (website.isNullOrBlank()) return null
