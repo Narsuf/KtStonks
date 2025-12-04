@@ -14,6 +14,7 @@ import org.n27.ktstonks.data.RepositoryImpl
 import org.n27.ktstonks.data.alpha_vantage.AlphaVantageApi
 import org.n27.ktstonks.data.db.api_usage.ApiUsageDao
 import org.n27.ktstonks.data.db.api_usage.tables.ApiUsages
+import org.n27.ktstonks.data.db.stock.StockDao
 import org.n27.ktstonks.data.db.tables.StockTable
 import org.n27.ktstonks.domain.Repository
 import org.n27.ktstonks.domain.UseCase
@@ -33,6 +34,7 @@ val mainModule = module {
 
     single { initDatabase() }
     single { ApiUsageDao() }
+    single { StockDao() }
 
     single {
         val apiKey = System.getenv("ALPHAVANTAGE_API_KEY") ?: error("API key not configured")
@@ -43,7 +45,7 @@ val mainModule = module {
         )
     }
 
-    single<Repository> { RepositoryImpl(get(), get()) }
+    single<Repository> { RepositoryImpl(get(), get(), get()) }
 
     single { UseCase(get()) }
 }
