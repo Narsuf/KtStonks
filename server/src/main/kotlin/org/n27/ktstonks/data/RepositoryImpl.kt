@@ -11,10 +11,10 @@ import org.n27.ktstonks.data.db.api_usage.ApiUsageDao
 import org.n27.ktstonks.data.db.stock.StockDao
 import org.n27.ktstonks.data.json.JsonReader
 import org.n27.ktstonks.domain.Repository
+import org.n27.ktstonks.domain.exceptions.ApiLimitExceededException
 import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.model.Stocks
 import org.n27.ktstonks.domain.model.Symbols
-import org.n27.ktstonks.extensions.isToday
 import java.time.LocalDate
 
 class RepositoryImpl(
@@ -23,12 +23,12 @@ class RepositoryImpl(
     private val stockDao: StockDao,
 ) : Repository {
 
-    override suspend fun getStock(symbol: String): Result<Stock> = runCatching {
+    override suspend fun getRemoteStock(symbol: String): Result<Stock> = runCatching {
         val today = LocalDate.now()
         val currentUsage = apiUsageDao.getUsage(today)
 
         if (currentUsage + 3 > MAX_CALLS_PER_DAY) {
-            throw IllegalStateException(
+            throw ApiLimitExceededException(
                 "API call limit exceeded for today. Current usage: $currentUsage/$MAX_CALLS_PER_DAY"
             )
         }
@@ -50,18 +50,18 @@ class RepositoryImpl(
         stockResult
     }
 
-    override suspend fun getStocks(
+    override suspend fun getStoredStocks(
         page: Int,
         pageSize: Int,
     ): Result<Stocks> = runCatching { stockDao.getStocks(page, pageSize) }
 
-    override suspend fun searchStocks(
+    override suspend fun searchStoredStocks(
         symbol: String,
         page: Int,
         pageSize: Int,
     ): Result<Stocks> = runCatching { stockDao.searchStocks(symbol, page, pageSize) }
 
-    override suspend fun getDbStock(symbol: String): Result<Stock?> = runCatching { stockDao.getDbStock(symbol) }
+    override suspend fun getStoredStock(symbol: String): Result<Stock?> = runCatching { stockDao.getDbStock(symbol) }
 
     override suspend fun saveStock(stock: Stock): Result<Unit> = runCatching { stockDao.saveStock(stock) }
 

@@ -1,5 +1,6 @@
 package org.n27.ktstonks.domain
 
+import org.n27.ktstonks.domain.exceptions.ApiLimitExceededException
 import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.model.Stocks
 import org.n27.ktstonks.extensions.isToday
@@ -8,13 +9,13 @@ import kotlin.Result.Companion.success
 
 class UseCase(private val repository: Repository) {
     suspend fun getStock(symbol: String): Result<Stock> {
-        val dbStock = repository.getDbStock(symbol).getOrNull()
+        val dbStock = repository.getStoredStock(symbol).getOrNull()
         val isStockUpdated = dbStock?.lastUpdated?.isToday() ?: false
 
         return if (dbStock != null && isStockUpdated)
             success(dbStock)
         else
-            repository.getStock(symbol).onSuccess { repository.saveStock(it) }
+            repository.getRemoteStock(symbol).onSuccess { repository.saveStock(it) }
     }
 
     suspend fun getStocks(
@@ -24,7 +25,7 @@ class UseCase(private val repository: Repository) {
         symbol: String? = null,
     ): Result<Stocks> {
         val result = if (symbol.isNullOrEmpty())
-            repository.getStocks(page, pageSize)
+            repository.getStoredStocks(page, pageSize)
         else
             getStocksBySymbol(page, pageSize, symbol)
 
@@ -38,7 +39,7 @@ class UseCase(private val repository: Repository) {
     }
 
     private suspend fun getStocksBySymbol(page: Int, pageSize: Int, symbol: String): Result<Stocks> {
-        val dbStocks = repository.searchStocks(symbol, page, pageSize).getOrNull()?.items
+        val dbStocks = repository.searchStoredStocks(symbol, page, pageSize).getOrNull()?.items
 
         if (!dbStocks.isNullOrEmpty()) return success(Stocks(dbStocks))
 
@@ -46,7 +47,7 @@ class UseCase(private val repository: Repository) {
         val matchingSymbol = symbols?.items?.firstOrNull { it.equals(symbol, ignoreCase = true) }
 
         return if (matchingSymbol != null) {
-            repository.getStock(matchingSymbol)
+            repository.getRemoteStock(matchingSymbol)
                 .onSuccess { repository.saveStock(it) }
                 .map { Stocks(listOf(it)) }
         } else {
@@ -66,9 +67,9 @@ class UseCase(private val repository: Repository) {
                 .sortedBy { it.lastUpdated }
 
             outdatedStocks.forEach loop@{ stock ->
-                repository.getStock(stock.symbol)
+                repository.getRemoteStock(stock.symbol)
                     .onSuccess { repository.saveStock(it) }
-                    .onFailure { if (it is IllegalStateException) return@loop }
+                    .onFailure { if (it is ApiLimitExceededException) return@loop }
             }
         }
 

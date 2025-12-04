@@ -6,10 +6,11 @@ import org.n27.ktstonks.domain.model.Symbols
 
 interface Repository {
 
-    suspend fun getStock(symbol: String): Result<Stock>
-    suspend fun getStocks(page: Int, pageSize: Int): Result<Stocks>
-    suspend fun searchStocks(symbol: String, page: Int, pageSize: Int): Result<Stocks>
-    suspend fun getDbStock(symbol: String): Result<Stock?>
+    suspend fun getRemoteStock(symbol: String): Result<Stock>
+
+    suspend fun getStoredStocks(page: Int, pageSize: Int): Result<Stocks>
+    suspend fun searchStoredStocks(symbol: String, page: Int, pageSize: Int): Result<Stocks>
+    suspend fun getStoredStock(symbol: String): Result<Stock?>
     suspend fun saveStock(stock: Stock): Result<Unit>
 
     suspend fun addToWatchlist(symbol: String): Result<Unit>
