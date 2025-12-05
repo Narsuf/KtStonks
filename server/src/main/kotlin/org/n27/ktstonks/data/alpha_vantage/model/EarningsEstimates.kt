@@ -10,6 +10,6 @@ data class EarningsEstimates(
 ) {
     @Serializable
     data class Estimate(
-        @SerialName("eps_estimate_high") val expectedEpsGrowth: String
+        @SerialName("eps_estimate_high") val expectedEpsGrowth: String?
     )
 }

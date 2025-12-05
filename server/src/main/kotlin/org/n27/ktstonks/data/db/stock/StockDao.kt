@@ -17,7 +17,7 @@ class StockDao {
             .toStocks(page, pageSize)
     }
 
-    suspend fun getDbStock(symbol: String): Stock? = dbQuery {
+    suspend fun getStock(symbol: String): Stock? = dbQuery {
         StocksTable
             .select { StocksTable.symbol eq symbol }
             .map { it.toStock() }
@@ -26,10 +26,12 @@ class StockDao {
 
     suspend fun saveStock(stock: Stock) {
         dbQuery {
-            val existingStock = StocksTable.select { StocksTable.symbol eq stock.symbol }.singleOrNull()
+            val existingStock = getStock(stock.symbol)
 
             if (existingStock != null) {
-                StocksTable.update(where = { StocksTable.symbol eq stock.symbol }) { it.fromStock(stock) }
+                StocksTable.update(where = { StocksTable.symbol eq stock.symbol }) {
+                    it.fromStock(stock.copy(isWatchlisted = existingStock.isWatchlisted))
+                }
             } else {
                 StocksTable.insert {
                     it[symbol] = stock.symbol

@@ -61,7 +61,7 @@ class RepositoryImpl(
         pageSize: Int,
     ): Result<Stocks> = runCatching { stockDao.searchStocks(symbol, page, pageSize) }
 
-    override suspend fun getStoredStock(symbol: String): Result<Stock?> = runCatching { stockDao.getDbStock(symbol) }
+    override suspend fun getStoredStock(symbol: String): Result<Stock?> = runCatching { stockDao.getStock(symbol) }
 
     override suspend fun saveStock(stock: Stock): Result<Unit> = runCatching { stockDao.saveStock(stock) }
 
