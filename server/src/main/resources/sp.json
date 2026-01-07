@@ -1,5 +1,5 @@
 [
-  "MSFT", "AAPL", "NVDA", "AMZN", "GOOGL", "LLY", "TSLA", "AVGO", "JNJ", "UNH", "WFC", "V", "JPM", "WMT", "MA",
+  "MSFT", "AMZN", "GOOGL", "LLY", "TSLA", "AVGO", "JNJ", "UNH", "V", "JPM", "WMT", "MA",
   "XOM", "KO", "COST", "CSCO", "GOOG", "ADBE", "A", "ABBV", "ABT", "ACN", "AES", "AFL", "AIG", "AKAM", "ALK", "ALLE",
   "AMD", "AMCR", "AMT", "AEP", "APD", "AWK", "AXP", "BA", "BAC", "BBY", "BIIB", "BKR", "BLL", "BMY", "C", "CAG", "CAH",
   "CAT", "CBRE", "CCI", "CCL", "CHTR", "CI", "CINF", "CL", "CLX", "CMA", "CMCSA", "CMG", "COP", "CTAS", "CTVA", "CVS",
@@ -12,5 +12,5 @@
   "PPL", "PSX", "PVH", "PYPL", "QCOM", "QRVO", "RCL", "REGN", "RF", "RHI", "RNG", "ROK", "ROP", "ROST", "RTX", "SBUX",
   "SJM", "SLB", "SNA", "SNPS", "SO", "SPG", "SRE", "STT", "STX", "SYF", "SYK", "TGT", "TDY", "TIF", "TJX", "TMUS",
   "TSN", "TT", "UAA", "UAL", "UHS", "UPS", "URI", "USB", "VFC", "VNO", "VZ", "WAB", "WBA", "WDC", "WM", "WMB", "WYNN",
-  "XEL", "YUM", "ZBH", "ZION", "ZTS"
+  "XEL", "YUM", "ZBH", "ZION", "ZTS", "AAPL", "NVDA", "WFC"
 ]

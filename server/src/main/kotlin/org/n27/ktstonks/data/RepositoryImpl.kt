@@ -1,80 +1,97 @@
 package org.n27.ktstonks.data
 
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import org.n27.ktstonks.MAX_CALLS_PER_DAY
-import org.n27.ktstonks.data.alpha_vantage.AlphaVantageApi
-import org.n27.ktstonks.data.alpha_vantage.mapping.toDomainEntity
-import org.n27.ktstonks.data.alpha_vantage.mapping.toExpectedEpsGrowth
-import org.n27.ktstonks.data.alpha_vantage.mapping.toPrice
-import org.n27.ktstonks.data.db.api_usage.ApiUsageDao
 import org.n27.ktstonks.data.db.stock.StockDao
-import org.n27.ktstonks.data.json.JsonReader
+import org.n27.ktstonks.data.json.SymbolReader
+import org.n27.ktstonks.data.yfinance.YfinanceApi
+import org.n27.ktstonks.data.yfinance.mapping.toDomainEntity
 import org.n27.ktstonks.domain.Repository
-import org.n27.ktstonks.domain.exceptions.ApiLimitExceededException
 import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.model.Stocks
-import org.n27.ktstonks.domain.model.Symbols
-import java.time.LocalDate
+import org.n27.ktstonks.extensions.isToday
+import java.util.Base64
 
 class RepositoryImpl(
-    private val api: AlphaVantageApi,
-    private val apiUsageDao: ApiUsageDao,
+    private val api: YfinanceApi,
     private val stockDao: StockDao,
+    private val symbolReader: SymbolReader,
 ) : Repository {
 
-    override suspend fun getRemoteStock(symbol: String): Result<Stock> = runCatching {
-        val today = LocalDate.now()
-        val currentUsage = apiUsageDao.getUsage(today)
+    override suspend fun getStock(symbol: String): Result<Stock> = runCatching {
+        val localStock = stockDao.getStock(symbol)
+        val isStockUpdated = localStock?.lastUpdated?.isToday() ?: false
 
-        if (currentUsage + 3 > MAX_CALLS_PER_DAY) {
-            throw ApiLimitExceededException(
-                "API call limit exceeded for today. Current usage: $currentUsage/$MAX_CALLS_PER_DAY"
-            )
+        if (isStockUpdated) {
+            localStock
+        } else {
+            api.getStock(symbol)
+                .toDomainEntity()
+                .also { stockDao.saveStock(it) }
         }
-
-        val stockResult = coroutineScope {
-            val stockDeferred = async { api.getStock(symbol) }
-            val quoteDeferred = async { api.getGlobalQuote(symbol) }
-            val epsDeferred = async { api.getEpsEstimate(symbol) }
-
-            val stock = stockDeferred.await()
-            val globalQuote = quoteDeferred.await()
-            val estimates = epsDeferred.await()
-
-            stock.toDomainEntity(globalQuote.toPrice(), estimates.toExpectedEpsGrowth())
-        }
-
-        apiUsageDao.incrementUsage(today, 3)
-
-        stockResult
     }
 
-    override suspend fun getStoredStocks(
+    override suspend fun updateStock(stock: Stock): Result<Unit> = runCatching { stockDao.saveStock(stock) }
+
+    override suspend fun getStocks(
         page: Int,
         pageSize: Int,
-    ): Result<Stocks> = runCatching { stockDao.getStocks(page, pageSize) }
+        filterWatchlist: Boolean,
+        symbol: String?,
+    ): Result<Stocks> = runCatching {
+        val params = symbolReader.getSymbols(symbol)
+        val filteredParams = if (filterWatchlist) params.filterWatchlist() else params
+        val paginatedParams = filteredParams
+            .drop(page)
+            .take(pageSize)
 
-    override suspend fun searchStoredStocks(
-        symbol: String,
-        page: Int,
-        pageSize: Int,
-    ): Result<Stocks> = runCatching { stockDao.searchStocks(symbol, page, pageSize) }
+        val localStocks = stockDao.getStocks(paginatedParams)
+        val remoteParams = paginatedParams
+            .filter { param -> param !in localStocks.map { it.symbol } }
+            .joinToString(separator = ",")
 
-    override suspend fun getStoredStock(symbol: String): Result<Stock?> = runCatching { stockDao.getStock(symbol) }
+        val remoteStocks = getRemoteStocks(remoteParams)
 
-    override suspend fun saveStock(stock: Stock): Result<Unit> = runCatching { stockDao.saveStock(stock) }
+        val nextPage = page + pageSize
+        Stocks(
+            items = localStocks + remoteStocks,
+            nextPage = nextPage.takeIf { it <= filteredParams.size },
+        )
+    }
+
+    private suspend fun List<String>.filterWatchlist(): List<String> {
+        val watchlist = stockDao.getWatchlist(0, Int.MAX_VALUE).items.map { it.symbol }
+        return filter { it !in watchlist }
+    }
+
+    private suspend fun getRemoteStocks(params: String, ignoreLogo: Boolean = false) = if (params.isNotEmpty()) {
+        val stocks = api.getStocks(params)
+        stocks.map { stock ->
+            stock.toDomainEntity(
+                logo = stock.logoUrl
+                    ?.takeIf { !ignoreLogo }
+                    ?.let { api.downloadImage(it) }
+            ).also { stockDao.saveStock(it) }
+        }
+    } else {
+        emptyList()
+    }
 
     override suspend fun addToWatchlist(symbol: String): Result<Unit> = runCatching { stockDao.addToWatchlist(symbol) }
 
     override suspend fun getWatchlist(
         page: Int,
         pageSize: Int,
-    ): Result<Stocks> = runCatching { stockDao.getWatchlist(page, pageSize) }
+    ): Result<Stocks> = runCatching {
+        val watchlist = stockDao.getWatchlist(page, pageSize)
+        val stocksToUpdate = watchlist.items.filter { !it.lastUpdated.isToday() }
+        val symbols = stocksToUpdate.joinToString(separator = ",") { it.symbol }
+        val updatedStocks = getRemoteStocks(symbols, ignoreLogo = true)
 
-    override suspend fun removeFromWatchlist(
-        symbol: String,
-    ): Result<Unit> = runCatching { stockDao.removeFromWatchlist(symbol) }
+        if (updatedStocks.isNotEmpty()) stockDao.saveStocks(updatedStocks)
 
-    override suspend fun getSymbols(): Result<Symbols> = runCatching { Symbols(JsonReader.getSymbols()) }
+        stockDao.getWatchlist(page, pageSize)
+    }
+
+    override suspend fun removeFromWatchlist(symbol: String): Result<Unit> = runCatching {
+        stockDao.removeFromWatchlist(symbol)
+    }
 }

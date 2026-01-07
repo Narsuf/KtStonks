@@ -5,16 +5,14 @@ import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.n27.ktstonks.data.db.dbQuery
 import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.model.Stocks
+import java.util.Base64
 
 class StockDao {
-    suspend fun getStocks(page: Int, pageSize: Int): Stocks = dbQuery {
-        StocksTable.selectAll().toStocks(page, pageSize)
-    }
 
-    suspend fun searchStocks(query: String, page: Int, pageSize: Int): Stocks = dbQuery {
+    suspend fun getStocks(symbols: Collection<String>): List<Stock> = dbQuery {
         StocksTable
-            .select { (StocksTable.symbol like "%$query%") or (StocksTable.companyName like "%$query%") }
-            .toStocks(page, pageSize)
+            .select { StocksTable.symbol inList symbols }
+            .map { it.toStock() }
     }
 
     suspend fun getStock(symbol: String): Stock? = dbQuery {
@@ -30,13 +28,39 @@ class StockDao {
 
             if (existingStock != null) {
                 StocksTable.update(where = { StocksTable.symbol eq stock.symbol }) {
-                    it.fromStock(stock.copy(isWatchlisted = existingStock.isWatchlisted))
+                    it.fromStock(stock.copy(
+                        isWatchlisted = existingStock.isWatchlisted,
+                        logo = existingStock.logo ?: stock.logo
+                    ))
                 }
             } else {
                 StocksTable.insert {
                     it[symbol] = stock.symbol
                     it.fromStock(stock)
                 }
+            }
+        }
+    }
+
+    suspend fun saveStocks(stocks: List<Stock>) {
+        if (stocks.isEmpty()) return
+
+        dbQuery {
+            val existingData = StocksTable
+                .slice(StocksTable.symbol, StocksTable.logo, StocksTable.isWatchlisted)
+                .select { StocksTable.symbol inList stocks.map { it.symbol } }
+                .associate { it[StocksTable.symbol] to (it[StocksTable.logo] to it[StocksTable.isWatchlisted]) }
+
+            StocksTable.batchUpsert(stocks) { stock ->
+                this[StocksTable.symbol] = stock.symbol
+                val existing = existingData[stock.symbol]
+                val existingLogo = existing?.first?.let { Base64.getEncoder().encodeToString(it) }
+                val isWatchlisted = existing?.second ?: stock.isWatchlisted
+
+                fromStock(stock.copy(
+                    logo = existingLogo ?: stock.logo,
+                    isWatchlisted = isWatchlisted
+                ))
             }
         }
     }
@@ -61,13 +85,15 @@ class StockDao {
 
     private fun <T> UpdateBuilder<T>.fromStock(stock: Stock) {
         this[StocksTable.companyName] = stock.companyName
-        this[StocksTable.logoUrl] = stock.logoUrl
+        this[StocksTable.logo] = stock.logo?.let { Base64.getDecoder().decode(it) }
         this[StocksTable.price] = stock.price
         this[StocksTable.dividendYield] = stock.dividendYield
         this[StocksTable.eps] = stock.eps
         this[StocksTable.pe] = stock.pe
+        this[StocksTable.pb] = stock.pb
         this[StocksTable.earningsQuarterlyGrowth] = stock.earningsQuarterlyGrowth
         this[StocksTable.expectedEpsGrowth] = stock.expectedEpsGrowth
+        this[StocksTable.valuationFloor] = stock.valuationFloor
         this[StocksTable.currentIntrinsicValue] = stock.currentIntrinsicValue
         this[StocksTable.forwardIntrinsicValue] = stock.forwardIntrinsicValue
         this[StocksTable.currency] = stock.currency
@@ -89,13 +115,15 @@ class StockDao {
     private fun ResultRow.toStock() = Stock(
         symbol = this[StocksTable.symbol],
         companyName = this[StocksTable.companyName],
-        logoUrl = this[StocksTable.logoUrl],
+        logo = this[StocksTable.logo]?.let { Base64.getEncoder().encodeToString(it) },
         price = this[StocksTable.price],
         dividendYield = this[StocksTable.dividendYield],
         eps = this[StocksTable.eps],
         pe = this[StocksTable.pe],
+        pb = this[StocksTable.pb],
         earningsQuarterlyGrowth = this[StocksTable.earningsQuarterlyGrowth],
         expectedEpsGrowth = this[StocksTable.expectedEpsGrowth],
+        valuationFloor = this[StocksTable.valuationFloor],
         currentIntrinsicValue = this[StocksTable.currentIntrinsicValue],
         forwardIntrinsicValue = this[StocksTable.forwardIntrinsicValue],
         currency = this[StocksTable.currency],
