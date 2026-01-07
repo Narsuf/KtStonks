@@ -5,15 +5,15 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.n27.ktstonks.DEFAULT_PAGE_SIZE
-import org.n27.ktstonks.domain.UseCase
+import org.n27.ktstonks.domain.Repository
 import org.n27.ktstonks.extensions.respondError
 import org.n27.ktstonks.extensions.respondSuccess
 
-fun Route.stockRoutes(useCase: UseCase) {
+fun Route.stockRoutes(repository: Repository) {
 
     get("stock/{symbol}") {
         call.withSymbol { symbol ->
-            useCase.getStock(symbol).fold(
+            repository.getStock(symbol).fold(
                 onSuccess = { call.respondSuccess(it) },
                 onFailure = { call.respondError(it) }
             )
@@ -25,7 +25,7 @@ fun Route.stockRoutes(useCase: UseCase) {
         val filterWatchlist = call.request.queryParameters["filterWatchlist"]?.toBoolean() ?: false
         val symbol = call.request.queryParameters["symbol"]
 
-        useCase.getStocks(page, pageSize, filterWatchlist, symbol).fold(
+        repository.getStocks(page, pageSize, filterWatchlist, symbol).fold(
             onSuccess = { call.respondSuccess(it) },
             onFailure = { call.respondError(it, "Error searching for stock") }
         )
@@ -34,8 +34,7 @@ fun Route.stockRoutes(useCase: UseCase) {
     route("/watchlist") {
         get {
             val (page, pageSize) = call.getPageAndSize()
-            val forceUpdate = call.request.queryParameters["forceUpdate"]?.toBoolean() ?: false
-            useCase.getWatchlist(page, pageSize, forceUpdate).fold(
+            repository.getWatchlist(page, pageSize).fold(
                 onSuccess = { call.respondSuccess(it) },
                 onFailure = { call.respondError(it, "Error fetching watchlist") }
             )
@@ -43,7 +42,7 @@ fun Route.stockRoutes(useCase: UseCase) {
 
         post("/{symbol}") {
             call.withSymbol("No symbol provided to add to watchlist") { symbol ->
-                useCase.addStockToWatchlist(symbol).fold(
+                repository.addToWatchlist(symbol).fold(
                     onSuccess = { call.respondText("Stock $symbol added to watchlist", status = HttpStatusCode.OK) },
                     onFailure = { call.respondError(it, "Error adding stock to watchlist") }
                 )
@@ -52,7 +51,7 @@ fun Route.stockRoutes(useCase: UseCase) {
 
         delete("/{symbol}") {
             call.withSymbol("No symbol provided to remove from watchlist") { symbol ->
-                useCase.removeStockFromWatchlist(symbol).fold(
+                repository.removeFromWatchlist(symbol).fold(
                     onSuccess = { call.respondText("Stock $symbol removed from watchlist", status = HttpStatusCode.OK) },
                     onFailure = { call.respondError(it, "Error removing stock from watchlist") }
                 )

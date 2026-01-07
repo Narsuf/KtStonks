@@ -1,0 +1,28 @@
+package org.n27.ktstonks.data.yfinance.mapping
+
+import org.n27.ktstonks.data.yfinance.model.StockRaw
+import org.n27.ktstonks.domain.model.Stock
+import org.n27.ktstonks.domain.model.Stocks
+
+internal fun List<StockRaw>.toDomainEntity(nextPage: Int? = null) = Stocks(
+    nextPage = nextPage,
+    items = map { it.toDomainEntity() }
+)
+
+internal fun StockRaw.toDomainEntity() = Stock(
+    symbol = symbol,
+    companyName = companyName,
+    logoUrl = logoUrl,
+    price = price,
+    dividendYield = dividendYield,
+    eps = eps,
+    pe = pe,
+    pb = pb,
+    earningsQuarterlyGrowth = earningsQuarterlyGrowth,
+    expectedEpsGrowth = null,
+    valuationFloor = null,
+    currentIntrinsicValue = intrinsicValue,
+    forwardIntrinsicValue = null,
+    currency = currency,
+    lastUpdated = System.currentTimeMillis(),
+)

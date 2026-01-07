@@ -7,14 +7,11 @@ import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.model.Stocks
 
 class StockDao {
-    suspend fun getStocks(page: Int, pageSize: Int): Stocks = dbQuery {
-        StocksTable.selectAll().toStocks(page, pageSize)
-    }
 
-    suspend fun searchStocks(query: String, page: Int, pageSize: Int): Stocks = dbQuery {
+    suspend fun getStocks(symbols: Collection<String>): List<Stock> = dbQuery {
         StocksTable
-            .select { (StocksTable.symbol like "%$query%") or (StocksTable.companyName like "%$query%") }
-            .toStocks(page, pageSize)
+            .select { StocksTable.symbol inList symbols }
+            .map { it.toStock() }
     }
 
     suspend fun getStock(symbol: String): Stock? = dbQuery {
@@ -37,6 +34,17 @@ class StockDao {
                     it[symbol] = stock.symbol
                     it.fromStock(stock)
                 }
+            }
+        }
+    }
+
+    suspend fun saveStocks(stocks: List<Stock>) {
+        if (stocks.isEmpty()) return
+
+        dbQuery {
+            StocksTable.batchUpsert(stocks) { stock ->
+                this[StocksTable.symbol] = stock.symbol
+                fromStock(stock)
             }
         }
     }
@@ -66,8 +74,10 @@ class StockDao {
         this[StocksTable.dividendYield] = stock.dividendYield
         this[StocksTable.eps] = stock.eps
         this[StocksTable.pe] = stock.pe
+        this[StocksTable.pb] = stock.pb
         this[StocksTable.earningsQuarterlyGrowth] = stock.earningsQuarterlyGrowth
         this[StocksTable.expectedEpsGrowth] = stock.expectedEpsGrowth
+        this[StocksTable.valuationFloor] = stock.valuationFloor
         this[StocksTable.currentIntrinsicValue] = stock.currentIntrinsicValue
         this[StocksTable.forwardIntrinsicValue] = stock.forwardIntrinsicValue
         this[StocksTable.currency] = stock.currency
@@ -94,8 +104,10 @@ class StockDao {
         dividendYield = this[StocksTable.dividendYield],
         eps = this[StocksTable.eps],
         pe = this[StocksTable.pe],
+        pb = this[StocksTable.pb],
         earningsQuarterlyGrowth = this[StocksTable.earningsQuarterlyGrowth],
         expectedEpsGrowth = this[StocksTable.expectedEpsGrowth],
+        valuationFloor = this[StocksTable.valuationFloor],
         currentIntrinsicValue = this[StocksTable.currentIntrinsicValue],
         forwardIntrinsicValue = this[StocksTable.forwardIntrinsicValue],
         currency = this[StocksTable.currency],
