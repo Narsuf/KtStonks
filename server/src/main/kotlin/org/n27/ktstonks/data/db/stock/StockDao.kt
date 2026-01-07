@@ -28,7 +28,10 @@ class StockDao {
 
             if (existingStock != null) {
                 StocksTable.update(where = { StocksTable.symbol eq stock.symbol }) {
-                    it.fromStock(stock.copy(isWatchlisted = existingStock.isWatchlisted))
+                    it.fromStock(stock.copy(
+                        isWatchlisted = existingStock.isWatchlisted,
+                        logo = existingStock.logo ?: stock.logo
+                    ))
                 }
             } else {
                 StocksTable.insert {
@@ -43,9 +46,21 @@ class StockDao {
         if (stocks.isEmpty()) return
 
         dbQuery {
+            val existingData = StocksTable
+                .slice(StocksTable.symbol, StocksTable.logo, StocksTable.isWatchlisted)
+                .select { StocksTable.symbol inList stocks.map { it.symbol } }
+                .associate { it[StocksTable.symbol] to (it[StocksTable.logo] to it[StocksTable.isWatchlisted]) }
+
             StocksTable.batchUpsert(stocks) { stock ->
                 this[StocksTable.symbol] = stock.symbol
-                fromStock(stock)
+                val existing = existingData[stock.symbol]
+                val existingLogo = existing?.first?.let { Base64.getEncoder().encodeToString(it) }
+                val isWatchlisted = existing?.second ?: stock.isWatchlisted
+
+                fromStock(stock.copy(
+                    logo = existingLogo ?: stock.logo,
+                    isWatchlisted = isWatchlisted
+                ))
             }
         }
     }
