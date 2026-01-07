@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.n27.ktstonks.data.db.dbQuery
 import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.model.Stocks
-import java.util.Base64
+import java.util.*
 
 class StockDao {
 
@@ -28,10 +28,12 @@ class StockDao {
 
             if (existingStock != null) {
                 StocksTable.update(where = { StocksTable.symbol eq stock.symbol }) {
-                    it.fromStock(stock.copy(
-                        isWatchlisted = existingStock.isWatchlisted,
-                        logo = existingStock.logo ?: stock.logo
-                    ))
+                    it.fromStock(
+                        stock.copy(
+                            isWatchlisted = existingStock.isWatchlisted,
+                            logo = existingStock.logo ?: stock.logo
+                        )
+                    )
                 }
             } else {
                 StocksTable.insert {

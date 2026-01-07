@@ -4,7 +4,7 @@ import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import org.n27.ktstonks.data.yfinance.model.StockRaw
-import java.util.Base64
+import java.util.*
 
 class YfinanceApi(private val url: String, private val httpClient: HttpClient) {
 

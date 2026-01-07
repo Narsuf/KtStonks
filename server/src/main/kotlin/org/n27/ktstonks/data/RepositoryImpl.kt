@@ -8,7 +8,6 @@ import org.n27.ktstonks.domain.Repository
 import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.model.Stocks
 import org.n27.ktstonks.extensions.isToday
-import java.util.Base64
 
 class RepositoryImpl(
     private val api: YfinanceApi,
