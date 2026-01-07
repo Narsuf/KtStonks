@@ -8,6 +8,7 @@ import org.n27.ktstonks.domain.Repository
 import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.model.Stocks
 import org.n27.ktstonks.extensions.isToday
+import java.util.Base64
 
 class RepositoryImpl(
     private val api: YfinanceApi,
@@ -61,10 +62,15 @@ class RepositoryImpl(
         return filter { it !in watchlist }
     }
 
-    private suspend fun getRemoteStocks(params: String) = if (params.isNotEmpty()) {
-        api.getStocks(params)
-            .toDomainEntity().items
-            .also { stockDao.saveStocks(it) }
+    private suspend fun getRemoteStocks(params: String, ignoreLogo: Boolean = false) = if (params.isNotEmpty()) {
+        val stocks = api.getStocks(params)
+        stocks.map { stock ->
+            stock.toDomainEntity(
+                logo = stock.logoUrl
+                    ?.takeIf { !ignoreLogo }
+                    ?.let { api.downloadImage(it) }
+            ).also { stockDao.saveStock(it) }
+        }
     } else {
         emptyList()
     }
@@ -78,7 +84,7 @@ class RepositoryImpl(
         val watchlist = stockDao.getWatchlist(page, pageSize)
         val stocksToUpdate = watchlist.items.filter { !it.lastUpdated.isToday() }
         val symbols = stocksToUpdate.joinToString(separator = ",") { it.symbol }
-        val updatedStocks = getRemoteStocks(symbols)
+        val updatedStocks = getRemoteStocks(symbols, ignoreLogo = true)
 
         if (updatedStocks.isNotEmpty()) stockDao.saveStocks(updatedStocks)
 

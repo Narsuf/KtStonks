@@ -4,6 +4,7 @@ import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import org.n27.ktstonks.data.yfinance.model.StockRaw
+import java.util.Base64
 
 class YfinanceApi(private val url: String, private val httpClient: HttpClient) {
 
@@ -22,5 +23,10 @@ class YfinanceApi(private val url: String, private val httpClient: HttpClient) {
         }.body()
 
         return response
+    }
+
+    suspend fun downloadImage(url: String): String {
+        val byteArray: ByteArray = httpClient.get(url).body()
+        return Base64.getEncoder().encodeToString(byteArray)
     }
 }

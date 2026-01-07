@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class Stock(
     val symbol: String,
     val companyName: String,
-    val logoUrl: String?,
+    val logo: String?,
     val price: Double?,
     val dividendYield: Double?,
     val eps: Double?,

@@ -5,6 +5,7 @@ import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.n27.ktstonks.data.db.dbQuery
 import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.model.Stocks
+import java.util.Base64
 
 class StockDao {
 
@@ -69,7 +70,7 @@ class StockDao {
 
     private fun <T> UpdateBuilder<T>.fromStock(stock: Stock) {
         this[StocksTable.companyName] = stock.companyName
-        this[StocksTable.logoUrl] = stock.logoUrl
+        this[StocksTable.logo] = stock.logo?.let { Base64.getDecoder().decode(it) }
         this[StocksTable.price] = stock.price
         this[StocksTable.dividendYield] = stock.dividendYield
         this[StocksTable.eps] = stock.eps
@@ -99,7 +100,7 @@ class StockDao {
     private fun ResultRow.toStock() = Stock(
         symbol = this[StocksTable.symbol],
         companyName = this[StocksTable.companyName],
-        logoUrl = this[StocksTable.logoUrl],
+        logo = this[StocksTable.logo]?.let { Base64.getEncoder().encodeToString(it) },
         price = this[StocksTable.price],
         dividendYield = this[StocksTable.dividendYield],
         eps = this[StocksTable.eps],

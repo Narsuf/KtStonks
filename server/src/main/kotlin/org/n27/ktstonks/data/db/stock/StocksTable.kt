@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.Table
 object StocksTable : Table("stocks") {
     val symbol = varchar("symbol", 20)
     val companyName = varchar("company_name", 255)
-    val logoUrl = varchar("logo_url", 2048).nullable()
+    val logo = binary("logo", 1024 * 1024).nullable()
     val price = double("price").nullable()
     val dividendYield = double("dividend_yield").nullable()
     val eps = double("eps").nullable()

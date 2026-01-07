@@ -9,10 +9,10 @@ internal fun List<StockRaw>.toDomainEntity(nextPage: Int? = null) = Stocks(
     items = map { it.toDomainEntity() }
 )
 
-internal fun StockRaw.toDomainEntity() = Stock(
+internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
     symbol = symbol,
     companyName = companyName,
-    logoUrl = logoUrl,
+    logo = logo,
     price = price,
     dividendYield = dividendYield,
     eps = eps,
