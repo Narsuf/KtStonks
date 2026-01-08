@@ -1,35 +1,37 @@
 package org.n27.ktstonks.data
 
-import org.n27.ktstonks.data.db.stock.StockDao
+import org.n27.ktstonks.data.db.stocks.StocksDao
+import org.n27.ktstonks.data.db.stocks.toEntity
+import org.n27.ktstonks.data.db.stocks.toStock
+import org.n27.ktstonks.data.db.stocks.toStocks
 import org.n27.ktstonks.data.json.SymbolReader
 import org.n27.ktstonks.data.yfinance.YfinanceApi
 import org.n27.ktstonks.data.yfinance.mapping.toDomainEntity
 import org.n27.ktstonks.domain.Repository
-import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.model.Stocks
+import org.n27.ktstonks.domain.model.Stocks.Stock
 import org.n27.ktstonks.extensions.isToday
-import java.util.Base64
 
 class RepositoryImpl(
     private val api: YfinanceApi,
-    private val stockDao: StockDao,
+    private val stocksDao: StocksDao,
     private val symbolReader: SymbolReader,
 ) : Repository {
 
     override suspend fun getStock(symbol: String): Result<Stock> = runCatching {
-        val localStock = stockDao.getStock(symbol)
+        val localStock = stocksDao.getStock(symbol)
         val isStockUpdated = localStock?.lastUpdated?.isToday() ?: false
 
         if (isStockUpdated) {
-            localStock
+            localStock.toStock()
         } else {
             api.getStock(symbol)
                 .toDomainEntity()
-                .also { stockDao.saveStock(it) }
+                .also { stocksDao.saveStock(it.toEntity()) }
         }
     }
 
-    override suspend fun updateStock(stock: Stock): Result<Unit> = runCatching { stockDao.saveStock(stock) }
+    override suspend fun updateStock(stock: Stock): Result<Unit> = runCatching { stocksDao.saveStock(stock.toEntity()) }
 
     override suspend fun getStocks(
         page: Int,
@@ -43,7 +45,7 @@ class RepositoryImpl(
             .drop(page)
             .take(pageSize)
 
-        val localStocks = stockDao.getStocks(paginatedParams)
+        val localStocks = stocksDao.getStocks(paginatedParams).map { it.toStock() }
         val remoteParams = paginatedParams
             .filter { param -> param !in localStocks.map { it.symbol } }
             .joinToString(separator = ",")
@@ -58,7 +60,7 @@ class RepositoryImpl(
     }
 
     private suspend fun List<String>.filterWatchlist(): List<String> {
-        val watchlist = stockDao.getWatchlist(0, Int.MAX_VALUE).items.map { it.symbol }
+        val watchlist = stocksDao.getWatchlist(0, Int.MAX_VALUE).items.map { it.symbol }
         return filter { it !in watchlist }
     }
 
@@ -69,29 +71,29 @@ class RepositoryImpl(
                 logo = stock.logoUrl
                     ?.takeIf { !ignoreLogo }
                     ?.let { api.downloadImage(it) }
-            ).also { stockDao.saveStock(it) }
+            ).also { stocksDao.saveStock(it.toEntity()) }
         }
     } else {
         emptyList()
     }
 
-    override suspend fun addToWatchlist(symbol: String): Result<Unit> = runCatching { stockDao.addToWatchlist(symbol) }
+    override suspend fun addToWatchlist(symbol: String): Result<Unit> = runCatching { stocksDao.addToWatchlist(symbol) }
 
     override suspend fun getWatchlist(
         page: Int,
         pageSize: Int,
     ): Result<Stocks> = runCatching {
-        val watchlist = stockDao.getWatchlist(page, pageSize)
+        val watchlist = stocksDao.getWatchlist(page, pageSize)
         val stocksToUpdate = watchlist.items.filter { !it.lastUpdated.isToday() }
         val symbols = stocksToUpdate.joinToString(separator = ",") { it.symbol }
         val updatedStocks = getRemoteStocks(symbols, ignoreLogo = true)
 
-        if (updatedStocks.isNotEmpty()) stockDao.saveStocks(updatedStocks)
+        if (updatedStocks.isNotEmpty()) stocksDao.saveStocks(updatedStocks.map { it.toEntity() })
 
-        stockDao.getWatchlist(page, pageSize)
+        stocksDao.getWatchlist(page, pageSize).toStocks()
     }
 
     override suspend fun removeFromWatchlist(symbol: String): Result<Unit> = runCatching {
-        stockDao.removeFromWatchlist(symbol)
+        stocksDao.removeFromWatchlist(symbol)
     }
 }

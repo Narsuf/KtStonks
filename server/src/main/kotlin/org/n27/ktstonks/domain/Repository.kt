@@ -1,7 +1,7 @@
 package org.n27.ktstonks.domain
 
-import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.model.Stocks
+import org.n27.ktstonks.domain.model.Stocks.Stock
 
 interface Repository {
 
@@ -11,7 +11,7 @@ interface Repository {
         page: Int,
         pageSize: Int,
         filterWatchlist: Boolean,
-        symbol: String? = null,
+        symbol: String?
     ): Result<Stocks>
 
     suspend fun addToWatchlist(symbol: String): Result<Unit>

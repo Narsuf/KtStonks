@@ -6,4 +6,24 @@ import kotlinx.serialization.Serializable
 data class Stocks(
     val items: List<Stock>,
     val nextPage: Int? = null,
-)
+) {
+
+    @Serializable
+    data class Stock(
+        val symbol: String,
+        val companyName: String,
+        val logo: String?,
+        val price: Double?,
+        val dividendYield: Double?,
+        val eps: Double?,
+        val pe: Double?,
+        val pb: Double?,
+        val earningsQuarterlyGrowth: Double?,
+        val expectedEpsGrowth: Double?,
+        val valuationFloor: Double?,
+        val currentIntrinsicValue: Double?,
+        val forwardIntrinsicValue: Double?,
+        val currency: String?,
+        val lastUpdated: Long,
+    )
+}

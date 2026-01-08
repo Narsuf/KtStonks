@@ -1,13 +1,7 @@
 package org.n27.ktstonks.data.yfinance.mapping
 
 import org.n27.ktstonks.data.yfinance.model.StockRaw
-import org.n27.ktstonks.domain.model.Stock
-import org.n27.ktstonks.domain.model.Stocks
-
-internal fun List<StockRaw>.toDomainEntity(nextPage: Int? = null) = Stocks(
-    nextPage = nextPage,
-    items = map { it.toDomainEntity() }
-)
+import org.n27.ktstonks.domain.model.Stocks.Stock
 
 internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
     symbol = symbol,
