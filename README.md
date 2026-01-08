@@ -4,4 +4,4 @@
 
 Ktor service to provide information about stocks.
 
-Using [Alpha Vantage](https://www.alphavantage.co/) API.
+Using [yfinance](https://github.com/ranaroussi/yfinance) API.
