@@ -11,7 +11,7 @@ interface Repository {
         page: Int,
         pageSize: Int,
         filterWatchlist: Boolean,
-        symbol: String? = null,
+        symbol: String?
     ): Result<Stocks>
 
     suspend fun addToWatchlist(symbol: String): Result<Unit>

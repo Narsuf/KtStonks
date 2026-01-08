@@ -5,18 +5,36 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.n27.ktstonks.DEFAULT_PAGE_SIZE
-import org.n27.ktstonks.domain.Repository
+import org.n27.ktstonks.domain.UseCase
 import org.n27.ktstonks.extensions.respondError
 import org.n27.ktstonks.extensions.respondSuccess
 
-fun Route.stockRoutes(repository: Repository) {
+fun Route.stockRoutes(useCase: UseCase) {
 
-    get("stock/{symbol}") {
-        call.withSymbol { symbol ->
-            repository.getStock(symbol).fold(
-                onSuccess = { call.respondSuccess(it) },
-                onFailure = { call.respondError(it) }
-            )
+    route("stock/{symbol}") {
+        get {
+            call.withSymbol { symbol ->
+                useCase.getStock(symbol).fold(
+                    onSuccess = { call.respondSuccess(it) },
+                    onFailure = { call.respondError(it) }
+                )
+            }
+        }
+
+        post("/valuation") {
+            call.withSymbol { symbol ->
+                val valuationFloor = call.request.queryParameters["valuationFloor"]?.toDoubleOrNull()
+                val epsGrowth = call.request.queryParameters["epsGrowth"]?.toDoubleOrNull()
+
+                if (epsGrowth != null) {
+                    useCase.addCustomValuation(symbol, valuationFloor, epsGrowth).fold(
+                        onSuccess = { call.respondText("Valuation updated", status = HttpStatusCode.OK) },
+                        onFailure = { call.respondError(it) }
+                    )
+                } else {
+                    call.respondText("epsGrowth is required", status = HttpStatusCode.BadRequest)
+                }
+            }
         }
     }
 
@@ -25,7 +43,7 @@ fun Route.stockRoutes(repository: Repository) {
         val filterWatchlist = call.request.queryParameters["filterWatchlist"]?.toBoolean() ?: false
         val symbol = call.request.queryParameters["symbol"]
 
-        repository.getStocks(page, pageSize, filterWatchlist, symbol).fold(
+        useCase.getStocks(page, pageSize, filterWatchlist, symbol).fold(
             onSuccess = { call.respondSuccess(it) },
             onFailure = { call.respondError(it, "Error searching for stock") }
         )
@@ -34,7 +52,7 @@ fun Route.stockRoutes(repository: Repository) {
     route("/watchlist") {
         get {
             val (page, pageSize) = call.getPageAndSize()
-            repository.getWatchlist(page, pageSize).fold(
+            useCase.getWatchlist(page, pageSize).fold(
                 onSuccess = { call.respondSuccess(it) },
                 onFailure = { call.respondError(it, "Error fetching watchlist") }
             )
@@ -42,7 +60,7 @@ fun Route.stockRoutes(repository: Repository) {
 
         post("/{symbol}") {
             call.withSymbol("No symbol provided to add to watchlist") { symbol ->
-                repository.addToWatchlist(symbol).fold(
+                useCase.addToWatchlist(symbol).fold(
                     onSuccess = { call.respondText("Stock $symbol added to watchlist", status = HttpStatusCode.OK) },
                     onFailure = { call.respondError(it, "Error adding stock to watchlist") }
                 )
@@ -51,7 +69,7 @@ fun Route.stockRoutes(repository: Repository) {
 
         delete("/{symbol}") {
             call.withSymbol("No symbol provided to remove from watchlist") { symbol ->
-                repository.removeFromWatchlist(symbol).fold(
+                useCase.removeFromWatchlist(symbol).fold(
                     onSuccess = { call.respondText("Stock $symbol removed from watchlist", status = HttpStatusCode.OK) },
                     onFailure = { call.respondError(it, "Error removing stock from watchlist") }
                 )
