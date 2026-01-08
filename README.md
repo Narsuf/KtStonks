@@ -4,4 +4,4 @@
 
 Ktor service to provide information about stocks.
 
-Using [yfinance](https://github.com/ranaroussi/yfinance) API.
+Using [yfinance](https://github.com/ranaroussi/yfinance) running locally using a simple `FastAPI` script.
