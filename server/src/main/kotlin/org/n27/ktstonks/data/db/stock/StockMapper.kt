@@ -3,7 +3,7 @@ package org.n27.ktstonks.data.db.stock
 import org.n27.ktstonks.data.db.stock.StocksEntity.StockEntity
 import org.n27.ktstonks.domain.model.Stock
 import org.n27.ktstonks.domain.model.Stocks
-import java.util.Base64
+import java.util.*
 
 fun StocksEntity.toStocks() = Stocks(
     items = items.map { it.toStock() },

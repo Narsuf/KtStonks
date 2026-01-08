@@ -16,6 +16,7 @@ import org.n27.ktstonks.data.json.JsonReader
 import org.n27.ktstonks.data.json.SymbolReader
 import org.n27.ktstonks.data.yfinance.YfinanceApi
 import org.n27.ktstonks.domain.Repository
+import org.n27.ktstonks.domain.UseCase
 
 const val BASE_URL = "http://localhost:8000"
 
@@ -39,6 +40,7 @@ val mainModule = module {
     single { JsonReader() }
     single { SymbolReader(get()) }
     single { YfinanceApi(BASE_URL, get()) }
+    single { UseCase(get()) }
 
     single<Repository> { RepositoryImpl(get(), get(), get()) }
 }

@@ -50,9 +50,8 @@ class StockDao {
                 .slice(StocksTable.symbol, StocksTable.logo, StocksTable.isWatchlisted)
                 .select { StocksTable.symbol inList stocks.map { it.symbol } }
                 .associate { row ->
-                    row[StocksTable.symbol]
-                        to (row[StocksTable.logo]?.let { StockEntity.Logo(it) }
-                        to row[StocksTable.isWatchlisted])
+                    row[StocksTable.symbol] to
+                            (row[StocksTable.logo]?.let { StockEntity.Logo(it) } to row[StocksTable.isWatchlisted])
                 }
 
             StocksTable.batchUpsert(stocks) { stock ->
