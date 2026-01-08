@@ -1,8 +1,8 @@
-package org.n27.ktstonks.data.db.stock
+package org.n27.ktstonks.data.db.stocks
 
-import org.n27.ktstonks.data.db.stock.StocksEntity.StockEntity
-import org.n27.ktstonks.domain.model.Stock
+import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
 import org.n27.ktstonks.domain.model.Stocks
+import org.n27.ktstonks.domain.model.Stocks.Stock
 import java.util.*
 
 fun StocksEntity.toStocks() = Stocks(

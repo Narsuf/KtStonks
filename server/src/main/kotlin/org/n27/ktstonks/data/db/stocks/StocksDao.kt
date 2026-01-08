@@ -1,11 +1,11 @@
-package org.n27.ktstonks.data.db.stock
+package org.n27.ktstonks.data.db.stocks
 
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.n27.ktstonks.data.db.dbQuery
-import org.n27.ktstonks.data.db.stock.StocksEntity.StockEntity
+import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
 
-class StockDao {
+class StocksDao {
 
     suspend fun getStocks(symbols: Collection<String>): List<StockEntity> = dbQuery {
         StocksTable

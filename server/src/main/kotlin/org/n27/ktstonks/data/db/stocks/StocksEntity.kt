@@ -1,4 +1,4 @@
-package org.n27.ktstonks.data.db.stock
+package org.n27.ktstonks.data.db.stocks
 
 data class StocksEntity(
     val items: List<StockEntity>,
