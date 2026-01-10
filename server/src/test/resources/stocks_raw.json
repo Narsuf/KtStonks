@@ -1,0 +1,15 @@
+[
+  {
+    "symbol": "AAPL",
+    "companyName": "Apple Inc.",
+    "logoUrl": "https://img.logo.dev/apple.com",
+    "price": 259.369995117188,
+    "dividendYield": 0.4,
+    "eps": 7.47,
+    "pe": 34.7215522245231,
+    "pb": 51.967537,
+    "earningsQuarterlyGrowth": 86.4,
+    "intrinsicValue": 119.52,
+    "currency": "USD"
+  }
+]

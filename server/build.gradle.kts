@@ -30,4 +30,5 @@ dependencies {
     implementation(libs.koin.ktor)
     testImplementation(libs.ktor.serverTestHost)
     testImplementation(libs.kotlin.testJunit)
+    testImplementation(libs.ktor.client.mock)
 }

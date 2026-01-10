@@ -13,16 +13,16 @@ class StocksDao {
             .map { it.toStockEntity() }
     }
 
-    suspend fun getStock(symbol: String): StockEntity? = dbQuery {
-        StocksTable
-            .select { StocksTable.symbol eq symbol }
-            .map { it.toStockEntity() }
-            .singleOrNull()
-    }
+    suspend fun getStock(symbol: String): StockEntity? = dbQuery { findStock(symbol) }
+
+    private fun findStock(symbol: String) = StocksTable
+        .select { StocksTable.symbol eq symbol }
+        .map { it.toStockEntity() }
+        .singleOrNull()
 
     suspend fun saveStock(stock: StockEntity) {
         dbQuery {
-            val existingStock = getStock(stock.symbol)
+            val existingStock = findStock(stock.symbol)
 
             if (existingStock != null) {
                 StocksTable.update(where = { StocksTable.symbol eq stock.symbol }) {
@@ -38,34 +38,6 @@ class StocksDao {
                     it[symbol] = stock.symbol
                     it.fromStockEntity(stock)
                 }
-            }
-        }
-    }
-
-    suspend fun saveStocks(stocks: List<StockEntity>) {
-        if (stocks.isEmpty()) return
-
-        dbQuery {
-            val existingData = StocksTable
-                .slice(StocksTable.symbol, StocksTable.logo, StocksTable.isWatchlisted)
-                .select { StocksTable.symbol inList stocks.map { it.symbol } }
-                .associate { row ->
-                    row[StocksTable.symbol] to
-                            (row[StocksTable.logo]?.let { StockEntity.Logo(it) } to row[StocksTable.isWatchlisted])
-                }
-
-            StocksTable.batchUpsert(stocks) { stock ->
-                this[StocksTable.symbol] = stock.symbol
-                val existing = existingData[stock.symbol]
-                val existingLogo = existing?.first
-                val isWatchlisted = existing?.second ?: stock.isWatchlisted
-
-                fromStockEntity(
-                    stock.copy(
-                        logo = existingLogo ?: stock.logo,
-                        isWatchlisted = isWatchlisted
-                    )
-                )
             }
         }
     }
