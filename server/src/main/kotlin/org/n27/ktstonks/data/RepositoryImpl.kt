@@ -88,7 +88,7 @@ class RepositoryImpl(
         val symbols = stocksToUpdate.joinToString(separator = ",") { it.symbol }
         val updatedStocks = getRemoteStocks(symbols, ignoreLogo = true)
 
-        if (updatedStocks.isNotEmpty()) stocksDao.saveStocks(updatedStocks.map { it.toEntity() })
+        if (updatedStocks.isNotEmpty()) updatedStocks.forEach { stocksDao.saveStock(it.toEntity()) }
 
         stocksDao.getWatchlist(page, pageSize).toStocks()
     }

@@ -1,8 +1,12 @@
+import org.gradle.api.tasks.testing.Test
+import org.gradle.testing.jacoco.tasks.JacocoReport
+
 plugins {
     alias(libs.plugins.kotlinJvm)
     alias(libs.plugins.ktor)
     application
     kotlin("plugin.serialization") version "1.9.0"
+    id("jacoco")
 }
 
 group = "org.n27.ktstonks"
@@ -30,4 +34,29 @@ dependencies {
     implementation(libs.koin.ktor)
     testImplementation(libs.ktor.serverTestHost)
     testImplementation(libs.kotlin.testJunit)
+    testImplementation(libs.ktor.client.mock)
+}
+
+tasks.withType<Test> {
+    jacoco { isEnabled = true }
+}
+
+tasks.register("jacocoJvmTestReport", JacocoReport::class) {
+    dependsOn("test")
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+
+    sourceDirectories.setFrom(files(
+        "src/main/kotlin"
+    ))
+
+    classDirectories.setFrom(files("$buildDir/classes/kotlin/main"))
+    executionData.setFrom(files("$buildDir/jacoco/test.exec"))
+}
+
+tasks.named("test") {
+    finalizedBy("jacocoJvmTestReport")
 }
