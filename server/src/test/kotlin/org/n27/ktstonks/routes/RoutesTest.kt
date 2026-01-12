@@ -82,6 +82,63 @@ class RoutesTest {
         assertEquals(HttpStatusCode.InternalServerError, response.status)
     }
 
+    @Test
+    fun `test get watchlist success`() = testWithApplication { client ->
+        whenever(useCase.getWatchlist(anyInt(), anyInt())) doReturn Result.success(getStocks())
+
+        val response = client.get("/watchlist")
+
+        assertEquals(HttpStatusCode.OK, response.status)
+        assertEquals(getJson("get_stocks.json"), response.bodyAsText())
+    }
+
+    @Test
+    fun `test get watchlist error`() = testWithApplication { client ->
+        whenever(useCase.getWatchlist(anyInt(), anyInt())) doReturn Result.failure(Exception())
+
+        val response = client.get("/watchlist")
+
+        assertEquals(HttpStatusCode.InternalServerError, response.status)
+    }
+
+    @Test
+    fun `test post watchlist success`() = testWithApplication { client ->
+        whenever(useCase.addToWatchlist(anyString())) doReturn Result.success(Unit)
+
+        val response = client.post("/watchlist/AAPL")
+
+        assertEquals(HttpStatusCode.OK, response.status)
+        assertEquals("Stock AAPL added to watchlist", response.bodyAsText())
+    }
+
+    @Test
+    fun `test post watchlist error`() = testWithApplication { client ->
+        whenever(useCase.addToWatchlist(anyString())) doReturn Result.failure(Exception())
+
+        val response = client.post("/watchlist/AAPL")
+
+        assertEquals(HttpStatusCode.InternalServerError, response.status)
+    }
+
+    @Test
+    fun `test delete watchlist success`() = testWithApplication { client ->
+        whenever(useCase.removeFromWatchlist(anyString())) doReturn Result.success(Unit)
+
+        val response = client.delete("/watchlist/AAPL")
+
+        assertEquals(HttpStatusCode.OK, response.status)
+        assertEquals("Stock AAPL removed from watchlist", response.bodyAsText())
+    }
+
+    @Test
+    fun `test delete watchlist error`() = testWithApplication { client ->
+        whenever(useCase.removeFromWatchlist(anyString())) doReturn Result.failure(Exception())
+
+        val response = client.delete("/watchlist/AAPL")
+
+        assertEquals(HttpStatusCode.InternalServerError, response.status)
+    }
+
     private fun testWithApplication(
         block: suspend ApplicationTestBuilder.(client: HttpClient) -> Unit
     ) = testApplication {
