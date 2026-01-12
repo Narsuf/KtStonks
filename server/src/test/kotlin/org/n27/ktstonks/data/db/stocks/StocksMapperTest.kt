@@ -14,22 +14,16 @@ class StocksMapperTest {
 
     @Test
     fun `toStocks should map StocksEntity to Stocks correctly`() {
-        val expected = getStocks(
-            items = listOf(getStock(logo = "aHR0cHM6Ly9pbWcubG9nby5kZXYvYXBwbGUuY29t"))
-        )
-
         val result = getStocksEntity().toStocks()
 
-        assertEquals(expected, result)
+        assertEquals(getStocks(), result)
     }
 
     @Test
     fun `toStock should map StockEntity to Stock correctly`() {
-        val expected = getStock(logo = "aHR0cHM6Ly9pbWcubG9nby5kZXYvYXBwbGUuY29t")
-
         val result = getStockEntity().toStock()
 
-        assertEquals(expected, result)
+        assertEquals(getStock(), result)
     }
 
     @Test

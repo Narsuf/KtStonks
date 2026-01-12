@@ -18,17 +18,13 @@ class StocksDaoTest {
     @Before
     fun setUp() {
         Database.connect("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", driver = "org.h2.Driver")
-        transaction {
-            SchemaUtils.create(StocksTable)
-        }
+        transaction { SchemaUtils.create(StocksTable) }
         dao = StocksDao()
     }
 
     @After
     fun tearDown() {
-        transaction {
-            SchemaUtils.drop(StocksTable)
-        }
+        transaction { SchemaUtils.drop(StocksTable) }
     }
 
     @Test
@@ -62,13 +58,11 @@ class StocksDaoTest {
     fun `saveStock should update existing stock`() = runBlocking {
         val stock = getStockEntity()
         dao.saveStock(stock)
-
         val updatedStock = stock.copy(price = 200.0)
+
         dao.saveStock(updatedStock)
 
-        val result = dao.getStock("AAPL")
-
-        assertEquals(updatedStock, result)
+        assertEquals(updatedStock, dao.getStock("AAPL"))
     }
 
     @Test
@@ -78,9 +72,7 @@ class StocksDaoTest {
 
         dao.addToWatchlist("AAPL")
 
-        val result = dao.getStock("AAPL")
-
-        assertEquals(true, result?.isWatchlisted)
+        assertEquals(true,  dao.getStock("AAPL")?.isWatchlisted)
     }
 
     @Test
@@ -100,8 +92,6 @@ class StocksDaoTest {
 
         dao.removeFromWatchlist("AAPL")
 
-        val result = dao.getStock("AAPL")
-
-        assertEquals(false, result?.isWatchlisted)
+        assertEquals(false, dao.getStock("AAPL")?.isWatchlisted)
     }
 }

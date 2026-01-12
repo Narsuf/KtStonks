@@ -9,9 +9,7 @@ class StockMapperTest {
 
     @Test
     fun `toDomainEntity should map StockRaw to Stock correctly`() {
-        val logo = "https://img.logo.dev/apple.com"
-
-        val result = getStockRaw().toDomainEntity(logo)
+        val result = getStockRaw().toDomainEntity(logo = "/9j/2wCEAAEBAQEBAQEBAQEBAQEB")
 
         assertEquals(getStock(lastUpdated = result.lastUpdated), result)
     }

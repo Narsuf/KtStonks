@@ -6,7 +6,7 @@ import org.n27.ktstonks.domain.model.Stocks.Stock
 fun getStock(
     symbol: String = "AAPL",
     companyName: String = "Apple Inc.",
-    logo: String = "https://img.logo.dev/apple.com",
+    logo: String = "/9j/2wCEAAEBAQEBAQEBAQEBAQEB",
     price: Double = 259.369995117188,
     dividendYield: Double = 0.4,
     eps: Double = 7.47,

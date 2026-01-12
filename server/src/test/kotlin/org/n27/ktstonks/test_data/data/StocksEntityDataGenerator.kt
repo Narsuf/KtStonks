@@ -7,7 +7,7 @@ import java.util.*
 fun getStockEntity(
     symbol: String = "AAPL",
     companyName: String = "Apple Inc.",
-    logo: String = "aHR0cHM6Ly9pbWcubG9nby5kZXYvYXBwbGUuY29t",
+    logo: String = "/9j/2wCEAAEBAQEBAQEBAQEBAQEB",
     price: Double = 259.369995117188,
     dividendYield: Double = 0.4,
     eps: Double = 7.47,
