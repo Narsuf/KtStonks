@@ -33,7 +33,9 @@ class StocksDao {
                     it.fromStockEntity(
                         stock.copy(
                             isWatchlisted = existingStock.isWatchlisted,
-                            logo = existingStock.logo ?: stock.logo
+                            logo = existingStock.logo ?: stock.logo,
+                            expectedEpsGrowth = stock.expectedEpsGrowth ?: existingStock.expectedEpsGrowth,
+                            valuationFloor = stock.valuationFloor ?: existingStock.valuationFloor
                         )
                     )
                 }

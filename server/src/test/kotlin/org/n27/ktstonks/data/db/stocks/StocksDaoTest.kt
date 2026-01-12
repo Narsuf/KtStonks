@@ -77,6 +77,26 @@ class StocksDaoTest {
     }
 
     @Test
+    fun `saveStock with null values should not override existing values`() = runBlocking {
+        val stock = getStockEntity(isWatchlisted = true)
+        dao.saveStock(stock)
+        val updatedStock = stock.copy(
+            logo = null,
+            expectedEpsGrowth = null,
+            valuationFloor = null,
+            isWatchlisted = false
+        )
+
+        dao.saveStock(updatedStock)
+
+        val result = dao.getStock("AAPL")
+        assertEquals(stock.logo, result?.logo)
+        assertEquals(stock.expectedEpsGrowth, result?.expectedEpsGrowth)
+        assertEquals(stock.valuationFloor, result?.valuationFloor)
+        assertEquals(stock.isWatchlisted, result?.isWatchlisted)
+    }
+
+    @Test
     fun `addToWatchlist should update isWatchlisted to true`() = runBlocking {
         val stock = getStockEntity()
         dao.saveStock(stock)
