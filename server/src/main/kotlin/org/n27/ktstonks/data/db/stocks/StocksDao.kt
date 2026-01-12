@@ -7,10 +7,14 @@ import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
 
 class StocksDao {
 
-    suspend fun getStocks(symbols: Collection<String>): List<StockEntity> = dbQuery {
-        StocksTable
-            .select { StocksTable.symbol inList symbols }
-            .map { it.toStockEntity() }
+    suspend fun getStocks(symbols: Collection<String>): List<StockEntity> {
+        if (symbols.isEmpty()) return emptyList()
+
+        return dbQuery {
+            StocksTable
+                .select { StocksTable.symbol inList symbols }
+                .map { it.toStockEntity() }
+        }
     }
 
     suspend fun getStock(symbol: String): StockEntity? = dbQuery { findStock(symbol) }

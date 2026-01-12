@@ -39,7 +39,7 @@ fun getStock(
 
 fun getStocks(
     items: List<Stock> = listOf(getStock()),
-    nextPage: Int = 1,
+    nextPage: Int? = 1,
 ) = Stocks(
     items = items,
     nextPage = nextPage,

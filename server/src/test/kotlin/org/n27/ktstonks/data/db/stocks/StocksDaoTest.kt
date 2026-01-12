@@ -9,6 +9,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
+import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
 import org.n27.ktstonks.test_data.data.getStockEntity
 
 class StocksDaoTest {
@@ -35,6 +36,16 @@ class StocksDaoTest {
         val result = dao.getStocks(listOf("AAPL"))
 
         assertEquals(listOf(stock), result)
+    }
+
+    @Test
+    fun `getStocks should return empty list of stocks when empty list passed`() = runBlocking {
+        val stock = getStockEntity()
+        dao.saveStock(stock)
+
+        val result = dao.getStocks(emptyList())
+
+        assertEquals(emptyList<StockEntity>(), result)
     }
 
     @Test
