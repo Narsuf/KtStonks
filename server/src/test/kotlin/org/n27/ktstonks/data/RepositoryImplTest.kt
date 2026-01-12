@@ -36,22 +36,20 @@ class RepositoryImplTest {
 
     @Test
     fun `getStock should return local stock if updated`() = runBlocking {
-        val symbol = "AAPL"
         val now = System.currentTimeMillis()
-        `when`(stocksDao.getStock(symbol)).thenReturn(getStockEntity(lastUpdated = now))
+        `when`(stocksDao.getStock(anyString())).thenReturn(getStockEntity(lastUpdated = now))
 
-        val result = repository.getStock(symbol)
+        val result = repository.getStock("AAPL")
 
         assertEquals(getStock(lastUpdated = now), result.getOrNull())
     }
 
     @Test
     fun `getStock should return remote stock if not updated`() = runBlocking {
-        val symbol = "AAPL"
-        `when`(stocksDao.getStock(symbol)).thenReturn(null)
-        `when`(api.getStock(symbol)).thenReturn(getStockRaw())
+        `when`(stocksDao.getStock(anyString())).thenReturn(null)
+        `when`(api.getStock(anyString())).thenReturn(getStockRaw())
 
-        val result = repository.getStock(symbol)
+        val result = repository.getStock("AAPL")
 
         assertEquals(
             getStock(
