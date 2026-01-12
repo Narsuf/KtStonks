@@ -1,11 +1,13 @@
-package org.n27.ktstonks.test_data
+package org.n27.ktstonks.test_data.data
 
-import org.n27.ktstonks.domain.model.Stocks.Stock
+import org.n27.ktstonks.data.db.stocks.StocksEntity
+import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
+import java.util.*
 
-fun getStock(
+fun getStockEntity(
     symbol: String = "AAPL",
     companyName: String = "Apple Inc.",
-    logo: String = "https://img.logo.dev/apple.com",
+    logo: String = "aHR0cHM6Ly9pbWcubG9nby5kZXYvYXBwbGUuY29t",
     price: Double = 259.369995117188,
     dividendYield: Double = 0.4,
     eps: Double = 7.47,
@@ -17,11 +19,12 @@ fun getStock(
     currentIntrinsicValue: Double = 119.52,
     forwardIntrinsicValue: Double? = null,
     currency: String = "USD",
-    lastUpdated: Long = 0L
-) = Stock(
+    lastUpdated: Long = 0L,
+    isWatchlisted: Boolean = false
+) = StockEntity(
     symbol = symbol,
     companyName = companyName,
-    logo = logo,
+    logo = StockEntity.Logo(Base64.getDecoder().decode(logo)),
     price = price,
     dividendYield = dividendYield,
     eps = eps,
@@ -33,7 +36,14 @@ fun getStock(
     currentIntrinsicValue = currentIntrinsicValue,
     forwardIntrinsicValue = forwardIntrinsicValue,
     currency = currency,
-    lastUpdated = lastUpdated
+    lastUpdated = lastUpdated,
+    isWatchlisted = isWatchlisted
 )
 
-fun getStocks() = listOf(getStock())
+fun getStocksEntity(
+    items: List<StockEntity> = listOf(getStockEntity()),
+    nextPage: Int = 1,
+) = StocksEntity(
+    items = items,
+    nextPage = nextPage,
+)
