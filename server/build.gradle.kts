@@ -35,6 +35,8 @@ dependencies {
     testImplementation(libs.ktor.serverTestHost)
     testImplementation(libs.kotlin.testJunit)
     testImplementation(libs.ktor.client.mock)
+    testImplementation(libs.mockito.inline)
+    testImplementation(libs.mockito.kotlin)
 }
 
 tasks.withType<Test> {
