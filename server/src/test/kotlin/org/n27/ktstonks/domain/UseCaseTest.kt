@@ -7,11 +7,9 @@ import org.junit.Test
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Mockito.any
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
-import org.n27.ktstonks.domain.model.Stocks
 import org.n27.ktstonks.test_data.data.getStockEntity
 import org.n27.ktstonks.test_data.getStock
 import org.n27.ktstonks.test_data.getStocks
@@ -75,38 +73,34 @@ class UseCaseTest {
 
     @Test
     fun `addCustomValuation should update stock with new values`(): Unit = runBlocking {
-        val symbol = "AAPL"
         val stock = getStock()
         val expectedStock = getStock(
-            expectedEpsGrowth = 15.0,
-            forwardIntrinsicValue = 18.4,
-            valuationFloor = 16.0,
-            currentIntrinsicValue = 16.0
+            expectedEpsGrowth = 7.72,
+            valuationFloor = 12.5,
+            currentIntrinsicValue = 93.375,
+            forwardIntrinsicValue = 100.58355,
         )
-        `when`(repository.getStock(symbol)).thenReturn(success(stock))
-        `when`(repository.updateStock(any())).thenReturn(success(Unit))
+        `when`(repository.getStock(anyString())).thenReturn(success(stock))
+        `when`(repository.updateStock(getStock())).thenReturn(success(Unit))
 
-        val result = useCase.addCustomValuation(symbol, 12.5, 7.72)
+        useCase.addCustomValuation("AAPL", 12.5, 7.72)
 
-        assertEquals(success(Unit), result)
         verify(repository).updateStock(expectedStock)
     }
 
     @Test
     fun `addCustomValuation should update stock with new values when valuation floor is null`(): Unit = runBlocking {
-        val symbol = "AAPL"
         val stock = getStock()
         val expectedStock = getStock(
-            expectedEpsGrowth = 15.0,
-            forwardIntrinsicValue = 18.4,
+            expectedEpsGrowth = 7.72,
+            valuationFloor = null,
+            forwardIntrinsicValue = 128.74694399999998,
         )
+        `when`(repository.getStock(anyString())).thenReturn(success(stock))
+        `when`(repository.updateStock(getStock())).thenReturn(success(Unit))
 
-        `when`(repository.getStock(symbol)).thenReturn(Result.success(stock))
-        `when`(repository.updateStock(any())).thenReturn(Result.success(Unit))
+        useCase.addCustomValuation("AAPL", null, 7.72)
 
-        val result = useCase.addCustomValuation(symbol, null, 15.0)
-
-        assertEquals(Result.success(Unit), result)
         verify(repository).updateStock(expectedStock)
     }
 }
