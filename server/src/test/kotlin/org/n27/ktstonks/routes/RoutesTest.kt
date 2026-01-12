@@ -8,6 +8,7 @@ import io.ktor.server.application.install
 import io.ktor.server.routing.*
 import io.ktor.server.testing.*
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
@@ -27,23 +28,15 @@ class RoutesTest {
             install(ServerContentNegotiation) { json() }
             routing { stockRoutes(useCase) }
         }
-
-        val stock = getStock(symbol = "AAPL")
-        whenever(useCase.getStock("AAPL")) doReturn Result.success(stock)
-
+        whenever(useCase.getStock(anyString())) doReturn Result.success(getStock("AAPL"))
         val client = createClient {
-            install(ClientContentNegotiation) {
-                json()
-            }
+            install(ClientContentNegotiation) { json() }
         }
 
         val response = client.get("/stock/AAPL")
 
         assertEquals(HttpStatusCode.OK, response.status)
-        assertEquals(
-            """{"symbol":"AAPL","companyName":"Apple Inc.","logo":"/9j/2wCEAAEBAQEBAQEBAQEBAQEB","price":259.369995117188,"dividendYield":0.4,"eps":7.47,"pe":34.7215522245231,"pb":51.967537,"earningsQuarterlyGrowth":86.4,"expectedEpsGrowth":null,"valuationFloor":null,"currentIntrinsicValue":119.52,"forwardIntrinsicValue":null,"currency":"USD","lastUpdated":0}""",
-            response.bodyAsText()
-        )
+        assertEquals(getJson("get_stock.json"), response.bodyAsText())
     }
 
     @Test
@@ -52,11 +45,12 @@ class RoutesTest {
             install(ServerContentNegotiation) { json() }
             routing { stockRoutes(useCase) }
         }
-
         whenever(useCase.getStock("AAPL")) doReturn Result.failure(Exception())
 
         val response = client.get("/stock/AAPL")
 
         assertEquals(HttpStatusCode.InternalServerError, response.status)
     }
+
+    private fun getJson(path: String): String = this::class.java.classLoader.getResource(path)!!.readText().removeSuffix("\n")
 }
