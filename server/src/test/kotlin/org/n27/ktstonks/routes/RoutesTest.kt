@@ -9,13 +9,14 @@ import io.ktor.server.application.install
 import io.ktor.server.routing.*
 import io.ktor.server.testing.*
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyDouble
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
+import org.mockito.kotlin.*
 import org.n27.ktstonks.domain.UseCase
 import org.n27.ktstonks.test_data.getStock
+import org.n27.ktstonks.test_data.getStocks
 import kotlin.test.assertEquals
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation as ClientContentNegotiation
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation as ServerContentNegotiation
@@ -58,6 +59,25 @@ class RoutesTest {
         whenever(useCase.addCustomValuation(anyString(), anyDouble(), anyDouble())) doReturn Result.failure(Exception())
 
         val response = client.post("/stock/AAPL/valuation?valuationFloor=1.0&epsGrowth=1.0")
+
+        assertEquals(HttpStatusCode.InternalServerError, response.status)
+    }
+
+    @Test
+    fun `test get stocks success`() = testWithApplication { client ->
+        whenever(useCase.getStocks(anyInt(), anyInt(), anyBoolean(), anyOrNull())) doReturn Result.success(getStocks())
+
+        val response = client.get("/stocks")
+
+        assertEquals(HttpStatusCode.OK, response.status)
+        assertEquals(getJson("get_stocks.json"), response.bodyAsText())
+    }
+
+    @Test
+    fun `test get stocks error`() = testWithApplication { client ->
+        whenever(useCase.getStocks(anyInt(), anyInt(), anyBoolean(), anyOrNull())) doReturn Result.failure(Exception())
+
+        val response = client.get("/stocks")
 
         assertEquals(HttpStatusCode.InternalServerError, response.status)
     }
