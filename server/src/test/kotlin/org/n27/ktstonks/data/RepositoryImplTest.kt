@@ -6,8 +6,10 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers.*
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.n27.ktstonks.data.db.stocks.StocksDao
+import org.n27.ktstonks.data.db.stocks.toEntity
 import org.n27.ktstonks.data.json.SymbolReader
 import org.n27.ktstonks.data.yfinance.YfinanceApi
 import org.n27.ktstonks.domain.Repository
@@ -117,6 +119,45 @@ class RepositoryImplTest {
                     ),
                 ),
             ),
+            result.getOrNull(),
+        )
+    }
+
+    @Test
+    fun `updateStock should call dao`() = runBlocking {
+        repository.updateStock(getStock())
+
+        verify(stocksDao).saveStock(getStockEntity())
+    }
+
+    @Test
+    fun `addToWatchlist should call dao`() = runBlocking {
+        val symbol = "AAPL"
+
+        repository.addToWatchlist(symbol)
+
+        verify(stocksDao).addToWatchlist(symbol)
+    }
+
+    @Test
+    fun `removeFromWatchlist should call dao`() = runBlocking {
+        val symbol = "AAPL"
+
+        repository.removeFromWatchlist(symbol)
+
+        verify(stocksDao).removeFromWatchlist(symbol)
+    }
+
+    @Test
+    fun `getWatchlist should return watchlist`() = runBlocking {
+        val now = System.currentTimeMillis()
+        val watchlist = getStocksEntity(items = listOf(getStockEntity(lastUpdated = now)))
+        `when`(stocksDao.getWatchlist(anyInt(), anyInt())).thenReturn(watchlist)
+
+        val result = repository.getWatchlist(0, 1)
+
+        assertEquals(
+            getStocks(items = listOf(getStock(lastUpdated = now))),
             result.getOrNull(),
         )
     }
