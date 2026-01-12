@@ -1,19 +1,19 @@
 package org.n27.ktstonks.routes
 
-import io.ktor.client.HttpClient
+import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
-import io.ktor.server.application.install
+import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import io.ktor.server.testing.*
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyBoolean
-import org.mockito.ArgumentMatchers.anyDouble
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.kotlin.*
+import org.mockito.ArgumentMatchers.*
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.n27.ktstonks.domain.UseCase
 import org.n27.ktstonks.test_data.getStock
 import org.n27.ktstonks.test_data.getStocks

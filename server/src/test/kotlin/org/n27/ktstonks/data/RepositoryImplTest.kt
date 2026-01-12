@@ -5,11 +5,8 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers.*
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
-import org.mockito.Mockito.`when`
+import org.mockito.Mockito.*
 import org.n27.ktstonks.data.db.stocks.StocksDao
-import org.n27.ktstonks.data.db.stocks.toEntity
 import org.n27.ktstonks.data.json.SymbolReader
 import org.n27.ktstonks.data.yfinance.YfinanceApi
 import org.n27.ktstonks.domain.Repository

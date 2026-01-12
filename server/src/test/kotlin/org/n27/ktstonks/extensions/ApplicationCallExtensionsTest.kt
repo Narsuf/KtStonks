@@ -3,7 +3,6 @@ package org.n27.ktstonks.extensions
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import io.ktor.server.testing.*
 import kotlinx.serialization.Serializable

@@ -4,13 +4,8 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyBoolean
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
-import org.mockito.Mockito.`when`
-import org.n27.ktstonks.test_data.data.getStockEntity
+import org.mockito.ArgumentMatchers.*
+import org.mockito.Mockito.*
 import org.n27.ktstonks.test_data.getStock
 import org.n27.ktstonks.test_data.getStocks
 import kotlin.Result.Companion.success
