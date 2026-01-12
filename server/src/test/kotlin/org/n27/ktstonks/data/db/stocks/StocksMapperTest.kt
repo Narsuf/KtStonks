@@ -2,13 +2,10 @@ package org.n27.ktstonks.data.db.stocks
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
-import org.n27.ktstonks.domain.model.Stocks
 import org.n27.ktstonks.test_data.data.getStockEntity
 import org.n27.ktstonks.test_data.data.getStocksEntity
 import org.n27.ktstonks.test_data.getStock
 import org.n27.ktstonks.test_data.getStocks
-import java.util.*
 
 class StocksMapperTest {
 

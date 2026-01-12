@@ -2,8 +2,8 @@ package org.n27.ktstonks.data.yfinance.mapping
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.n27.ktstonks.test_data.getStock
 import org.n27.ktstonks.test_data.data.getStockRaw
+import org.n27.ktstonks.test_data.getStock
 
 class StockMapperTest {
 
