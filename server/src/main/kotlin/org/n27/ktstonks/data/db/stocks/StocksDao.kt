@@ -4,6 +4,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.n27.ktstonks.data.db.dbQuery
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
+import org.n27.ktstonks.domain.getIntrinsicValue
 
 class StocksDao {
 
@@ -30,12 +31,27 @@ class StocksDao {
 
             if (existingStock != null) {
                 StocksTable.update(where = { StocksTable.symbol eq stock.symbol }) {
+                    val expectedEpsGrowth = stock.expectedEpsGrowth ?: existingStock.expectedEpsGrowth
+                    val valuationFloor = stock.valuationFloor ?: existingStock.valuationFloor
+
+                    val forwardIntrinsicValue = if (stock.expectedEpsGrowth != null)
+                        stock.eps?.getIntrinsicValue(valuationFloor ?: 16.0, stock.expectedEpsGrowth)
+                    else
+                        existingStock.forwardIntrinsicValue
+
+                    val currentIntrinsicValue = if (stock.valuationFloor != null)
+                        stock.eps?.getIntrinsicValue(stock.valuationFloor)
+                    else
+                        existingStock.currentIntrinsicValue
+
                     it.fromStockEntity(
                         stock.copy(
                             isWatchlisted = existingStock.isWatchlisted,
                             logo = existingStock.logo ?: stock.logo,
-                            expectedEpsGrowth = stock.expectedEpsGrowth ?: existingStock.expectedEpsGrowth,
-                            valuationFloor = stock.valuationFloor ?: existingStock.valuationFloor
+                            expectedEpsGrowth = expectedEpsGrowth,
+                            valuationFloor = valuationFloor,
+                            forwardIntrinsicValue = forwardIntrinsicValue,
+                            currentIntrinsicValue = currentIntrinsicValue,
                         )
                     )
                 }

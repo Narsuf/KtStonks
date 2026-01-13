@@ -11,6 +11,7 @@ import org.junit.Before
 import org.junit.Test
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
 import org.n27.ktstonks.test_data.data.getStockEntity
+import java.util.Base64
 
 class StocksDaoTest {
 
@@ -69,22 +70,44 @@ class StocksDaoTest {
     fun `saveStock should update existing stock`() = runBlocking {
         val stock = getStockEntity()
         dao.saveStock(stock)
-        val updatedStock = stock.copy(price = 200.0)
+        val updatedStock = stock.copy(
+            symbol = "APL",
+            companyName = "A",
+            logo = StockEntity.Logo(Base64.getDecoder().decode("/9j/2wCEAAEBAQEBAQEBAQEBAQEC")),
+            price = 200.0,
+            dividendYield = 1.0,
+            eps = 2.0,
+            pe = 3.0,
+            pb = 4.0,
+            earningsQuarterlyGrowth = 5.0,
+            currentIntrinsicValue = 6.0,
+            currency = "EUR",
+            lastUpdated = 7L,
+            isWatchlisted = true,
+        )
 
         dao.saveStock(updatedStock)
 
-        assertEquals(updatedStock, dao.getStock("AAPL"))
+        assertEquals(updatedStock, dao.getStock("APL"))
     }
 
     @Test
     fun `saveStock with null values should not override existing values`() = runBlocking {
-        val stock = getStockEntity(isWatchlisted = true)
+        val stock = getStockEntity(
+            expectedEpsGrowth = 7.72,
+            valuationFloor = 12.5,
+            forwardIntrinsicValue = 100.58355,
+            isWatchlisted = true,
+        )
         dao.saveStock(stock)
         val updatedStock = stock.copy(
             logo = null,
             expectedEpsGrowth = null,
             valuationFloor = null,
-            isWatchlisted = false
+            currentIntrinsicValue = null,
+            forwardIntrinsicValue = null,
+            isWatchlisted = false,
+
         )
 
         dao.saveStock(updatedStock)
@@ -93,7 +116,27 @@ class StocksDaoTest {
         assertEquals(stock.logo, result?.logo)
         assertEquals(stock.expectedEpsGrowth, result?.expectedEpsGrowth)
         assertEquals(stock.valuationFloor, result?.valuationFloor)
+        assertEquals(stock.forwardIntrinsicValue, result?.forwardIntrinsicValue)
+        assertEquals(stock.currentIntrinsicValue, result?.currentIntrinsicValue)
         assertEquals(stock.isWatchlisted, result?.isWatchlisted)
+    }
+
+    @Test
+    fun `saveStock with null values should override existing values`() = runBlocking {
+        val stock = getStockEntity()
+        dao.saveStock(stock)
+        val updatedStock = stock.copy(
+            expectedEpsGrowth = 7.72,
+            valuationFloor = 12.5,
+        )
+
+        dao.saveStock(updatedStock)
+
+        val result = dao.getStock("AAPL")
+        assertEquals(updatedStock.expectedEpsGrowth, result?.expectedEpsGrowth)
+        assertEquals(updatedStock.valuationFloor, result?.valuationFloor)
+        assertEquals(100.58355, result?.forwardIntrinsicValue)
+        assertEquals(93.375, result?.currentIntrinsicValue)
     }
 
     @Test
