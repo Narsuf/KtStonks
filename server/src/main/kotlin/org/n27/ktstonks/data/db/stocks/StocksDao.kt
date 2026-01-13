@@ -4,7 +4,6 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.n27.ktstonks.data.db.dbQuery
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
-import org.n27.ktstonks.domain.getIntrinsicValue
 
 class StocksDao {
 
@@ -129,4 +128,11 @@ class StocksDao {
         lastUpdated = this[StocksTable.lastUpdated],
         isWatchlisted = this[StocksTable.isWatchlisted],
     )
+
+    private fun Double.getIntrinsicValue(
+        valuationFloor: Double,
+        expectedEpsGrowth: Double = 0.0,
+    ) = expectedEpsGrowth.toMultiplier() * valuationFloor * this
+
+    private fun Double.toMultiplier(): Double = 1 + this / 100
 }

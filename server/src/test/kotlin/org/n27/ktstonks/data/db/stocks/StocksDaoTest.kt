@@ -11,7 +11,7 @@ import org.junit.Before
 import org.junit.Test
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
 import org.n27.ktstonks.test_data.data.getStockEntity
-import java.util.Base64
+import java.util.*
 
 class StocksDaoTest {
 
