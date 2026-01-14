@@ -33,13 +33,13 @@ class StocksDao {
                     val expectedEpsGrowth = stock.expectedEpsGrowth ?: existingStock.expectedEpsGrowth
                     val valuationFloor = stock.valuationFloor ?: existingStock.valuationFloor
 
-                    val forwardIntrinsicValue = if (stock.expectedEpsGrowth != null)
-                        stock.eps?.getIntrinsicValue(valuationFloor ?: 16.0, stock.expectedEpsGrowth)
+                    val forwardIntrinsicValue = if (expectedEpsGrowth != null)
+                        stock.eps?.getIntrinsicValue(valuationFloor ?: 16.0, expectedEpsGrowth)
                     else
                         existingStock.forwardIntrinsicValue
 
-                    val currentIntrinsicValue = if (stock.valuationFloor != null)
-                        stock.eps?.getIntrinsicValue(stock.valuationFloor)
+                    val currentIntrinsicValue = if (valuationFloor != null)
+                        stock.eps?.getIntrinsicValue(valuationFloor)
                     else
                         existingStock.currentIntrinsicValue
 
