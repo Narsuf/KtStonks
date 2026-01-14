@@ -1,10 +1,6 @@
 package org.n27.ktstonks.data
 
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.n27.ktstonks.data.db.stocks.StocksDao
 import org.n27.ktstonks.data.db.stocks.toEntity
 import org.n27.ktstonks.data.db.stocks.toStock
@@ -71,7 +67,7 @@ class RepositoryImpl(
 
     private suspend fun getRemoteStocks(params: String, ignoreLogo: Boolean = false) = if (params.isNotEmpty()) {
         val stocks = api.getStocks(params)
-        coroutineScope {
+        withContext(Dispatchers.IO) {
             stocks.map { stock ->
                 async {
                     stock.toDomainEntity(
@@ -97,7 +93,7 @@ class RepositoryImpl(
         val symbols = stocksToUpdate.joinToString(separator = ",") { it.symbol }
         val updatedStocks = getRemoteStocks(symbols, ignoreLogo = true)
 
-        if (updatedStocks.isNotEmpty()) coroutineScope {
+        if (updatedStocks.isNotEmpty()) withContext(Dispatchers.IO) {
             updatedStocks.map {
                 launch { stocksDao.saveStock(it.toEntity()) }
             }.joinAll()
