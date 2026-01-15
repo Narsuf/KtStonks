@@ -30,12 +30,27 @@ class StocksDao {
 
             if (existingStock != null) {
                 StocksTable.update(where = { StocksTable.symbol eq stock.symbol }) {
+                    val expectedEpsGrowth = stock.expectedEpsGrowth ?: existingStock.expectedEpsGrowth
+                    val valuationFloor = stock.valuationFloor ?: existingStock.valuationFloor
+
+                    val forwardIntrinsicValue = if (expectedEpsGrowth != null)
+                        stock.eps?.getIntrinsicValue(valuationFloor ?: 16.0, expectedEpsGrowth)
+                    else
+                        existingStock.forwardIntrinsicValue
+
+                    val currentIntrinsicValue = if (valuationFloor != null)
+                        stock.eps?.getIntrinsicValue(valuationFloor)
+                    else
+                        existingStock.currentIntrinsicValue
+
                     it.fromStockEntity(
                         stock.copy(
                             isWatchlisted = existingStock.isWatchlisted,
                             logo = existingStock.logo ?: stock.logo,
-                            expectedEpsGrowth = stock.expectedEpsGrowth ?: existingStock.expectedEpsGrowth,
-                            valuationFloor = stock.valuationFloor ?: existingStock.valuationFloor
+                            expectedEpsGrowth = expectedEpsGrowth,
+                            valuationFloor = valuationFloor,
+                            forwardIntrinsicValue = forwardIntrinsicValue,
+                            currentIntrinsicValue = currentIntrinsicValue,
                         )
                     )
                 }
@@ -113,4 +128,11 @@ class StocksDao {
         lastUpdated = this[StocksTable.lastUpdated],
         isWatchlisted = this[StocksTable.isWatchlisted],
     )
+
+    private fun Double.getIntrinsicValue(
+        valuationFloor: Double,
+        expectedEpsGrowth: Double = 0.0,
+    ) = expectedEpsGrowth.toMultiplier() * valuationFloor * this
+
+    private fun Double.toMultiplier(): Double = 1 + this / 100
 }

@@ -72,29 +72,11 @@ class UseCaseTest {
         val expectedStock = getStock(
             expectedEpsGrowth = 7.72,
             valuationFloor = 12.5,
-            currentIntrinsicValue = 93.375,
-            forwardIntrinsicValue = 100.58355,
         )
         `when`(repository.getStock(anyString())).thenReturn(success(stock))
         `when`(repository.updateStock(getStock())).thenReturn(success(Unit))
 
         useCase.addCustomValuation("AAPL", 12.5, 7.72)
-
-        verify(repository).updateStock(expectedStock)
-    }
-
-    @Test
-    fun `addCustomValuation should update stock with new values when valuation floor is null`(): Unit = runBlocking {
-        val stock = getStock()
-        val expectedStock = getStock(
-            expectedEpsGrowth = 7.72,
-            valuationFloor = null,
-            forwardIntrinsicValue = 128.74694399999998,
-        )
-        `when`(repository.getStock(anyString())).thenReturn(success(stock))
-        `when`(repository.updateStock(getStock())).thenReturn(success(Unit))
-
-        useCase.addCustomValuation("AAPL", null, 7.72)
 
         verify(repository).updateStock(expectedStock)
     }
