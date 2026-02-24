@@ -25,6 +25,7 @@ Returns all the information available from a specific stock.
   "currentIntrinsicValue": 119.2,
   "forwardIntrinsicValue": 133.5,
   "currency": "USD",
-  "lastUpdated": 1764872173179
+  "lastUpdated": 1764872173179,
+  "isWatchlisted": false
 }
 ```
