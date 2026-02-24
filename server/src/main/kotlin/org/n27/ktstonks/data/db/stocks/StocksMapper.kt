@@ -26,6 +26,7 @@ fun StockEntity.toStock() = Stock(
     forwardIntrinsicValue = forwardIntrinsicValue,
     currency = currency,
     lastUpdated = lastUpdated,
+    isWatchlisted = isWatchlisted,
 )
 
 fun Stock.toEntity() = StockEntity(
@@ -44,5 +45,5 @@ fun Stock.toEntity() = StockEntity(
     forwardIntrinsicValue = forwardIntrinsicValue,
     currency = currency,
     lastUpdated = lastUpdated,
-    isWatchlisted = false,
+    isWatchlisted = isWatchlisted,
 )

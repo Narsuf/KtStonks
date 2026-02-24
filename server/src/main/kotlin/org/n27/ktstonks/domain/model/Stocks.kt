@@ -25,5 +25,6 @@ data class Stocks(
         val forwardIntrinsicValue: Double?,
         val currency: String?,
         val lastUpdated: Long,
+        val isWatchlisted: Boolean,
     )
 }

@@ -19,4 +19,5 @@ internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
     forwardIntrinsicValue = null,
     currency = currency,
     lastUpdated = System.currentTimeMillis(),
+    isWatchlisted = false,
 )
