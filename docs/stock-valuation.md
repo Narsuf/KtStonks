@@ -14,5 +14,5 @@ Updates or sets a custom valuation for a given stock symbol.
 ### Response
 #### Status code
 - 200 — Valuation successfully saved.
-- 400 — `epsGrowth` missing.
+- 400 — Missing `epsGrowth`.
 - 500 — Failed to save stock.
