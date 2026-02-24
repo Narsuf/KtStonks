@@ -1,4 +1,4 @@
-# Add to Watchlist
+# POST Watchlist
 Adds a stock to the watchlist.
 
 ## Endpoint

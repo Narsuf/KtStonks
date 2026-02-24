@@ -1,4 +1,4 @@
-# Watchlist
+# GET Watchlist
 Returns a paginated list of watchlisted stocks.
 
 ## Endpoint

@@ -1,4 +1,4 @@
-# Remove from Watchlist
+# DELETE Watchlist
 Removes a stock from the watchlist.
 
 ## Endpoint
