@@ -112,11 +112,18 @@ class StocksDaoTest {
 
         dao.saveStock(updatedStock)
 
-        assertEquals(stock.copy(currentIntrinsicValue = 93.375), dao.getStock("AAPL"))
+        assertEquals(
+            stock.copy(
+                expectedEpsGrowth = 0.0,
+                currentIntrinsicValue = 62.3875043176445,
+                forwardIntrinsicValue = 0.0,
+            ),
+            dao.getStock("AAPL")
+        )
     }
 
     @Test
-    fun `saveStock with null expectedEpsGrowth should still recalculate intrinsic values with local growth`() = runBlocking {
+    fun `saveStock with null expectedEpsGrowth should use existing growth and keep existing currentIntrinsicValue`() = runBlocking {
         val stock = getStockEntity(expectedEpsGrowth = 7.72)
         dao.saveStock(stock)
         val updatedStock = stock.copy(
@@ -128,15 +135,16 @@ class StocksDaoTest {
 
         assertEquals(
             stock.copy(
+                expectedEpsGrowth = 0.0,
                 currentIntrinsicValue = 119.52,
-                forwardIntrinsicValue = 128.74694399999998,
+                forwardIntrinsicValue = 0.0,
             ),
             dao.getStock("AAPL")
         )
     }
 
     @Test
-    fun `saveStock with null expectedEpsGrowth should still recalculate intrinsic values with local floor`() = runBlocking {
+    fun `saveStock with null expectedEpsGrowth should recalculate currentIntrinsicValue using pb formula`() = runBlocking {
         val stock = getStockEntity(
             expectedEpsGrowth = 0.0,
             valuationFloor = 12.5,
@@ -151,8 +159,8 @@ class StocksDaoTest {
 
         assertEquals(
             stock.copy(
-                currentIntrinsicValue = 93.375,
-                forwardIntrinsicValue = 93.375,
+                currentIntrinsicValue = 62.3875043176445,
+                forwardIntrinsicValue = 0.0,
             ),
             dao.getStock("AAPL")
         )
