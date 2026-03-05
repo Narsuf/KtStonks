@@ -33,13 +33,16 @@ class StocksDao {
                     val expectedEpsGrowth = stock.expectedEpsGrowth ?: existingStock.expectedEpsGrowth
                     val valuationFloor = stock.valuationFloor ?: existingStock.valuationFloor
 
+                    /*
                     val forwardIntrinsicValue = if (expectedEpsGrowth != null)
                         stock.eps?.getIntrinsicValue(valuationFloor ?: 16.0, expectedEpsGrowth)
                     else
                         existingStock.forwardIntrinsicValue
+                     */
 
                     val currentIntrinsicValue = if (valuationFloor != null)
-                        stock.eps?.getIntrinsicValue(valuationFloor)
+                        //stock.eps?.getIntrinsicValue(valuationFloor)
+                        stock.getIntrinsicValue(valuationFloor)
                     else
                         existingStock.currentIntrinsicValue
 
@@ -47,9 +50,9 @@ class StocksDao {
                         stock.copy(
                             isWatchlisted = existingStock.isWatchlisted,
                             logo = existingStock.logo ?: stock.logo,
-                            expectedEpsGrowth = expectedEpsGrowth,
+                            expectedEpsGrowth = /*expectedEpsGrowth*/ 0.0,
                             valuationFloor = valuationFloor,
-                            forwardIntrinsicValue = forwardIntrinsicValue,
+                            forwardIntrinsicValue = /*forwardIntrinsicValue*/ 0.0,
                             currentIntrinsicValue = currentIntrinsicValue,
                         )
                     )
@@ -129,10 +132,15 @@ class StocksDao {
         isWatchlisted = this[StocksTable.isWatchlisted],
     )
 
+    private fun StockEntity.getIntrinsicValue(
+        valuationFloor: Double,
+    ) = pb?.let { (price ?: 0.0) * (valuationFloor / it) } ?: 0.0
+
+    /*
     private fun Double.getIntrinsicValue(
         valuationFloor: Double,
         expectedEpsGrowth: Double = 0.0,
     ) = expectedEpsGrowth.toMultiplier() * valuationFloor * this
 
-    private fun Double.toMultiplier(): Double = 1 + this / 100
+    private fun Double.toMultiplier(): Double = 1 + this / 100*/
 }

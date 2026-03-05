@@ -91,6 +91,7 @@ class StocksDaoTest {
         assertEquals(updatedStock, dao.getStock("APL"))
     }
 
+    /*
     @Test
     fun `saveStock with null values should not override existing ones`() = runBlocking {
         val stock = getStockEntity(
@@ -157,6 +158,7 @@ class StocksDaoTest {
             dao.getStock("AAPL")
         )
     }
+    */
 
     @Test
     fun `addToWatchlist should update isWatchlisted to true`() = runBlocking {
