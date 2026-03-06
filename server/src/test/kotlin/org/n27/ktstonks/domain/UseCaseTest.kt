@@ -6,6 +6,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers.*
 import org.mockito.Mockito.*
+import org.n27.ktstonks.domain.model.Stocks.ValuationMeasures
 import org.n27.ktstonks.test_data.getStock
 import org.n27.ktstonks.test_data.getStocks
 import kotlin.Result.Companion.success
@@ -70,13 +71,18 @@ class UseCaseTest {
     fun `addCustomValuation should update stock with new values`(): Unit = runBlocking {
         val stock = getStock()
         val expectedStock = getStock(
-            expectedEpsGrowth = 7.72,
-            valuationFloor = 12.5,
+            valuationMeasures = ValuationMeasures(
+                pe = 34.7215522245231,
+                pb = 51.967537,
+                ps = 8.78231,
+                valuationFloor = 12.5,
+                intrinsicValue = 119.52,
+            ),
         )
         `when`(repository.getStock(anyString())).thenReturn(success(stock))
         `when`(repository.updateStock(getStock())).thenReturn(success(Unit))
 
-        useCase.addCustomValuation("AAPL", 12.5, 7.72)
+        useCase.addCustomValuation("AAPL", 12.5)
 
         verify(repository).updateStock(expectedStock)
     }

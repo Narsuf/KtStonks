@@ -76,11 +76,8 @@ class StocksDaoTest {
             logo = StockEntity.Logo(Base64.getDecoder().decode("/9j/2wCEAAEBAQEBAQEBAQEBAQEC")),
             price = 200.0,
             dividendYield = 1.0,
-            eps = 2.0,
-            pe = 3.0,
-            pb = 4.0,
-            earningsQuarterlyGrowth = 5.0,
-            currentIntrinsicValue = 6.0,
+            incomeStatement = stock.incomeStatement?.copy(eps = 2.0, earningsQuarterlyGrowth = 5.0),
+            valuationMeasures = stock.valuationMeasures?.copy(pe = 3.0, pb = 4.0, intrinsicValue = 6.0),
             currency = "EUR",
             lastUpdated = 7L,
             isWatchlisted = true,
@@ -91,74 +88,36 @@ class StocksDaoTest {
         assertEquals(updatedStock, dao.getStock("APL"))
     }
 
-    /*
     @Test
-    fun `saveStock with null values should not override existing ones`() = runBlocking {
-        val stock = getStockEntity(
-            expectedEpsGrowth = 7.72,
-            valuationFloor = 12.5,
-            forwardIntrinsicValue = 100.58355,
-            isWatchlisted = true,
-        )
+    fun `getIntrinsicValue should calculate current intrinsic value based on ps and price`() = runBlocking {
+        val stock = getStockEntity()
         dao.saveStock(stock)
-        val updatedStock = stock.copy(
-            logo = null,
-            expectedEpsGrowth = null,
-            valuationFloor = null,
-            currentIntrinsicValue = 1.0,
-            forwardIntrinsicValue = null,
-            isWatchlisted = false,
 
-        )
+        dao.saveStock(stock.copy(valuationMeasures = stock.valuationMeasures?.copy(valuationFloor = 12.5)))
 
-        dao.saveStock(updatedStock)
-
-        assertEquals(stock.copy(currentIntrinsicValue = 93.375), dao.getStock("AAPL"))
+        val expected = 369.16539486363496
+        assertEquals(expected, dao.getStock("AAPL")?.valuationMeasures?.intrinsicValue)
     }
 
     @Test
-    fun `saveStock with null expectedEpsGrowth should still recalculate intrinsic values with local growth`() = runBlocking {
-        val stock = getStockEntity(expectedEpsGrowth = 7.72)
+    fun `getIntrinsicValue with null ps should return 0`() = runBlocking {
+        val stock = getStockEntity()
         dao.saveStock(stock)
-        val updatedStock = stock.copy(
-            expectedEpsGrowth = null,
-            currentIntrinsicValue = 1.0,
-        )
 
-        dao.saveStock(updatedStock)
+        dao.saveStock(stock.copy(valuationMeasures = stock.valuationMeasures?.copy(ps = null, valuationFloor = 12.5)))
 
-        assertEquals(
-            stock.copy(
-                currentIntrinsicValue = 119.52,
-                forwardIntrinsicValue = 128.74694399999998,
-            ),
-            dao.getStock("AAPL")
-        )
+        assertEquals(0.0, dao.getStock("AAPL")?.valuationMeasures?.intrinsicValue)
     }
 
     @Test
-    fun `saveStock with null expectedEpsGrowth should still recalculate intrinsic values with local floor`() = runBlocking {
-        val stock = getStockEntity(
-            expectedEpsGrowth = 0.0,
-            valuationFloor = 12.5,
-        )
+    fun `getIntrinsicValue with null price should return 0`() = runBlocking {
+        val stock = getStockEntity()
         dao.saveStock(stock)
-        val updatedStock = stock.copy(
-            expectedEpsGrowth = null,
-            currentIntrinsicValue = 1.0,
-        )
 
-        dao.saveStock(updatedStock)
+        dao.saveStock(stock.copy(price = null, valuationMeasures = stock.valuationMeasures?.copy(valuationFloor = 12.5)))
 
-        assertEquals(
-            stock.copy(
-                currentIntrinsicValue = 93.375,
-                forwardIntrinsicValue = 93.375,
-            ),
-            dao.getStock("AAPL")
-        )
+        assertEquals(0.0, dao.getStock("AAPL")?.valuationMeasures?.intrinsicValue)
     }
-    */
 
     @Test
     fun `addToWatchlist should update isWatchlisted to true`() = runBlocking {

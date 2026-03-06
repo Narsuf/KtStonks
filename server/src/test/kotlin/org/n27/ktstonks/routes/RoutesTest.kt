@@ -8,6 +8,7 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import io.ktor.server.testing.*
+import kotlinx.serialization.json.Json
 import org.junit.Test
 import org.mockito.ArgumentMatchers.*
 import org.mockito.kotlin.anyOrNull
@@ -32,7 +33,7 @@ class RoutesTest {
         val response = client.get("/stock/AAPL")
 
         assertEquals(HttpStatusCode.OK, response.status)
-        assertEquals(getJson("get_stock.json"), response.bodyAsText())
+        assertEquals(Json.parseToJsonElement(getJson("get_stock.json")), Json.parseToJsonElement(response.bodyAsText()))
     }
 
     @Test
@@ -46,19 +47,27 @@ class RoutesTest {
 
     @Test
     fun `test post valuation success`() = testWithApplication { client ->
-        whenever(useCase.addCustomValuation(anyString(), anyDouble(), anyDouble())) doReturn Result.success(Unit)
+        whenever(useCase.addCustomValuation(anyString(), anyDouble())) doReturn Result.success(Unit)
 
-        val response = client.post("/stock/AAPL/valuation?valuationFloor=1.0&epsGrowth=1.0")
+        val response = client.post("/stock/AAPL/valuation?valuationFloor=1.0")
 
         assertEquals(HttpStatusCode.OK, response.status)
         assertEquals("Valuation updated", response.bodyAsText())
     }
 
     @Test
-    fun `test post valuation error`() = testWithApplication { client ->
-        whenever(useCase.addCustomValuation(anyString(), anyDouble(), anyDouble())) doReturn Result.failure(Exception())
+    fun `test post valuation missing valuationFloor`() = testWithApplication { client ->
+        val response = client.post("/stock/AAPL/valuation")
 
-        val response = client.post("/stock/AAPL/valuation?valuationFloor=1.0&epsGrowth=1.0")
+        assertEquals(HttpStatusCode.BadRequest, response.status)
+        assertEquals("valuationFloor is required", response.bodyAsText())
+    }
+
+    @Test
+    fun `test post valuation error`() = testWithApplication { client ->
+        whenever(useCase.addCustomValuation(anyString(), anyDouble())) doReturn Result.failure(Exception())
+
+        val response = client.post("/stock/AAPL/valuation?valuationFloor=1.0")
 
         assertEquals(HttpStatusCode.InternalServerError, response.status)
     }
@@ -70,7 +79,7 @@ class RoutesTest {
         val response = client.get("/stocks")
 
         assertEquals(HttpStatusCode.OK, response.status)
-        assertEquals(getJson("get_stocks.json"), response.bodyAsText())
+        assertEquals(Json.parseToJsonElement(getJson("get_stocks.json")), Json.parseToJsonElement(response.bodyAsText()))
     }
 
     @Test
@@ -89,7 +98,7 @@ class RoutesTest {
         val response = client.get("/watchlist")
 
         assertEquals(HttpStatusCode.OK, response.status)
-        assertEquals(getJson("get_stocks.json"), response.bodyAsText())
+        assertEquals(Json.parseToJsonElement(getJson("get_stocks.json")), Json.parseToJsonElement(response.bodyAsText()))
     }
 
     @Test

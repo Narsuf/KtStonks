@@ -7,7 +7,13 @@
   "eps": 7.47,
   "pe": 34.7215522245231,
   "pb": 51.967537,
+  "ps": 8.78231,
   "earningsQuarterlyGrowth": 86.4,
+  "revenueQuarterlyGrowth": 5.2,
+  "revenueEstimateGrowthLow": null,
+  "revenueEstimateGrowthHigh": null,
+  "earningsEstimateGrowthLow": null,
+  "earningsEstimateGrowthHigh": null,
   "intrinsicValue": 119.52,
   "currency": "USD"
 }

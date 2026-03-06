@@ -15,16 +15,40 @@ data class Stocks(
         val logo: String?,
         val price: Double?,
         val dividendYield: Double?,
-        val eps: Double?,
-        val pe: Double?,
-        val pb: Double?,
-        val earningsQuarterlyGrowth: Double?,
-        val expectedEpsGrowth: Double?,
-        val valuationFloor: Double?,
-        val currentIntrinsicValue: Double?,
-        val forwardIntrinsicValue: Double?,
+        val incomeStatement: IncomeStatement?,
+        val analysis: Analysis?,
+        val valuationMeasures: ValuationMeasures?,
         val currency: String?,
         val lastUpdated: Long,
         val isWatchlisted: Boolean,
     )
+
+    @Serializable
+    data class IncomeStatement(
+        val eps: Double?,
+        val earningsQuarterlyGrowth: Double?,
+        val revenueQuarterlyGrowth: Double?,
+    )
+
+    @Serializable
+    data class ValuationMeasures(
+        val pe: Double?,
+        val pb: Double?,
+        val ps: Double?,
+        val valuationFloor: Double?,
+        val intrinsicValue: Double?,
+    )
+
+    @Serializable
+    data class Analysis(
+        val earningsEstimate: Estimate?,
+        val revenueEstimate: Estimate?,
+    ) {
+
+        @Serializable
+        data class Estimate(
+            val growthLow: Double?,
+            val growthHigh: Double?,
+        )
+    }
 }

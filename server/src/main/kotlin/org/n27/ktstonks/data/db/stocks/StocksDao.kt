@@ -30,30 +30,20 @@ class StocksDao {
 
             if (existingStock != null) {
                 StocksTable.update(where = { StocksTable.symbol eq stock.symbol }) {
-                    val expectedEpsGrowth = stock.expectedEpsGrowth ?: existingStock.expectedEpsGrowth
-                    val valuationFloor = stock.valuationFloor ?: existingStock.valuationFloor
-
-                    /*
-                    val forwardIntrinsicValue = if (expectedEpsGrowth != null)
-                        stock.eps?.getIntrinsicValue(valuationFloor ?: 16.0, expectedEpsGrowth)
-                    else
-                        existingStock.forwardIntrinsicValue
-                     */
-
-                    val currentIntrinsicValue = if (valuationFloor != null)
-                        //stock.eps?.getIntrinsicValue(valuationFloor)
+                    val valuationFloor = stock.valuationMeasures?.valuationFloor ?: existingStock.valuationMeasures?.valuationFloor
+                    val intrinsicValue = if (valuationFloor != null)
                         stock.getIntrinsicValue(valuationFloor)
                     else
-                        existingStock.currentIntrinsicValue
+                        existingStock.valuationMeasures?.intrinsicValue
 
                     it.fromStockEntity(
                         stock.copy(
                             isWatchlisted = existingStock.isWatchlisted,
                             logo = existingStock.logo ?: stock.logo,
-                            expectedEpsGrowth = /*expectedEpsGrowth*/ 0.0,
-                            valuationFloor = valuationFloor,
-                            forwardIntrinsicValue = /*forwardIntrinsicValue*/ 0.0,
-                            currentIntrinsicValue = currentIntrinsicValue,
+                            valuationMeasures = existingStock.valuationMeasures?.copy(
+                                valuationFloor = valuationFloor,
+                                intrinsicValue = intrinsicValue,
+                            ),
                         )
                     )
                 }
@@ -89,14 +79,18 @@ class StocksDao {
         this[StocksTable.logo] = stock.logo?.bytes
         this[StocksTable.price] = stock.price
         this[StocksTable.dividendYield] = stock.dividendYield
-        this[StocksTable.eps] = stock.eps
-        this[StocksTable.pe] = stock.pe
-        this[StocksTable.pb] = stock.pb
-        this[StocksTable.earningsQuarterlyGrowth] = stock.earningsQuarterlyGrowth
-        this[StocksTable.expectedEpsGrowth] = stock.expectedEpsGrowth
-        this[StocksTable.valuationFloor] = stock.valuationFloor
-        this[StocksTable.currentIntrinsicValue] = stock.currentIntrinsicValue
-        this[StocksTable.forwardIntrinsicValue] = stock.forwardIntrinsicValue
+        this[StocksTable.eps] = stock.incomeStatement?.eps
+        this[StocksTable.earningsQuarterlyGrowth] = stock.incomeStatement?.earningsQuarterlyGrowth
+        this[StocksTable.revenueQuarterlyGrowth] = stock.incomeStatement?.revenueQuarterlyGrowth
+        this[StocksTable.pe] = stock.valuationMeasures?.pe
+        this[StocksTable.pb] = stock.valuationMeasures?.pb
+        this[StocksTable.ps] = stock.valuationMeasures?.ps
+        this[StocksTable.revenueEstimateGrowthLow] = stock.analysis?.revenueEstimate?.growthLow
+        this[StocksTable.revenueEstimateGrowthHigh] = stock.analysis?.revenueEstimate?.growthHigh
+        this[StocksTable.earningsEstimateGrowthLow] = stock.analysis?.earningsEstimate?.growthLow
+        this[StocksTable.earningsEstimateGrowthHigh] = stock.analysis?.earningsEstimate?.growthHigh
+        this[StocksTable.valuationFloor] = stock.valuationMeasures?.valuationFloor
+        this[StocksTable.intrinsicValue] = stock.valuationMeasures?.intrinsicValue
         this[StocksTable.currency] = stock.currency
         this[StocksTable.lastUpdated] = stock.lastUpdated
         this[StocksTable.isWatchlisted] = stock.isWatchlisted
@@ -119,14 +113,40 @@ class StocksDao {
         logo = this[StocksTable.logo]?.let { StockEntity.Logo(it) },
         price = this[StocksTable.price],
         dividendYield = this[StocksTable.dividendYield],
-        eps = this[StocksTable.eps],
-        pe = this[StocksTable.pe],
-        pb = this[StocksTable.pb],
-        earningsQuarterlyGrowth = this[StocksTable.earningsQuarterlyGrowth],
-        expectedEpsGrowth = this[StocksTable.expectedEpsGrowth],
-        valuationFloor = this[StocksTable.valuationFloor],
-        currentIntrinsicValue = this[StocksTable.currentIntrinsicValue],
-        forwardIntrinsicValue = this[StocksTable.forwardIntrinsicValue],
+        incomeStatement = run {
+            val eps = this[StocksTable.eps]
+            val earningsQuarterlyGrowth = this[StocksTable.earningsQuarterlyGrowth]
+            val revenueQuarterlyGrowth = this[StocksTable.revenueQuarterlyGrowth]
+            if (eps != null || earningsQuarterlyGrowth != null || revenueQuarterlyGrowth != null)
+                StockEntity.IncomeStatement(eps, earningsQuarterlyGrowth, revenueQuarterlyGrowth)
+            else null
+        },
+        analysis = run {
+            val earningsLow = this[StocksTable.earningsEstimateGrowthLow]
+            val earningsHigh = this[StocksTable.earningsEstimateGrowthHigh]
+            val revenueLow = this[StocksTable.revenueEstimateGrowthLow]
+            val revenueHigh = this[StocksTable.revenueEstimateGrowthHigh]
+            if (earningsLow != null || earningsHigh != null || revenueLow != null || revenueHigh != null)
+                StockEntity.Analysis(
+                    earningsEstimate = if (earningsLow != null || earningsHigh != null)
+                        StockEntity.Analysis.Estimate(earningsLow, earningsHigh)
+                    else null,
+                    revenueEstimate = if (revenueLow != null || revenueHigh != null)
+                        StockEntity.Analysis.Estimate(revenueLow, revenueHigh)
+                    else null,
+                )
+            else null
+        },
+        valuationMeasures = run {
+            val pe = this[StocksTable.pe]
+            val pb = this[StocksTable.pb]
+            val ps = this[StocksTable.ps]
+            val valuationFloor = this[StocksTable.valuationFloor]
+            val intrinsicValue = this[StocksTable.intrinsicValue]
+            if (pe != null || pb != null || ps != null || valuationFloor != null || intrinsicValue != null)
+                StockEntity.ValuationMeasures(pe, pb, ps, valuationFloor, intrinsicValue)
+            else null
+        },
         currency = this[StocksTable.currency],
         lastUpdated = this[StocksTable.lastUpdated],
         isWatchlisted = this[StocksTable.isWatchlisted],
@@ -134,13 +154,5 @@ class StocksDao {
 
     private fun StockEntity.getIntrinsicValue(
         valuationFloor: Double,
-    ) = pb?.let { (price ?: 0.0) * (valuationFloor / it) } ?: 0.0
-
-    /*
-    private fun Double.getIntrinsicValue(
-        valuationFloor: Double,
-        expectedEpsGrowth: Double = 0.0,
-    ) = expectedEpsGrowth.toMultiplier() * valuationFloor * this
-
-    private fun Double.toMultiplier(): Double = 1 + this / 100*/
+    ) = valuationMeasures?.ps?.let { (price ?: 0.0) * (valuationFloor / it) } ?: 0.0
 }

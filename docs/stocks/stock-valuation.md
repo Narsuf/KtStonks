@@ -8,11 +8,10 @@ Updates or sets a custom valuation for a given stock symbol.
 `POST`
 
 ### Query parameters
-- `epsGrowth` (double, required) — EPS growth percentage used for valuation calculation.
-- `valuationFloor` (double, optional) — Manual valuation floor (P/E) to apply.
+- `valuationFloor` (double, required) — Manual valuation floor (P/S) to apply.
 
 ### Response
 #### Status code
 - 200 — Valuation successfully saved.
-- 400 — Missing `epsGrowth`.
+- 400 — Missing `valuationFloor`.
 - 500 — Failed to save stock.

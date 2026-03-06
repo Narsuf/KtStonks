@@ -51,7 +51,7 @@ private fun initDatabase(): Database {
         driver = "org.h2.Driver"
     )
 
-    transaction(db) { SchemaUtils.create(StocksTable) }
+    transaction(db) { SchemaUtils.createMissingTablesAndColumns(StocksTable) }
 
     return db
 }
