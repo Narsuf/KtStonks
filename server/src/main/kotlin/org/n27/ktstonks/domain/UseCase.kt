@@ -27,7 +27,13 @@ class UseCase(private val repository: Repository) {
     ): Result<Unit> = repository.getStock(symbol).mapCatching {
         val updatedStock = it.copy(
             valuationMeasures = it.valuationMeasures?.copy(valuationFloor = valuationFloor)
-                ?: ValuationMeasures(pe = null, pb = null, ps = null, valuationFloor = valuationFloor, intrinsicValue = null),
+                ?: ValuationMeasures(
+                    pe = null,
+                    pb = null,
+                    ps = null,
+                    valuationFloor = valuationFloor,
+                    intrinsicValue = null,
+                ),
         )
         repository.updateStock(updatedStock).getOrThrow()
     }

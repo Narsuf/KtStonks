@@ -95,7 +95,7 @@ class StocksDaoTest {
 
         dao.saveStock(stock.copy(valuationMeasures = stock.valuationMeasures?.copy(valuationFloor = 12.5)))
 
-        val expected = 259.369995117188 * (12.5 / 8.78231)
+        val expected = 369.16539486363496
         assertEquals(expected, dao.getStock("AAPL")?.valuationMeasures?.intrinsicValue)
     }
 
