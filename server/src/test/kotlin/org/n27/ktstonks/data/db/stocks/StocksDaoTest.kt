@@ -161,6 +161,37 @@ class StocksDaoTest {
     */
 
     @Test
+    fun `getIntrinsicValue should calculate current intrinsic value based on ps and price`() = runBlocking {
+        val stock = getStockEntity()
+        dao.saveStock(stock)
+
+        dao.saveStock(stock.copy(valuationFloor = 12.5))
+
+        val expected = 259.369995117188 * (12.5 / 8.78231)
+        assertEquals(expected, dao.getStock("AAPL")?.currentIntrinsicValue)
+    }
+
+    @Test
+    fun `getIntrinsicValue with null ps should return 0`() = runBlocking {
+        val stock = getStockEntity()
+        dao.saveStock(stock)
+
+        dao.saveStock(stock.copy(ps = null, valuationFloor = 12.5))
+
+        assertEquals(0.0, dao.getStock("AAPL")?.currentIntrinsicValue)
+    }
+
+    @Test
+    fun `getIntrinsicValue with null price should return 0`() = runBlocking {
+        val stock = getStockEntity()
+        dao.saveStock(stock)
+
+        dao.saveStock(stock.copy(price = null, valuationFloor = 12.5))
+
+        assertEquals(0.0, dao.getStock("AAPL")?.currentIntrinsicValue)
+    }
+
+    @Test
     fun `addToWatchlist should update isWatchlisted to true`() = runBlocking {
         val stock = getStockEntity()
         dao.saveStock(stock)

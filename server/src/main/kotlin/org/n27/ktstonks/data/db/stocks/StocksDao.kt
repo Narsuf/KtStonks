@@ -136,7 +136,7 @@ class StocksDao {
 
     private fun StockEntity.getIntrinsicValue(
         valuationFloor: Double,
-    ) = pb?.let { (price ?: 0.0) * (valuationFloor / it) } ?: 0.0
+    ) = ps?.let { (price ?: 0.0) * (valuationFloor / it) } ?: 0.0
 
     /*
     private fun Double.getIntrinsicValue(
