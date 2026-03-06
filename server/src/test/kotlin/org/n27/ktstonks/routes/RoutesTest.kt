@@ -17,6 +17,7 @@ import org.mockito.kotlin.whenever
 import org.n27.ktstonks.domain.UseCase
 import org.n27.ktstonks.test_data.getStock
 import org.n27.ktstonks.test_data.getStocks
+import kotlinx.serialization.json.Json
 import kotlin.test.assertEquals
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation as ClientContentNegotiation
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation as ServerContentNegotiation
@@ -32,7 +33,7 @@ class RoutesTest {
         val response = client.get("/stock/AAPL")
 
         assertEquals(HttpStatusCode.OK, response.status)
-        assertEquals(getJson("get_stock.json"), response.bodyAsText())
+        assertEquals(Json.parseToJsonElement(getJson("get_stock.json")), Json.parseToJsonElement(response.bodyAsText()))
     }
 
     @Test
@@ -70,7 +71,7 @@ class RoutesTest {
         val response = client.get("/stocks")
 
         assertEquals(HttpStatusCode.OK, response.status)
-        assertEquals(getJson("get_stocks.json"), response.bodyAsText())
+        assertEquals(Json.parseToJsonElement(getJson("get_stocks.json")), Json.parseToJsonElement(response.bodyAsText()))
     }
 
     @Test
@@ -89,7 +90,7 @@ class RoutesTest {
         val response = client.get("/watchlist")
 
         assertEquals(HttpStatusCode.OK, response.status)
-        assertEquals(getJson("get_stocks.json"), response.bodyAsText())
+        assertEquals(Json.parseToJsonElement(getJson("get_stocks.json")), Json.parseToJsonElement(response.bodyAsText()))
     }
 
     @Test
