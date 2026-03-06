@@ -23,7 +23,7 @@ class UseCase(private val repository: Repository) {
 
     suspend fun addCustomValuation(
         symbol: String,
-        valuationFloor: Double?,
+        valuationFloor: Double,
     ): Result<Unit> = repository.getStock(symbol).mapCatching {
         val updatedStock = it.copy(
             valuationMeasures = it.valuationMeasures?.copy(valuationFloor = valuationFloor)

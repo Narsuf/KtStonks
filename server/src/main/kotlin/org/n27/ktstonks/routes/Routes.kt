@@ -25,10 +25,14 @@ fun Route.stockRoutes(useCase: UseCase) {
             call.withSymbol { symbol ->
                 val valuationFloor = call.request.queryParameters["valuationFloor"]?.toDoubleOrNull()
 
-                useCase.addCustomValuation(symbol, valuationFloor).fold(
-                    onSuccess = { call.respondText("Valuation updated", status = HttpStatusCode.OK) },
-                    onFailure = { call.respondError(it) }
-                )
+                if (valuationFloor != null) {
+                    useCase.addCustomValuation(symbol, valuationFloor).fold(
+                        onSuccess = { call.respondText("Valuation updated", status = HttpStatusCode.OK) },
+                        onFailure = { call.respondError(it) }
+                    )
+                } else {
+                    call.respondText("valuationFloor is required", status = HttpStatusCode.BadRequest)
+                }
             }
         }
     }

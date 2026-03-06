@@ -47,7 +47,7 @@ class RoutesTest {
 
     @Test
     fun `test post valuation success`() = testWithApplication { client ->
-        whenever(useCase.addCustomValuation(anyString(), anyOrNull())) doReturn Result.success(Unit)
+        whenever(useCase.addCustomValuation(anyString(), anyDouble())) doReturn Result.success(Unit)
 
         val response = client.post("/stock/AAPL/valuation?valuationFloor=1.0")
 
@@ -56,8 +56,16 @@ class RoutesTest {
     }
 
     @Test
+    fun `test post valuation missing valuationFloor`() = testWithApplication { client ->
+        val response = client.post("/stock/AAPL/valuation")
+
+        assertEquals(HttpStatusCode.BadRequest, response.status)
+        assertEquals("valuationFloor is required", response.bodyAsText())
+    }
+
+    @Test
     fun `test post valuation error`() = testWithApplication { client ->
-        whenever(useCase.addCustomValuation(anyString(), anyOrNull())) doReturn Result.failure(Exception())
+        whenever(useCase.addCustomValuation(anyString(), anyDouble())) doReturn Result.failure(Exception())
 
         val response = client.post("/stock/AAPL/valuation?valuationFloor=1.0")
 
