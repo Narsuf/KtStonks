@@ -1,6 +1,7 @@
 package org.n27.ktstonks.data.yfinance.mapping
 
 import org.n27.ktstonks.data.yfinance.model.StockRaw
+import org.n27.ktstonks.domain.model.Stocks
 import org.n27.ktstonks.domain.model.Stocks.Stock
 
 internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
@@ -9,15 +10,29 @@ internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
     logo = logo,
     price = price,
     dividendYield = dividendYield,
-    eps = eps,
-    pe = pe,
-    pb = pb,
-    ps = ps,
-    earningsQuarterlyGrowth = earningsQuarterlyGrowth,
-    expectedEpsGrowth = null,
-    valuationFloor = null,
-    currentIntrinsicValue = intrinsicValue,
-    forwardIntrinsicValue = null,
+    incomeStatement = Stocks.IncomeStatement(
+        eps = eps,
+        earningsQuarterlyGrowth = earningsQuarterlyGrowth,
+        revenueQuarterlyGrowth = revenueQuarterlyGrowth,
+    ),
+    analysis = run {
+        val earningsEstimate = if (earningsEstimateGrowthLow != null || earningsEstimateGrowthHigh != null)
+            Stocks.Analysis.Estimate(earningsEstimateGrowthLow, earningsEstimateGrowthHigh)
+        else null
+        val revenueEstimate = if (revenueEstimateGrowthLow != null || revenueEstimateGrowthHigh != null)
+            Stocks.Analysis.Estimate(revenueEstimateGrowthLow, revenueEstimateGrowthHigh)
+        else null
+        if (earningsEstimate != null || revenueEstimate != null)
+            Stocks.Analysis(earningsEstimate, revenueEstimate)
+        else null
+    },
+    valuationMeasures = Stocks.ValuationMeasures(
+        pe = pe,
+        pb = pb,
+        ps = ps,
+        valuationFloor = null,
+        intrinsicValue = intrinsicValue,
+    ),
     currency = currency,
     lastUpdated = System.currentTimeMillis(),
     isWatchlisted = false,

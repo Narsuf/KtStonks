@@ -2,7 +2,7 @@ package org.n27.ktstonks.data.db.stocks
 
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
 import org.n27.ktstonks.domain.model.Stocks
-import org.n27.ktstonks.domain.model.Stocks.Stock
+import org.n27.ktstonks.domain.model.Stocks.*
 import java.util.*
 
 fun StocksEntity.toStocks() = Stocks(
@@ -16,15 +16,32 @@ fun StockEntity.toStock() = Stock(
     logo = logo?.bytes?.let { Base64.getEncoder().encodeToString(it) },
     price = price,
     dividendYield = dividendYield,
-    eps = eps,
-    pe = pe,
-    pb = pb,
-    ps = ps,
-    earningsQuarterlyGrowth = earningsQuarterlyGrowth,
-    expectedEpsGrowth = expectedEpsGrowth,
-    valuationFloor = valuationFloor,
-    currentIntrinsicValue = currentIntrinsicValue,
-    forwardIntrinsicValue = forwardIntrinsicValue,
+    incomeStatement = incomeStatement?.let {
+        IncomeStatement(
+            eps = it.eps,
+            earningsQuarterlyGrowth = it.earningsQuarterlyGrowth,
+            revenueQuarterlyGrowth = it.revenueQuarterlyGrowth,
+        )
+    },
+    analysis = analysis?.let {
+        Analysis(
+            earningsEstimate = it.earningsEstimate?.let { e ->
+                Analysis.Estimate(growthLow = e.growthLow, growthHigh = e.growthHigh)
+            },
+            revenueEstimate = it.revenueEstimate?.let { e ->
+                Analysis.Estimate(growthLow = e.growthLow, growthHigh = e.growthHigh)
+            },
+        )
+    },
+    valuationMeasures = valuationMeasures?.let {
+        ValuationMeasures(
+            pe = it.pe,
+            pb = it.pb,
+            ps = it.ps,
+            valuationFloor = it.valuationFloor,
+            intrinsicValue = it.intrinsicValue,
+        )
+    },
     currency = currency,
     lastUpdated = lastUpdated,
     isWatchlisted = isWatchlisted,
@@ -36,15 +53,32 @@ fun Stock.toEntity() = StockEntity(
     logo = logo?.let { StockEntity.Logo(Base64.getDecoder().decode(it)) },
     price = price,
     dividendYield = dividendYield,
-    eps = eps,
-    pe = pe,
-    pb = pb,
-    ps = ps,
-    earningsQuarterlyGrowth = earningsQuarterlyGrowth,
-    expectedEpsGrowth = expectedEpsGrowth,
-    valuationFloor = valuationFloor,
-    currentIntrinsicValue = currentIntrinsicValue,
-    forwardIntrinsicValue = forwardIntrinsicValue,
+    incomeStatement = incomeStatement?.let {
+        StockEntity.IncomeStatement(
+            eps = it.eps,
+            earningsQuarterlyGrowth = it.earningsQuarterlyGrowth,
+            revenueQuarterlyGrowth = it.revenueQuarterlyGrowth,
+        )
+    },
+    analysis = analysis?.let {
+        StockEntity.Analysis(
+            earningsEstimate = it.earningsEstimate?.let { e ->
+                StockEntity.Analysis.Estimate(growthLow = e.growthLow, growthHigh = e.growthHigh)
+            },
+            revenueEstimate = it.revenueEstimate?.let { e ->
+                StockEntity.Analysis.Estimate(growthLow = e.growthLow, growthHigh = e.growthHigh)
+            },
+        )
+    },
+    valuationMeasures = valuationMeasures?.let {
+        StockEntity.ValuationMeasures(
+            pe = it.pe,
+            pb = it.pb,
+            ps = it.ps,
+            valuationFloor = it.valuationFloor,
+            intrinsicValue = it.intrinsicValue,
+        )
+    },
     currency = currency,
     lastUpdated = lastUpdated,
     isWatchlisted = isWatchlisted,

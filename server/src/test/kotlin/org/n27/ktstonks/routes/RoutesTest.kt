@@ -8,6 +8,7 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import io.ktor.server.testing.*
+import kotlinx.serialization.json.Json
 import org.junit.Test
 import org.mockito.ArgumentMatchers.*
 import org.mockito.kotlin.anyOrNull
@@ -17,7 +18,6 @@ import org.mockito.kotlin.whenever
 import org.n27.ktstonks.domain.UseCase
 import org.n27.ktstonks.test_data.getStock
 import org.n27.ktstonks.test_data.getStocks
-import kotlinx.serialization.json.Json
 import kotlin.test.assertEquals
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation as ClientContentNegotiation
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation as ServerContentNegotiation
@@ -47,9 +47,9 @@ class RoutesTest {
 
     @Test
     fun `test post valuation success`() = testWithApplication { client ->
-        whenever(useCase.addCustomValuation(anyString(), anyDouble(), anyDouble())) doReturn Result.success(Unit)
+        whenever(useCase.addCustomValuation(anyString(), anyOrNull())) doReturn Result.success(Unit)
 
-        val response = client.post("/stock/AAPL/valuation?valuationFloor=1.0&epsGrowth=1.0")
+        val response = client.post("/stock/AAPL/valuation?valuationFloor=1.0")
 
         assertEquals(HttpStatusCode.OK, response.status)
         assertEquals("Valuation updated", response.bodyAsText())
@@ -57,9 +57,9 @@ class RoutesTest {
 
     @Test
     fun `test post valuation error`() = testWithApplication { client ->
-        whenever(useCase.addCustomValuation(anyString(), anyDouble(), anyDouble())) doReturn Result.failure(Exception())
+        whenever(useCase.addCustomValuation(anyString(), anyOrNull())) doReturn Result.failure(Exception())
 
-        val response = client.post("/stock/AAPL/valuation?valuationFloor=1.0&epsGrowth=1.0")
+        val response = client.post("/stock/AAPL/valuation?valuationFloor=1.0")
 
         assertEquals(HttpStatusCode.InternalServerError, response.status)
     }

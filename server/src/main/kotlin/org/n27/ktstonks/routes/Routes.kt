@@ -24,16 +24,11 @@ fun Route.stockRoutes(useCase: UseCase) {
         post("/valuation") {
             call.withSymbol { symbol ->
                 val valuationFloor = call.request.queryParameters["valuationFloor"]?.toDoubleOrNull()
-                val epsGrowth = call.request.queryParameters["epsGrowth"]?.toDoubleOrNull()
 
-                if (epsGrowth != null) {
-                    useCase.addCustomValuation(symbol, valuationFloor, epsGrowth).fold(
-                        onSuccess = { call.respondText("Valuation updated", status = HttpStatusCode.OK) },
-                        onFailure = { call.respondError(it) }
-                    )
-                } else {
-                    call.respondText("epsGrowth is required", status = HttpStatusCode.BadRequest)
-                }
+                useCase.addCustomValuation(symbol, valuationFloor).fold(
+                    onSuccess = { call.respondText("Valuation updated", status = HttpStatusCode.OK) },
+                    onFailure = { call.respondError(it) }
+                )
             }
         }
     }
