@@ -92,6 +92,7 @@ class StocksDao {
         this[StocksTable.eps] = stock.eps
         this[StocksTable.pe] = stock.pe
         this[StocksTable.pb] = stock.pb
+        this[StocksTable.ps] = stock.ps
         this[StocksTable.earningsQuarterlyGrowth] = stock.earningsQuarterlyGrowth
         this[StocksTable.expectedEpsGrowth] = stock.expectedEpsGrowth
         this[StocksTable.valuationFloor] = stock.valuationFloor
@@ -122,6 +123,7 @@ class StocksDao {
         eps = this[StocksTable.eps],
         pe = this[StocksTable.pe],
         pb = this[StocksTable.pb],
+        ps = this[StocksTable.ps],
         earningsQuarterlyGrowth = this[StocksTable.earningsQuarterlyGrowth],
         expectedEpsGrowth = this[StocksTable.expectedEpsGrowth],
         valuationFloor = this[StocksTable.valuationFloor],

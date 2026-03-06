@@ -12,6 +12,7 @@ internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
     eps = eps,
     pe = pe,
     pb = pb,
+    ps = ps,
     earningsQuarterlyGrowth = earningsQuarterlyGrowth,
     expectedEpsGrowth = null,
     valuationFloor = null,

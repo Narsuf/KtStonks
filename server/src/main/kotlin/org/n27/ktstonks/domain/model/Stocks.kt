@@ -18,6 +18,7 @@ data class Stocks(
         val eps: Double?,
         val pe: Double?,
         val pb: Double?,
+        val ps: Double?,
         val earningsQuarterlyGrowth: Double?,
         val expectedEpsGrowth: Double?,
         val valuationFloor: Double?,

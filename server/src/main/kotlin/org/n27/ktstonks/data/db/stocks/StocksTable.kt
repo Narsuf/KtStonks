@@ -11,6 +11,7 @@ object StocksTable : Table("stocks") {
     val eps = double("eps").nullable()
     val pe = double("pe").nullable()
     val pb = double("pb").nullable()
+    val ps = double("ps").nullable()
     val earningsQuarterlyGrowth = double("earnings_quarterly_growth").nullable()
     val expectedEpsGrowth = double("expected_eps_growth").nullable()
     val valuationFloor = double("valuation_floor").nullable()

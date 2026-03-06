@@ -12,6 +12,7 @@ data class StockRaw(
     val eps: Double?,
     val pe: Double?,
     val pb: Double?,
+    val ps: Double?,
     val earningsQuarterlyGrowth: Double?,
     val intrinsicValue: Double?,
     val currency: String?,
