@@ -120,18 +120,6 @@ class StocksDaoTest {
     }
 
     @Test
-    fun `saveStock should keep db valuationFloor when it already exists`() = runBlocking {
-        val dbValuationFloor = 10.0
-        val stock = getStockEntity(valuationMeasures = getStockEntity().valuationMeasures?.copy(valuationFloor = dbValuationFloor))
-        dao.saveStock(stock)
-
-        val remoteStock = stock.copy(valuationMeasures = stock.valuationMeasures?.copy(valuationFloor = 99.0))
-        dao.saveStock(remoteStock)
-
-        assertEquals(dbValuationFloor, dao.getStock("AAPL")?.valuationMeasures?.valuationFloor)
-    }
-
-    @Test
     fun `addToWatchlist should update isWatchlisted to true`() = runBlocking {
         val stock = getStockEntity()
         dao.saveStock(stock)

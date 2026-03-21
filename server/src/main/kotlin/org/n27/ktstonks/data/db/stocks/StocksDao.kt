@@ -30,11 +30,9 @@ class StocksDao {
 
             if (existingStock != null) {
                 StocksTable.update(where = { StocksTable.symbol eq stock.symbol }) {
-                    val valuationFloor = existingStock.valuationMeasures?.valuationFloor ?: stock.valuationMeasures?.valuationFloor
-                    val intrinsicValue = if (valuationFloor != null)
-                        stock.getIntrinsicValue(valuationFloor)
-                    else
-                        existingStock.valuationMeasures?.intrinsicValue
+                    val valuationFloor = stock.valuationMeasures?.valuationFloor
+                        ?: existingStock.valuationMeasures?.valuationFloor
+                        ?: 1.0
 
                     it.fromStockEntity(
                         stock.copy(
@@ -42,7 +40,7 @@ class StocksDao {
                             logo = existingStock.logo ?: stock.logo,
                             valuationMeasures = existingStock.valuationMeasures?.copy(
                                 valuationFloor = valuationFloor,
-                                intrinsicValue = intrinsicValue,
+                                intrinsicValue = stock.getIntrinsicValue(valuationFloor),
                             ),
                         )
                     )
