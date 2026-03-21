@@ -30,7 +30,7 @@ fun getStockEntity(
 ) = StockEntity(
     symbol = symbol,
     companyName = companyName,
-    logo = StockEntity.Logo(Base64.getDecoder().decode(logo)),
+    logo = Logo(Base64.getDecoder().decode(logo)),
     price = price,
     dividendYield = dividendYield,
     incomeStatement = incomeStatement,
