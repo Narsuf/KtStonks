@@ -22,7 +22,7 @@ fun getStockEntity(
         pb = 51.967537,
         ps = 8.78231,
         valuationFloor = null,
-        intrinsicValue = 119.52,
+        intrinsicValue = null,
     ),
     currency: String = "USD",
     lastUpdated: Long = 0L,

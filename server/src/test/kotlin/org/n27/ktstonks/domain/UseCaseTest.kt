@@ -76,7 +76,7 @@ class UseCaseTest {
                 pb = 51.967537,
                 ps = 8.78231,
                 valuationFloor = 12.5,
-                intrinsicValue = 119.52,
+                intrinsicValue = null,
             ),
         )
         `when`(repository.getStock(anyString())).thenReturn(success(stock))

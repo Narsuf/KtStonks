@@ -18,7 +18,6 @@ fun getStockRaw(
     revenueEstimateGrowthHigh: Double? = null,
     earningsEstimateGrowthLow: Double? = null,
     earningsEstimateGrowthHigh: Double? = null,
-    intrinsicValue: Double = 119.52,
     currency: String = "USD",
 ) = StockRaw(
     symbol = symbol,
@@ -36,7 +35,6 @@ fun getStockRaw(
     revenueEstimateGrowthHigh = revenueEstimateGrowthHigh,
     earningsEstimateGrowthLow = earningsEstimateGrowthLow,
     earningsEstimateGrowthHigh = earningsEstimateGrowthHigh,
-    intrinsicValue = intrinsicValue,
     currency = currency,
 )
 

@@ -31,7 +31,7 @@ internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
         pb = pb,
         ps = ps,
         valuationFloor = null,
-        intrinsicValue = intrinsicValue,
+        intrinsicValue = null,
     ),
     currency = currency,
     lastUpdated = System.currentTimeMillis(),
