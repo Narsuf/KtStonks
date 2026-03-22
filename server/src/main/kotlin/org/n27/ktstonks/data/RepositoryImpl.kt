@@ -32,6 +32,7 @@ class RepositoryImpl(
             api.getStock(symbol)
                 .toDomainEntity()
                 .also { stocksDao.saveStock(it.toEntity()) }
+            stocksDao.getStock(symbol)!!.toStock()
         }
     }
 
