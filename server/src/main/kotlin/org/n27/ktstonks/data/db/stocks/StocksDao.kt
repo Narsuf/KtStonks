@@ -38,7 +38,7 @@ class StocksDao {
                         stock.copy(
                             isWatchlisted = existingStock.isWatchlisted,
                             logo = existingStock.logo ?: stock.logo,
-                            valuationMeasures = existingStock.valuationMeasures.copy(
+                            valuationMeasures = stock.valuationMeasures.copy(
                                 valuationFloor = valuationFloor,
                                 intrinsicValue = stock.getIntrinsicValue(valuationFloor),
                             ),
@@ -80,15 +80,15 @@ class StocksDao {
         this[StocksTable.eps] = stock.incomeStatement?.eps
         this[StocksTable.earningsQuarterlyGrowth] = stock.incomeStatement?.earningsQuarterlyGrowth
         this[StocksTable.revenueQuarterlyGrowth] = stock.incomeStatement?.revenueQuarterlyGrowth
-        this[StocksTable.pe] = stock.valuationMeasures?.pe
-        this[StocksTable.pb] = stock.valuationMeasures?.pb
-        this[StocksTable.ps] = stock.valuationMeasures?.ps
+        this[StocksTable.pe] = stock.valuationMeasures.pe
+        this[StocksTable.pb] = stock.valuationMeasures.pb
+        this[StocksTable.ps] = stock.valuationMeasures.ps
         this[StocksTable.revenueEstimateGrowthLow] = stock.analysis?.revenueEstimate?.growthLow
         this[StocksTable.revenueEstimateGrowthHigh] = stock.analysis?.revenueEstimate?.growthHigh
         this[StocksTable.earningsEstimateGrowthLow] = stock.analysis?.earningsEstimate?.growthLow
         this[StocksTable.earningsEstimateGrowthHigh] = stock.analysis?.earningsEstimate?.growthHigh
-        this[StocksTable.valuationFloor] = stock.valuationMeasures?.valuationFloor
-        this[StocksTable.intrinsicValue] = stock.valuationMeasures?.intrinsicValue
+        this[StocksTable.valuationFloor] = stock.valuationMeasures.valuationFloor
+        this[StocksTable.intrinsicValue] = stock.valuationMeasures.intrinsicValue
         this[StocksTable.currency] = stock.currency
         this[StocksTable.lastUpdated] = stock.lastUpdated
         this[StocksTable.isWatchlisted] = stock.isWatchlisted
