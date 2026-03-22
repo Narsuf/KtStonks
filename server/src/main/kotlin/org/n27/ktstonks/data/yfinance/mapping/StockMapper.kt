@@ -15,17 +15,10 @@ internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
         earningsQuarterlyGrowth = earningsQuarterlyGrowth,
         revenueQuarterlyGrowth = revenueQuarterlyGrowth,
     ),
-    analysis = run {
-        val earningsEstimate = if (earningsEstimateGrowthLow != null || earningsEstimateGrowthHigh != null)
-            Stocks.Analysis.Estimate(earningsEstimateGrowthLow, earningsEstimateGrowthHigh)
-        else null
-        val revenueEstimate = if (revenueEstimateGrowthLow != null || revenueEstimateGrowthHigh != null)
-            Stocks.Analysis.Estimate(revenueEstimateGrowthLow, revenueEstimateGrowthHigh)
-        else null
-        if (earningsEstimate != null || revenueEstimate != null)
-            Stocks.Analysis(earningsEstimate, revenueEstimate)
-        else null
-    },
+    analysis = Stocks.Analysis(
+        earningsEstimate = Stocks.Analysis.Estimate(earningsEstimateGrowthLow, earningsEstimateGrowthHigh),
+        revenueEstimate = Stocks.Analysis.Estimate(revenueEstimateGrowthLow, revenueEstimateGrowthHigh),
+    ),
     valuationMeasures = Stocks.ValuationMeasures(
         pe = pe,
         pb = pb,

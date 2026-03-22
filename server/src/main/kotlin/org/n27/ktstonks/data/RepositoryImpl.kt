@@ -50,8 +50,9 @@ class RepositoryImpl(
             .take(pageSize)
 
         val localStocks = stocksDao.getStocks(paginatedParams).map { it.toStock() }
+        val localSymbols = localStocks.map { it.symbol }
         val remoteParams = paginatedParams
-            .filter { param -> param !in localStocks.map { it.symbol } }
+            .filter { it !in localSymbols }
             .joinToString(separator = ",")
 
         val remoteStocks = getRemoteStocks(remoteParams)

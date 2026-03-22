@@ -11,10 +11,10 @@
     "ps": 8.78231,
     "earningsQuarterlyGrowth": 86.4,
     "revenueQuarterlyGrowth": 5.2,
-    "revenueEstimateGrowthLow": null,
-    "revenueEstimateGrowthHigh": null,
-    "earningsEstimateGrowthLow": null,
-    "earningsEstimateGrowthHigh": null,
+    "revenueEstimateGrowthLow": 5.60331523810161,
+    "revenueEstimateGrowthHigh": 10.2768231268171,
+    "earningsEstimateGrowthLow": 2.57668711656441,
+    "earningsEstimateGrowthHigh": 15.7190635451505,
     "currency": "USD"
   }
 ]

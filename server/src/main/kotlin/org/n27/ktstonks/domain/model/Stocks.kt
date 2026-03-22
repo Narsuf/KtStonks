@@ -15,8 +15,8 @@ data class Stocks(
         val logo: String?,
         val price: Double?,
         val dividendYield: Double?,
-        val incomeStatement: IncomeStatement?,
-        val analysis: Analysis?,
+        val incomeStatement: IncomeStatement,
+        val analysis: Analysis,
         val valuationMeasures: ValuationMeasures,
         val currency: String?,
         val lastUpdated: Long,
@@ -41,8 +41,8 @@ data class Stocks(
 
     @Serializable
     data class Analysis(
-        val earningsEstimate: Estimate?,
-        val revenueEstimate: Estimate?,
+        val earningsEstimate: Estimate,
+        val revenueEstimate: Estimate,
     ) {
 
         @Serializable
