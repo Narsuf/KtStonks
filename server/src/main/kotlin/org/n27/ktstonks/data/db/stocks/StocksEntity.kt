@@ -11,8 +11,8 @@ data class StocksEntity(
         val logo: Logo?,
         val price: Double?,
         val dividendYield: Double?,
-        val incomeStatement: IncomeStatement?,
-        val analysis: Analysis?,
+        val incomeStatement: IncomeStatement,
+        val analysis: Analysis,
         val valuationMeasures: ValuationMeasures,
         val currency: String?,
         val lastUpdated: Long,
@@ -34,8 +34,8 @@ data class StocksEntity(
         )
 
         data class Analysis(
-            val earningsEstimate: Estimate?,
-            val revenueEstimate: Estimate?,
+            val earningsEstimate: Estimate,
+            val revenueEstimate: Estimate,
         ) {
 
             data class Estimate(

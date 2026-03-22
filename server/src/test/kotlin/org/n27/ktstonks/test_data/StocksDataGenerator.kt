@@ -9,12 +9,15 @@ fun getStock(
     logo: String? = "/9j/2wCEAAEBAQEBAQEBAQEBAQEB",
     price: Double = 259.369995117188,
     dividendYield: Double = 0.4,
-    incomeStatement: IncomeStatement? = IncomeStatement(
+    incomeStatement: IncomeStatement = IncomeStatement(
         eps = 7.47,
         earningsQuarterlyGrowth = 86.4,
         revenueQuarterlyGrowth = 5.2,
     ),
-    analysis: Analysis? = null,
+    analysis: Analysis = Analysis(
+        earningsEstimate = Analysis.Estimate(null, null),
+        revenueEstimate = Analysis.Estimate(null, null),
+    ),
     valuationMeasures: ValuationMeasures = ValuationMeasures(
         pe = 34.7215522245231,
         pb = 51.967537,

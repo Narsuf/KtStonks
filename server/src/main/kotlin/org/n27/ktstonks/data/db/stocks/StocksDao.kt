@@ -111,30 +111,21 @@ class StocksDao {
         logo = this[StocksTable.logo]?.let { StockEntity.Logo(it) },
         price = this[StocksTable.price],
         dividendYield = this[StocksTable.dividendYield],
-        incomeStatement = run {
-            val eps = this[StocksTable.eps]
-            val earningsQuarterlyGrowth = this[StocksTable.earningsQuarterlyGrowth]
-            val revenueQuarterlyGrowth = this[StocksTable.revenueQuarterlyGrowth]
-            if (eps != null || earningsQuarterlyGrowth != null || revenueQuarterlyGrowth != null)
-                StockEntity.IncomeStatement(eps, earningsQuarterlyGrowth, revenueQuarterlyGrowth)
-            else null
-        },
-        analysis = run {
-            val earningsLow = this[StocksTable.earningsEstimateGrowthLow]
-            val earningsHigh = this[StocksTable.earningsEstimateGrowthHigh]
-            val revenueLow = this[StocksTable.revenueEstimateGrowthLow]
-            val revenueHigh = this[StocksTable.revenueEstimateGrowthHigh]
-            if (earningsLow != null || earningsHigh != null || revenueLow != null || revenueHigh != null)
-                StockEntity.Analysis(
-                    earningsEstimate = if (earningsLow != null || earningsHigh != null)
-                        StockEntity.Analysis.Estimate(earningsLow, earningsHigh)
-                    else null,
-                    revenueEstimate = if (revenueLow != null || revenueHigh != null)
-                        StockEntity.Analysis.Estimate(revenueLow, revenueHigh)
-                    else null,
-                )
-            else null
-        },
+        incomeStatement = StockEntity.IncomeStatement(
+            eps = this[StocksTable.eps],
+            earningsQuarterlyGrowth = this[StocksTable.earningsQuarterlyGrowth],
+            revenueQuarterlyGrowth = this[StocksTable.revenueQuarterlyGrowth],
+        ),
+        analysis = StockEntity.Analysis(
+            earningsEstimate = StockEntity.Analysis.Estimate(
+                growthLow = this[StocksTable.earningsEstimateGrowthLow],
+                growthHigh = this[StocksTable.earningsEstimateGrowthHigh],
+            ),
+            revenueEstimate = StockEntity.Analysis.Estimate(
+                growthLow = this[StocksTable.revenueEstimateGrowthLow],
+                growthHigh = this[StocksTable.revenueEstimateGrowthHigh],
+            ),
+        ),
         valuationMeasures = StockEntity.ValuationMeasures(
             pe = this[StocksTable.pe],
             pb = this[StocksTable.pb],

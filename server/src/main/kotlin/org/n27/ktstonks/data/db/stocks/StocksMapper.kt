@@ -16,23 +16,21 @@ fun StockEntity.toStock() = Stock(
     logo = logo?.bytes?.let { Base64.getEncoder().encodeToString(it) },
     price = price,
     dividendYield = dividendYield,
-    incomeStatement = incomeStatement?.let {
-        IncomeStatement(
-            eps = it.eps,
-            earningsQuarterlyGrowth = it.earningsQuarterlyGrowth,
-            revenueQuarterlyGrowth = it.revenueQuarterlyGrowth,
-        )
-    },
-    analysis = analysis?.let {
-        Analysis(
-            earningsEstimate = it.earningsEstimate?.let { e ->
-                Analysis.Estimate(growthLow = e.growthLow, growthHigh = e.growthHigh)
-            },
-            revenueEstimate = it.revenueEstimate?.let { e ->
-                Analysis.Estimate(growthLow = e.growthLow, growthHigh = e.growthHigh)
-            },
-        )
-    },
+    incomeStatement = IncomeStatement(
+        eps = incomeStatement.eps,
+        earningsQuarterlyGrowth = incomeStatement.earningsQuarterlyGrowth,
+        revenueQuarterlyGrowth = incomeStatement.revenueQuarterlyGrowth,
+    ),
+    analysis = Analysis(
+        earningsEstimate = Analysis.Estimate(
+            growthLow = analysis.earningsEstimate.growthLow,
+            growthHigh = analysis.earningsEstimate.growthHigh,
+        ),
+        revenueEstimate = Analysis.Estimate(
+            growthLow = analysis.revenueEstimate.growthLow,
+            growthHigh = analysis.revenueEstimate.growthHigh,
+        ),
+    ),
     valuationMeasures = ValuationMeasures(
         pe = valuationMeasures.pe,
         pb = valuationMeasures.pb,
@@ -51,23 +49,21 @@ fun Stock.toEntity() = StockEntity(
     logo = logo?.let { StockEntity.Logo(Base64.getDecoder().decode(it)) },
     price = price,
     dividendYield = dividendYield,
-    incomeStatement = incomeStatement?.let {
-        StockEntity.IncomeStatement(
-            eps = it.eps,
-            earningsQuarterlyGrowth = it.earningsQuarterlyGrowth,
-            revenueQuarterlyGrowth = it.revenueQuarterlyGrowth,
-        )
-    },
-    analysis = analysis?.let {
-        StockEntity.Analysis(
-            earningsEstimate = it.earningsEstimate?.let { e ->
-                StockEntity.Analysis.Estimate(growthLow = e.growthLow, growthHigh = e.growthHigh)
-            },
-            revenueEstimate = it.revenueEstimate?.let { e ->
-                StockEntity.Analysis.Estimate(growthLow = e.growthLow, growthHigh = e.growthHigh)
-            },
-        )
-    },
+    incomeStatement = StockEntity.IncomeStatement(
+        eps = incomeStatement.eps,
+        earningsQuarterlyGrowth = incomeStatement.earningsQuarterlyGrowth,
+        revenueQuarterlyGrowth = incomeStatement.revenueQuarterlyGrowth,
+    ),
+    analysis = StockEntity.Analysis(
+        earningsEstimate = StockEntity.Analysis.Estimate(
+            growthLow = analysis.earningsEstimate.growthLow,
+            growthHigh = analysis.earningsEstimate.growthHigh,
+        ),
+        revenueEstimate = StockEntity.Analysis.Estimate(
+            growthLow = analysis.revenueEstimate.growthLow,
+            growthHigh = analysis.revenueEstimate.growthHigh,
+        ),
+    ),
     valuationMeasures = StockEntity.ValuationMeasures(
         pe = valuationMeasures.pe,
         pb = valuationMeasures.pb,
