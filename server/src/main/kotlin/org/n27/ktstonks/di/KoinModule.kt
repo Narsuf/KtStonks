@@ -2,6 +2,7 @@ package org.n27.ktstonks.di
 
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
@@ -23,6 +24,11 @@ const val BASE_URL = "http://localhost:8000"
 val mainModule = module {
     single {
         HttpClient(CIO) {
+            install(HttpTimeout) {
+                requestTimeoutMillis = 30_000
+                connectTimeoutMillis = 10_000
+                socketTimeoutMillis = 30_000
+            }
             install(ContentNegotiation) {
                 json(
                     Json {

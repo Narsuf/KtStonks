@@ -15,7 +15,7 @@ fun getStock(
         revenueQuarterlyGrowth = 5.2,
     ),
     analysis: Analysis? = null,
-    valuationMeasures: ValuationMeasures? = ValuationMeasures(
+    valuationMeasures: ValuationMeasures = ValuationMeasures(
         pe = 34.7215522245231,
         pb = 51.967537,
         ps = 8.78231,
