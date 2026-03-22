@@ -30,15 +30,15 @@ class StocksDao {
 
             if (existingStock != null) {
                 StocksTable.update(where = { StocksTable.symbol eq stock.symbol }) {
-                    val valuationFloor = stock.valuationMeasures?.valuationFloor
-                        ?: existingStock.valuationMeasures?.valuationFloor
+                    val valuationFloor = stock.valuationMeasures.valuationFloor
+                        ?: existingStock.valuationMeasures.valuationFloor
                         ?: 1.0
 
                     it.fromStockEntity(
                         stock.copy(
                             isWatchlisted = existingStock.isWatchlisted,
                             logo = existingStock.logo ?: stock.logo,
-                            valuationMeasures = existingStock.valuationMeasures?.copy(
+                            valuationMeasures = stock.valuationMeasures.copy(
                                 valuationFloor = valuationFloor,
                                 intrinsicValue = stock.getIntrinsicValue(valuationFloor),
                             ),
@@ -80,15 +80,15 @@ class StocksDao {
         this[StocksTable.eps] = stock.incomeStatement?.eps
         this[StocksTable.earningsQuarterlyGrowth] = stock.incomeStatement?.earningsQuarterlyGrowth
         this[StocksTable.revenueQuarterlyGrowth] = stock.incomeStatement?.revenueQuarterlyGrowth
-        this[StocksTable.pe] = stock.valuationMeasures?.pe
-        this[StocksTable.pb] = stock.valuationMeasures?.pb
-        this[StocksTable.ps] = stock.valuationMeasures?.ps
+        this[StocksTable.pe] = stock.valuationMeasures.pe
+        this[StocksTable.pb] = stock.valuationMeasures.pb
+        this[StocksTable.ps] = stock.valuationMeasures.ps
         this[StocksTable.revenueEstimateGrowthLow] = stock.analysis?.revenueEstimate?.growthLow
         this[StocksTable.revenueEstimateGrowthHigh] = stock.analysis?.revenueEstimate?.growthHigh
         this[StocksTable.earningsEstimateGrowthLow] = stock.analysis?.earningsEstimate?.growthLow
         this[StocksTable.earningsEstimateGrowthHigh] = stock.analysis?.earningsEstimate?.growthHigh
-        this[StocksTable.valuationFloor] = stock.valuationMeasures?.valuationFloor
-        this[StocksTable.intrinsicValue] = stock.valuationMeasures?.intrinsicValue
+        this[StocksTable.valuationFloor] = stock.valuationMeasures.valuationFloor
+        this[StocksTable.intrinsicValue] = stock.valuationMeasures.intrinsicValue
         this[StocksTable.currency] = stock.currency
         this[StocksTable.lastUpdated] = stock.lastUpdated
         this[StocksTable.isWatchlisted] = stock.isWatchlisted
@@ -135,16 +135,13 @@ class StocksDao {
                 )
             else null
         },
-        valuationMeasures = run {
-            val pe = this[StocksTable.pe]
-            val pb = this[StocksTable.pb]
-            val ps = this[StocksTable.ps]
-            val valuationFloor = this[StocksTable.valuationFloor]
-            val intrinsicValue = this[StocksTable.intrinsicValue]
-            if (pe != null || pb != null || ps != null || valuationFloor != null || intrinsicValue != null)
-                StockEntity.ValuationMeasures(pe, pb, ps, valuationFloor, intrinsicValue)
-            else null
-        },
+        valuationMeasures = StockEntity.ValuationMeasures(
+            pe = this[StocksTable.pe],
+            pb = this[StocksTable.pb],
+            ps = this[StocksTable.ps],
+            valuationFloor = this[StocksTable.valuationFloor],
+            intrinsicValue = this[StocksTable.intrinsicValue],
+        ),
         currency = this[StocksTable.currency],
         lastUpdated = this[StocksTable.lastUpdated],
         isWatchlisted = this[StocksTable.isWatchlisted],
@@ -152,5 +149,5 @@ class StocksDao {
 
     private fun StockEntity.getIntrinsicValue(
         valuationFloor: Double,
-    ) = valuationMeasures?.ps?.let { (price ?: 0.0) * (valuationFloor / it) } ?: 0.0
+    ) = valuationMeasures.ps?.let { (price ?: 0.0) * (valuationFloor / it) } ?: 0.0
 }

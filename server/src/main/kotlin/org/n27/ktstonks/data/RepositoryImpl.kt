@@ -1,6 +1,9 @@
 package org.n27.ktstonks.data
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.withContext
 import org.n27.ktstonks.data.db.stocks.StocksDao
 import org.n27.ktstonks.data.db.stocks.toEntity
 import org.n27.ktstonks.data.db.stocks.toStock
@@ -91,13 +94,8 @@ class RepositoryImpl(
         val watchlist = stocksDao.getWatchlist(page, pageSize)
         val stocksToUpdate = watchlist.items.filter { !it.lastUpdated.isToday() }
         val symbols = stocksToUpdate.joinToString(separator = ",") { it.symbol }
-        val updatedStocks = getRemoteStocks(symbols, ignoreLogo = true)
 
-        if (updatedStocks.isNotEmpty()) withContext(Dispatchers.IO) {
-            updatedStocks.map {
-                launch { stocksDao.saveStock(it.toEntity()) }
-            }.joinAll()
-        }
+        getRemoteStocks(symbols, ignoreLogo = true)
 
         stocksDao.getWatchlist(page, pageSize).toStocks()
     }

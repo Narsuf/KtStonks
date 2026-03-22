@@ -33,15 +33,13 @@ fun StockEntity.toStock() = Stock(
             },
         )
     },
-    valuationMeasures = valuationMeasures?.let {
-        ValuationMeasures(
-            pe = it.pe,
-            pb = it.pb,
-            ps = it.ps,
-            valuationFloor = it.valuationFloor,
-            intrinsicValue = it.intrinsicValue,
-        )
-    },
+    valuationMeasures = ValuationMeasures(
+        pe = valuationMeasures.pe,
+        pb = valuationMeasures.pb,
+        ps = valuationMeasures.ps,
+        valuationFloor = valuationMeasures.valuationFloor,
+        intrinsicValue = valuationMeasures.intrinsicValue,
+    ),
     currency = currency,
     lastUpdated = lastUpdated,
     isWatchlisted = isWatchlisted,
@@ -70,15 +68,13 @@ fun Stock.toEntity() = StockEntity(
             },
         )
     },
-    valuationMeasures = valuationMeasures?.let {
-        StockEntity.ValuationMeasures(
-            pe = it.pe,
-            pb = it.pb,
-            ps = it.ps,
-            valuationFloor = it.valuationFloor,
-            intrinsicValue = it.intrinsicValue,
-        )
-    },
+    valuationMeasures = StockEntity.ValuationMeasures(
+        pe = valuationMeasures.pe,
+        pb = valuationMeasures.pb,
+        ps = valuationMeasures.ps,
+        valuationFloor = valuationMeasures.valuationFloor,
+        intrinsicValue = valuationMeasures.intrinsicValue,
+    ),
     currency = currency,
     lastUpdated = lastUpdated,
     isWatchlisted = isWatchlisted,

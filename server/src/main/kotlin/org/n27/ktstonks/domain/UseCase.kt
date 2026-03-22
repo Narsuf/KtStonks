@@ -2,7 +2,6 @@ package org.n27.ktstonks.domain
 
 import org.n27.ktstonks.domain.model.Stocks
 import org.n27.ktstonks.domain.model.Stocks.Stock
-import org.n27.ktstonks.domain.model.Stocks.ValuationMeasures
 
 class UseCase(private val repository: Repository) {
 
@@ -26,14 +25,9 @@ class UseCase(private val repository: Repository) {
         valuationFloor: Double,
     ): Result<Unit> = repository.getStock(symbol).mapCatching {
         val updatedStock = it.copy(
-            valuationMeasures = it.valuationMeasures?.copy(valuationFloor = valuationFloor)
-                ?: ValuationMeasures(
-                    pe = null,
-                    pb = null,
-                    ps = null,
-                    valuationFloor = valuationFloor,
-                    intrinsicValue = null,
-                ),
+            valuationMeasures = it.valuationMeasures.copy(
+                valuationFloor = valuationFloor,
+            ),
         )
         repository.updateStock(updatedStock).getOrThrow()
     }
