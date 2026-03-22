@@ -11,22 +11,9 @@ fun getStockEntity(
     logo: String = "/9j/2wCEAAEBAQEBAQEBAQEBAQEB",
     price: Double = 259.369995117188,
     dividendYield: Double = 0.4,
-    incomeStatement: IncomeStatement = IncomeStatement(
-        eps = 7.47,
-        earningsQuarterlyGrowth = 86.4,
-        revenueQuarterlyGrowth = 5.2,
-    ),
-    analysis: Analysis = Analysis(
-        earningsEstimate = Analysis.Estimate(null, null),
-        revenueEstimate = Analysis.Estimate(null, null),
-    ),
-    valuationMeasures: ValuationMeasures = ValuationMeasures(
-        pe = 34.7215522245231,
-        pb = 51.967537,
-        ps = 8.78231,
-        valuationFloor = null,
-        intrinsicValue = null,
-    ),
+    incomeStatement: IncomeStatement = getStockEntityIncomeStatement(),
+    analysis: Analysis = getStockEntityAnalysis(),
+    valuationMeasures: ValuationMeasures = getStockEntityValuationMeasures(),
     currency: String = "USD",
     lastUpdated: Long = 0L,
     isWatchlisted: Boolean = false
@@ -50,4 +37,34 @@ fun getStocksEntity(
 ) = StocksEntity(
     items = items,
     nextPage = nextPage,
+)
+
+fun getStockEntityIncomeStatement() = IncomeStatement(
+    eps = 7.47,
+    earningsQuarterlyGrowth = 86.4,
+    revenueQuarterlyGrowth = 5.2,
+)
+
+fun getStockEntityAnalysis() = Analysis(
+    earningsEstimate = getStockEntityAnalysisEstimate(),
+    revenueEstimate = getStockEntityAnalysisEstimate(
+        growthLow = 5.60331523810161,
+        growthHigh = 10.2768231268171,
+    ),
+)
+
+fun getStockEntityAnalysisEstimate(
+    growthLow: Double = 2.57668711656441,
+    growthHigh: Double = 15.7190635451505,
+) = Analysis.Estimate(
+    growthLow = growthLow,
+    growthHigh = growthHigh,
+)
+
+fun getStockEntityValuationMeasures() = ValuationMeasures(
+    pe = 34.7215522245231,
+    pb = 51.967537,
+    ps = 8.78231,
+    valuationFloor = null,
+    intrinsicValue = null,
 )
