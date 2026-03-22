@@ -13,7 +13,7 @@ data class StocksEntity(
         val dividendYield: Double?,
         val incomeStatement: IncomeStatement?,
         val analysis: Analysis?,
-        val valuationMeasures: ValuationMeasures?,
+        val valuationMeasures: ValuationMeasures,
         val currency: String?,
         val lastUpdated: Long,
         val isWatchlisted: Boolean,

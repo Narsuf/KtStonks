@@ -34,11 +34,11 @@ fun StockEntity.toStock() = Stock(
         )
     },
     valuationMeasures = ValuationMeasures(
-        pe = valuationMeasures?.pe,
-        pb = valuationMeasures?.pb,
-        ps = valuationMeasures?.ps,
-        valuationFloor = valuationMeasures?.valuationFloor,
-        intrinsicValue = valuationMeasures?.intrinsicValue,
+        pe = valuationMeasures.pe,
+        pb = valuationMeasures.pb,
+        ps = valuationMeasures.ps,
+        valuationFloor = valuationMeasures.valuationFloor,
+        intrinsicValue = valuationMeasures.intrinsicValue,
     ),
     currency = currency,
     lastUpdated = lastUpdated,

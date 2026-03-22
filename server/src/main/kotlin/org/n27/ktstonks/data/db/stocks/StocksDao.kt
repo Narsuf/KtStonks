@@ -30,15 +30,15 @@ class StocksDao {
 
             if (existingStock != null) {
                 StocksTable.update(where = { StocksTable.symbol eq stock.symbol }) {
-                    val valuationFloor = stock.valuationMeasures?.valuationFloor
-                        ?: existingStock.valuationMeasures?.valuationFloor
+                    val valuationFloor = stock.valuationMeasures.valuationFloor
+                        ?: existingStock.valuationMeasures.valuationFloor
                         ?: 1.0
 
                     it.fromStockEntity(
                         stock.copy(
                             isWatchlisted = existingStock.isWatchlisted,
                             logo = existingStock.logo ?: stock.logo,
-                            valuationMeasures = existingStock.valuationMeasures?.copy(
+                            valuationMeasures = existingStock.valuationMeasures.copy(
                                 valuationFloor = valuationFloor,
                                 intrinsicValue = stock.getIntrinsicValue(valuationFloor),
                             ),
@@ -135,16 +135,13 @@ class StocksDao {
                 )
             else null
         },
-        valuationMeasures = run {
-            val pe = this[StocksTable.pe]
-            val pb = this[StocksTable.pb]
-            val ps = this[StocksTable.ps]
-            val valuationFloor = this[StocksTable.valuationFloor]
-            val intrinsicValue = this[StocksTable.intrinsicValue]
-            if (pe != null || pb != null || ps != null || valuationFloor != null || intrinsicValue != null)
-                StockEntity.ValuationMeasures(pe, pb, ps, valuationFloor, intrinsicValue)
-            else null
-        },
+        valuationMeasures = StockEntity.ValuationMeasures(
+            pe = this[StocksTable.pe],
+            pb = this[StocksTable.pb],
+            ps = this[StocksTable.ps],
+            valuationFloor = this[StocksTable.valuationFloor],
+            intrinsicValue = this[StocksTable.intrinsicValue],
+        ),
         currency = this[StocksTable.currency],
         lastUpdated = this[StocksTable.lastUpdated],
         isWatchlisted = this[StocksTable.isWatchlisted],
@@ -152,5 +149,5 @@ class StocksDao {
 
     private fun StockEntity.getIntrinsicValue(
         valuationFloor: Double,
-    ) = valuationMeasures?.ps?.let { (price ?: 0.0) * (valuationFloor / it) } ?: 0.0
+    ) = valuationMeasures.ps?.let { (price ?: 0.0) * (valuationFloor / it) } ?: 0.0
 }
