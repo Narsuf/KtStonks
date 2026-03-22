@@ -2,7 +2,6 @@ package org.n27.ktstonks.domain
 
 import org.n27.ktstonks.domain.model.Stocks
 import org.n27.ktstonks.domain.model.Stocks.Stock
-import org.n27.ktstonks.domain.model.Stocks.ValuationMeasures
 
 class UseCase(private val repository: Repository) {
 
