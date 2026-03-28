@@ -6,6 +6,8 @@
       "logo": "/9j/2wCEAAEBAQEBAQEBAQEBAQEB",
       "price": 259.369995117188,
       "dividendYield": 0.4,
+      "roe": 1.5202099,
+      "profitMargin": 0.27037,
       "incomeStatement": {
         "eps": 7.47,
         "earningsQuarterlyGrowth": 86.4,
@@ -25,6 +27,10 @@
         "pe": 34.7215522245231,
         "valuationFloor": null,
         "intrinsicValue": null
+      },
+      "balanceSheet": {
+        "totalCashPerShare": 4.557,
+        "de": 102.63
       },
       "currency": "USD",
       "lastUpdated": 0,
