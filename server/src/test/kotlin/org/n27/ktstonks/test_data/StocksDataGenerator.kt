@@ -2,6 +2,7 @@ package org.n27.ktstonks.test_data
 
 import org.n27.ktstonks.domain.model.Stocks
 import org.n27.ktstonks.domain.model.Stocks.*
+import org.n27.ktstonks.domain.model.Stocks.Analysis.Estimate
 
 fun getStocks(
     items: List<Stock> = listOf(getStock()),
@@ -17,9 +18,12 @@ fun getStock(
     logo: String? = "/9j/2wCEAAEBAQEBAQEBAQEBAQEB",
     price: Double = 259.369995117188,
     dividendYield: Double = 0.4,
+    roe: Double? = 1.5202099,
+    profitMargin: Double? = 0.27037,
     incomeStatement: IncomeStatement = getStockIncomeStatement(),
     analysis: Analysis = getStockAnalysis(),
     valuationMeasures: ValuationMeasures = getStockValuationMeasures(),
+    balanceSheet: BalanceSheet = getStockBalanceSheet(),
     currency: String = "USD",
     lastUpdated: Long = 0L,
     isWatchlisted: Boolean = false,
@@ -29,38 +33,60 @@ fun getStock(
     logo = logo,
     price = price,
     dividendYield = dividendYield,
+    roe = roe,
+    profitMargin = profitMargin,
     incomeStatement = incomeStatement,
     analysis = analysis,
     valuationMeasures = valuationMeasures,
+    balanceSheet = balanceSheet,
     currency = currency,
     lastUpdated = lastUpdated,
     isWatchlisted = isWatchlisted,
 )
 
-fun getStockIncomeStatement() = IncomeStatement(
-    eps = 7.47,
-    earningsQuarterlyGrowth = 86.4,
-    revenueQuarterlyGrowth = 5.2,
+fun getStockIncomeStatement(
+    eps: Double = 7.47,
+    earningsQuarterlyGrowth: Double = 86.4,
+    revenueQuarterlyGrowth: Double = 5.2,
+) = IncomeStatement(
+    eps = eps,
+    earningsQuarterlyGrowth = earningsQuarterlyGrowth,
+    revenueQuarterlyGrowth = revenueQuarterlyGrowth,
 )
 
-fun getStockAnalysis() = Analysis(
-    earningsEstimate = getStockAnalysisEstimate(),
-    revenueEstimate = getStockAnalysisEstimate(
+fun getStockAnalysis(
+    earningsEstimate: Estimate = getStockAnalysisEstimate(),
+    revenueEstimate: Estimate = getStockAnalysisEstimate(
         growthLow = 5.60331523810161,
         growthHigh = 10.2768231268171,
     ),
+) = Analysis(
+    earningsEstimate = earningsEstimate,
+    revenueEstimate = revenueEstimate,
 )
 
 fun getStockAnalysisEstimate(
     growthLow: Double = 2.57668711656441,
     growthHigh: Double = 15.7190635451505,
-) = Analysis.Estimate(
+) = Estimate(
     growthLow = growthLow,
     growthHigh = growthHigh,
 )
 
-fun getStockValuationMeasures() = ValuationMeasures(
-    pe = 34.7215522245231,
-    valuationFloor = null,
-    intrinsicValue = null,
+fun getStockValuationMeasures(
+    pe: Double = 34.7215522245231,
+    valuationFloor: Double? = null,
+    intrinsicValue: Double? = null,
+) = ValuationMeasures(
+    pe = pe,
+    valuationFloor = valuationFloor,
+    intrinsicValue = intrinsicValue,
+)
+
+fun getStockBalanceSheet(
+    totalCashPerShare: Double = 4.557,
+    de: Double = 102.63,
+) = BalanceSheet(
+    totalCashPerShare = totalCashPerShare,
+    de = de,
 )

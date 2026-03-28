@@ -87,6 +87,10 @@ class StocksDao {
         this[StocksTable.earningsEstimateGrowthHigh] = stock.analysis.earningsEstimate.growthHigh
         this[StocksTable.valuationFloor] = stock.valuationMeasures.valuationFloor
         this[StocksTable.intrinsicValue] = stock.valuationMeasures.intrinsicValue
+        this[StocksTable.roe] = stock.roe
+        this[StocksTable.profitMargin] = stock.profitMargin
+        this[StocksTable.totalCashPerShare] = stock.balanceSheet.totalCashPerShare
+        this[StocksTable.de] = stock.balanceSheet.de
         this[StocksTable.currency] = stock.currency
         this[StocksTable.lastUpdated] = stock.lastUpdated
         this[StocksTable.isWatchlisted] = stock.isWatchlisted
@@ -109,6 +113,8 @@ class StocksDao {
         logo = this[StocksTable.logo]?.let { StockEntity.Logo(it) },
         price = this[StocksTable.price],
         dividendYield = this[StocksTable.dividendYield],
+        roe = this[StocksTable.roe],
+        profitMargin = this[StocksTable.profitMargin],
         incomeStatement = StockEntity.IncomeStatement(
             eps = this[StocksTable.eps],
             earningsQuarterlyGrowth = this[StocksTable.earningsQuarterlyGrowth],
@@ -128,6 +134,10 @@ class StocksDao {
             pe = this[StocksTable.pe],
             valuationFloor = this[StocksTable.valuationFloor],
             intrinsicValue = this[StocksTable.intrinsicValue],
+        ),
+        balanceSheet = StockEntity.BalanceSheet(
+            totalCashPerShare = this[StocksTable.totalCashPerShare],
+            de = this[StocksTable.de],
         ),
         currency = this[StocksTable.currency],
         lastUpdated = this[StocksTable.lastUpdated],

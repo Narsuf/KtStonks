@@ -11,9 +11,12 @@ data class StocksEntity(
         val logo: Logo?,
         val price: Double?,
         val dividendYield: Double?,
+        val roe: Double?,
+        val profitMargin: Double?,
         val incomeStatement: IncomeStatement,
         val analysis: Analysis,
         val valuationMeasures: ValuationMeasures,
+        val balanceSheet: BalanceSheet,
         val currency: String?,
         val lastUpdated: Long,
         val isWatchlisted: Boolean,
@@ -29,6 +32,11 @@ data class StocksEntity(
             val pe: Double?,
             val valuationFloor: Double?,
             val intrinsicValue: Double?,
+        )
+
+        data class BalanceSheet(
+            val totalCashPerShare: Double?,
+            val de: Double?,
         )
 
         data class Analysis(

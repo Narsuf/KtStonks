@@ -94,7 +94,7 @@ class RepositoryImpl(
         pageSize: Int,
     ): Result<Stocks> = runCatching {
         val watchlist = stocksDao.getWatchlist(page, pageSize)
-        val stocksToUpdate = watchlist.items.filter { !it.lastUpdated.isToday() }
+        val stocksToUpdate = watchlist.items.filter { it.lastUpdated.isToday() }
         val symbols = stocksToUpdate.joinToString(separator = ",") { it.symbol }
 
         getRemoteStocks(symbols, ignoreLogo = true)

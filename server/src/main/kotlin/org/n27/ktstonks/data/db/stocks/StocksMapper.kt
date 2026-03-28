@@ -16,6 +16,8 @@ fun StockEntity.toStock() = Stock(
     logo = logo?.bytes?.let { Base64.getEncoder().encodeToString(it) },
     price = price,
     dividendYield = dividendYield,
+    roe = roe,
+    profitMargin = profitMargin,
     incomeStatement = IncomeStatement(
         eps = incomeStatement.eps,
         earningsQuarterlyGrowth = incomeStatement.earningsQuarterlyGrowth,
@@ -36,6 +38,10 @@ fun StockEntity.toStock() = Stock(
         valuationFloor = valuationMeasures.valuationFloor,
         intrinsicValue = valuationMeasures.intrinsicValue,
     ),
+    balanceSheet = BalanceSheet(
+        totalCashPerShare = balanceSheet.totalCashPerShare,
+        de = balanceSheet.de,
+    ),
     currency = currency,
     lastUpdated = lastUpdated,
     isWatchlisted = isWatchlisted,
@@ -47,6 +53,8 @@ fun Stock.toEntity() = StockEntity(
     logo = logo?.let { StockEntity.Logo(Base64.getDecoder().decode(it)) },
     price = price,
     dividendYield = dividendYield,
+    roe = roe,
+    profitMargin = profitMargin,
     incomeStatement = StockEntity.IncomeStatement(
         eps = incomeStatement.eps,
         earningsQuarterlyGrowth = incomeStatement.earningsQuarterlyGrowth,
@@ -66,6 +74,10 @@ fun Stock.toEntity() = StockEntity(
         pe = valuationMeasures.pe,
         valuationFloor = valuationMeasures.valuationFloor,
         intrinsicValue = valuationMeasures.intrinsicValue,
+    ),
+    balanceSheet = StockEntity.BalanceSheet(
+        totalCashPerShare = balanceSheet.totalCashPerShare,
+        de = balanceSheet.de,
     ),
     currency = currency,
     lastUpdated = lastUpdated,

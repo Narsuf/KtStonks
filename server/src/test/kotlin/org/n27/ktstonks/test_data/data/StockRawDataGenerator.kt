@@ -17,6 +17,10 @@ fun getStockRaw(
     earningsEstimateGrowthLow: Double? = 2.57668711656441,
     earningsEstimateGrowthHigh: Double? = 15.7190635451505,
     currency: String = "USD",
+    roe: Double? = 1.5202099,
+    profitMargin: Double? = 0.27037,
+    totalCashPerShare: Double? = 4.557,
+    de: Double? = 102.63,
 ) = StockRaw(
     symbol = symbol,
     companyName = companyName,
@@ -32,6 +36,10 @@ fun getStockRaw(
     earningsEstimateGrowthLow = earningsEstimateGrowthLow,
     earningsEstimateGrowthHigh = earningsEstimateGrowthHigh,
     currency = currency,
+    roe = roe,
+    profitMargin = profitMargin,
+    totalCashPerShare = totalCashPerShare,
+    de = de,
 )
 
 fun getStocksRaw() = listOf(getStockRaw())

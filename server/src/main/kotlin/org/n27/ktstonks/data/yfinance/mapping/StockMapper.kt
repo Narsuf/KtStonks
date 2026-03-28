@@ -10,6 +10,8 @@ internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
     logo = logo,
     price = price,
     dividendYield = dividendYield,
+    roe = roe,
+    profitMargin = profitMargin,
     incomeStatement = Stocks.IncomeStatement(
         eps = eps,
         earningsQuarterlyGrowth = earningsQuarterlyGrowth,
@@ -23,6 +25,10 @@ internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
         pe = pe,
         valuationFloor = null,
         intrinsicValue = null,
+    ),
+    balanceSheet = Stocks.BalanceSheet(
+        totalCashPerShare = totalCashPerShare,
+        de = de,
     ),
     currency = currency,
     lastUpdated = System.currentTimeMillis(),

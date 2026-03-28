@@ -3,6 +3,7 @@ package org.n27.ktstonks.test_data.data
 import org.n27.ktstonks.data.db.stocks.StocksEntity
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.*
+import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.Analysis.Estimate
 import java.util.*
 
 fun getStockEntity(
@@ -11,9 +12,12 @@ fun getStockEntity(
     logo: String = "/9j/2wCEAAEBAQEBAQEBAQEBAQEB",
     price: Double = 259.369995117188,
     dividendYield: Double = 0.4,
+    roe: Double? = 1.5202099,
+    profitMargin: Double? = 0.27037,
     incomeStatement: IncomeStatement = getStockEntityIncomeStatement(),
     analysis: Analysis = getStockEntityAnalysis(),
     valuationMeasures: ValuationMeasures = getStockEntityValuationMeasures(),
+    balanceSheet: BalanceSheet = getStockEntityBalanceSheet(),
     currency: String = "USD",
     lastUpdated: Long = 0L,
     isWatchlisted: Boolean = false
@@ -23,9 +27,12 @@ fun getStockEntity(
     logo = Logo(Base64.getDecoder().decode(logo)),
     price = price,
     dividendYield = dividendYield,
+    roe = roe,
+    profitMargin = profitMargin,
     incomeStatement = incomeStatement,
     analysis = analysis,
     valuationMeasures = valuationMeasures,
+    balanceSheet = balanceSheet,
     currency = currency,
     lastUpdated = lastUpdated,
     isWatchlisted = isWatchlisted
@@ -39,30 +46,49 @@ fun getStocksEntity(
     nextPage = nextPage,
 )
 
-fun getStockEntityIncomeStatement() = IncomeStatement(
-    eps = 7.47,
-    earningsQuarterlyGrowth = 86.4,
-    revenueQuarterlyGrowth = 5.2,
+fun getStockEntityIncomeStatement(
+    eps: Double = 7.47,
+    earningsQuarterlyGrowth: Double = 86.4,
+    revenueQuarterlyGrowth: Double = 5.2,
+) = IncomeStatement(
+    eps = eps,
+    earningsQuarterlyGrowth = earningsQuarterlyGrowth,
+    revenueQuarterlyGrowth = revenueQuarterlyGrowth,
 )
 
-fun getStockEntityAnalysis() = Analysis(
-    earningsEstimate = getStockEntityAnalysisEstimate(),
-    revenueEstimate = getStockEntityAnalysisEstimate(
+fun getStockEntityAnalysis(
+    earningsEstimate: Estimate = getStockEntityAnalysisEstimate(),
+    revenueEstimate: Estimate = getStockEntityAnalysisEstimate(
         growthLow = 5.60331523810161,
         growthHigh = 10.2768231268171,
     ),
+) = Analysis(
+    earningsEstimate = earningsEstimate,
+    revenueEstimate = revenueEstimate,
 )
 
 fun getStockEntityAnalysisEstimate(
     growthLow: Double = 2.57668711656441,
     growthHigh: Double = 15.7190635451505,
-) = Analysis.Estimate(
+) = Estimate(
     growthLow = growthLow,
     growthHigh = growthHigh,
 )
 
-fun getStockEntityValuationMeasures() = ValuationMeasures(
-    pe = 34.7215522245231,
-    valuationFloor = null,
-    intrinsicValue = null,
+fun getStockEntityValuationMeasures(
+    pe: Double = 34.7215522245231,
+    valuationFloor: Double? = null,
+    intrinsicValue: Double? = null,
+) = ValuationMeasures(
+    pe = pe,
+    valuationFloor = valuationFloor,
+    intrinsicValue = intrinsicValue,
+)
+
+fun getStockEntityBalanceSheet(
+    totalCashPerShare: Double = 4.557,
+    de: Double = 102.63,
+) = BalanceSheet(
+    totalCashPerShare = totalCashPerShare,
+    de = de,
 )

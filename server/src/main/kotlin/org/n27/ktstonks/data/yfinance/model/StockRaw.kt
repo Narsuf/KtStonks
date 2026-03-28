@@ -18,4 +18,8 @@ data class StockRaw(
     val earningsEstimateGrowthLow: Double?,
     val earningsEstimateGrowthHigh: Double?,
     val currency: String?,
+    val roe: Double?,
+    val profitMargin: Double?,
+    val totalCashPerShare: Double?,
+    val de: Double?,
 )
