@@ -21,6 +21,7 @@ fun getStockRaw(
     profitMargin: Double? = 0.27037,
     totalCashPerShare: Double? = 4.557,
     de: Double? = 102.63,
+    payoutRatio: Double? = 0.1476,
 ) = StockRaw(
     symbol = symbol,
     companyName = companyName,
@@ -40,6 +41,7 @@ fun getStockRaw(
     profitMargin = profitMargin,
     totalCashPerShare = totalCashPerShare,
     de = de,
+    payoutRatio = payoutRatio,
 )
 
 fun getStocksRaw() = listOf(getStockRaw())

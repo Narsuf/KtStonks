@@ -17,7 +17,7 @@ fun getStock(
     companyName: String = "Apple Inc.",
     logo: String? = "/9j/2wCEAAEBAQEBAQEBAQEBAQEB",
     price: Double = 259.369995117188,
-    dividendYield: Double = 0.4,
+    dividends: Dividends = getStockDividends(),
     roe: Double? = 1.5202099,
     profitMargin: Double? = 0.27037,
     incomeStatement: IncomeStatement = getStockIncomeStatement(),
@@ -32,7 +32,7 @@ fun getStock(
     companyName = companyName,
     logo = logo,
     price = price,
-    dividendYield = dividendYield,
+    dividends = dividends,
     roe = roe,
     profitMargin = profitMargin,
     incomeStatement = incomeStatement,
@@ -81,6 +81,14 @@ fun getStockValuationMeasures(
     pe = pe,
     valuationFloor = valuationFloor,
     intrinsicValue = intrinsicValue,
+)
+
+fun getStockDividends(
+    dividendYield: Double = 0.4,
+    payoutRatio: Double = 0.1476,
+) = Dividends(
+    dividendYield = dividendYield,
+    payoutRatio = payoutRatio,
 )
 
 fun getStockBalanceSheet(

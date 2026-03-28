@@ -76,7 +76,7 @@ class StocksDaoTest {
             companyName = "A",
             logo = StockEntity.Logo(Base64.getDecoder().decode("/9j/2wCEAAEBAQEBAQEBAQEBAQEC")),
             price = 200.0,
-            dividendYield = 1.0,
+            dividends = stock.dividends.copy(dividendYield = 1.0),
             incomeStatement = stock.incomeStatement.copy(eps = 2.0, earningsQuarterlyGrowth = 5.0),
             valuationMeasures = stock.valuationMeasures.copy(pe = 3.0, intrinsicValue = 6.0),
             currency = "EUR",

@@ -11,7 +11,7 @@ fun getStockEntity(
     companyName: String = "Apple Inc.",
     logo: String = "/9j/2wCEAAEBAQEBAQEBAQEBAQEB",
     price: Double = 259.369995117188,
-    dividendYield: Double = 0.4,
+    dividends: Dividends = getStockEntityDividends(),
     roe: Double? = 1.5202099,
     profitMargin: Double? = 0.27037,
     incomeStatement: IncomeStatement = getStockEntityIncomeStatement(),
@@ -26,7 +26,7 @@ fun getStockEntity(
     companyName = companyName,
     logo = Logo(Base64.getDecoder().decode(logo)),
     price = price,
-    dividendYield = dividendYield,
+    dividends = dividends,
     roe = roe,
     profitMargin = profitMargin,
     incomeStatement = incomeStatement,
@@ -83,6 +83,14 @@ fun getStockEntityValuationMeasures(
     pe = pe,
     valuationFloor = valuationFloor,
     intrinsicValue = intrinsicValue,
+)
+
+fun getStockEntityDividends(
+    dividendYield: Double = 0.4,
+    payoutRatio: Double = 0.1476,
+) = Dividends(
+    dividendYield = dividendYield,
+    payoutRatio = payoutRatio,
 )
 
 fun getStockEntityBalanceSheet(
