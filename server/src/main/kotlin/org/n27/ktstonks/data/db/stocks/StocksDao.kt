@@ -4,6 +4,12 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.n27.ktstonks.data.db.dbQuery
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
+import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.Analysis
+import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.Analysis.Estimate
+import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.BalanceSheet
+import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.Dividends
+import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.IncomeStatement
+import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.ValuationMeasures
 
 class StocksDao {
 
@@ -76,7 +82,8 @@ class StocksDao {
         this[StocksTable.companyName] = stock.companyName
         this[StocksTable.logo] = stock.logo?.bytes
         this[StocksTable.price] = stock.price
-        this[StocksTable.dividendYield] = stock.dividendYield
+        this[StocksTable.dividendYield] = stock.dividends.dividendYield
+        this[StocksTable.payoutRatio] = stock.dividends.payoutRatio
         this[StocksTable.eps] = stock.incomeStatement.eps
         this[StocksTable.earningsQuarterlyGrowth] = stock.incomeStatement.earningsQuarterlyGrowth
         this[StocksTable.revenueQuarterlyGrowth] = stock.incomeStatement.revenueQuarterlyGrowth
@@ -112,30 +119,33 @@ class StocksDao {
         companyName = this[StocksTable.companyName],
         logo = this[StocksTable.logo]?.let { StockEntity.Logo(it) },
         price = this[StocksTable.price],
-        dividendYield = this[StocksTable.dividendYield],
+        dividends = Dividends(
+            dividendYield = this[StocksTable.dividendYield],
+            payoutRatio = this[StocksTable.payoutRatio],
+        ),
         roe = this[StocksTable.roe],
         profitMargin = this[StocksTable.profitMargin],
-        incomeStatement = StockEntity.IncomeStatement(
+        incomeStatement = IncomeStatement(
             eps = this[StocksTable.eps],
             earningsQuarterlyGrowth = this[StocksTable.earningsQuarterlyGrowth],
             revenueQuarterlyGrowth = this[StocksTable.revenueQuarterlyGrowth],
         ),
-        analysis = StockEntity.Analysis(
-            earningsEstimate = StockEntity.Analysis.Estimate(
+        analysis = Analysis(
+            earningsEstimate = Estimate(
                 growthLow = this[StocksTable.earningsEstimateGrowthLow],
                 growthHigh = this[StocksTable.earningsEstimateGrowthHigh],
             ),
-            revenueEstimate = StockEntity.Analysis.Estimate(
+            revenueEstimate = Estimate(
                 growthLow = this[StocksTable.revenueEstimateGrowthLow],
                 growthHigh = this[StocksTable.revenueEstimateGrowthHigh],
             ),
         ),
-        valuationMeasures = StockEntity.ValuationMeasures(
+        valuationMeasures = ValuationMeasures(
             pe = this[StocksTable.pe],
             valuationFloor = this[StocksTable.valuationFloor],
             intrinsicValue = this[StocksTable.intrinsicValue],
         ),
-        balanceSheet = StockEntity.BalanceSheet(
+        balanceSheet = BalanceSheet(
             totalCashPerShare = this[StocksTable.totalCashPerShare],
             de = this[StocksTable.de],
         ),

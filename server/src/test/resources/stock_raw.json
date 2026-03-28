@@ -13,6 +13,7 @@
   "earningsEstimateGrowthLow": 2.57668711656441,
   "earningsEstimateGrowthHigh": 15.7190635451505,
   "currency": "USD",
+  "payoutRatio": 0.1476,
   "roe": 1.5202099,
   "profitMargin": 0.27037,
   "totalCashPerShare": 4.557,

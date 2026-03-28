@@ -10,7 +10,7 @@ data class StocksEntity(
         val companyName: String,
         val logo: Logo?,
         val price: Double?,
-        val dividendYield: Double?,
+        val dividends: Dividends,
         val roe: Double?,
         val profitMargin: Double?,
         val incomeStatement: IncomeStatement,
@@ -21,6 +21,11 @@ data class StocksEntity(
         val lastUpdated: Long,
         val isWatchlisted: Boolean,
     ) {
+
+        data class Dividends(
+            val dividendYield: Double?,
+            val payoutRatio: Double?,
+        )
 
         data class IncomeStatement(
             val eps: Double?,

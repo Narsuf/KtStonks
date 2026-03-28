@@ -22,4 +22,5 @@ data class StockRaw(
     val profitMargin: Double?,
     val totalCashPerShare: Double?,
     val de: Double?,
+    val payoutRatio: Double?,
 )

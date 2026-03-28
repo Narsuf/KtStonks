@@ -2,31 +2,40 @@ package org.n27.ktstonks.data.yfinance.mapping
 
 import org.n27.ktstonks.data.yfinance.model.StockRaw
 import org.n27.ktstonks.domain.model.Stocks
+import org.n27.ktstonks.domain.model.Stocks.Analysis
+import org.n27.ktstonks.domain.model.Stocks.Analysis.Estimate
+import org.n27.ktstonks.domain.model.Stocks.BalanceSheet
+import org.n27.ktstonks.domain.model.Stocks.Dividends
+import org.n27.ktstonks.domain.model.Stocks.IncomeStatement
 import org.n27.ktstonks.domain.model.Stocks.Stock
+import org.n27.ktstonks.domain.model.Stocks.ValuationMeasures
 
 internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
     symbol = symbol,
     companyName = companyName,
     logo = logo,
     price = price,
-    dividendYield = dividendYield,
+    dividends = Dividends(
+        dividendYield = dividendYield,
+        payoutRatio = payoutRatio,
+    ),
     roe = roe,
     profitMargin = profitMargin,
-    incomeStatement = Stocks.IncomeStatement(
+    incomeStatement = IncomeStatement(
         eps = eps,
         earningsQuarterlyGrowth = earningsQuarterlyGrowth,
         revenueQuarterlyGrowth = revenueQuarterlyGrowth,
     ),
-    analysis = Stocks.Analysis(
-        earningsEstimate = Stocks.Analysis.Estimate(earningsEstimateGrowthLow, earningsEstimateGrowthHigh),
-        revenueEstimate = Stocks.Analysis.Estimate(revenueEstimateGrowthLow, revenueEstimateGrowthHigh),
+    analysis = Analysis(
+        earningsEstimate = Estimate(earningsEstimateGrowthLow, earningsEstimateGrowthHigh),
+        revenueEstimate = Estimate(revenueEstimateGrowthLow, revenueEstimateGrowthHigh),
     ),
-    valuationMeasures = Stocks.ValuationMeasures(
+    valuationMeasures = ValuationMeasures(
         pe = pe,
         valuationFloor = null,
         intrinsicValue = null,
     ),
-    balanceSheet = Stocks.BalanceSheet(
+    balanceSheet = BalanceSheet(
         totalCashPerShare = totalCashPerShare,
         de = de,
     ),

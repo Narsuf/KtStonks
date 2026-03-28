@@ -8,6 +8,7 @@ object StocksTable : Table("stocks") {
     val logo = binary("logo", 1024 * 1024).nullable()
     val price = double("price").nullable()
     val dividendYield = double("dividend_yield").nullable()
+    val payoutRatio = double("payout_ratio").nullable()
     val eps = double("eps").nullable()
     val pe = double("pe").nullable()
     val earningsQuarterlyGrowth = double("earnings_quarterly_growth").nullable()

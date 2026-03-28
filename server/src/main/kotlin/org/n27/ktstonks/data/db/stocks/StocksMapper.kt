@@ -1,8 +1,10 @@
 package org.n27.ktstonks.data.db.stocks
 
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
+import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.Logo
 import org.n27.ktstonks.domain.model.Stocks
 import org.n27.ktstonks.domain.model.Stocks.*
+import org.n27.ktstonks.domain.model.Stocks.Analysis.Estimate
 import java.util.*
 
 fun StocksEntity.toStocks() = Stocks(
@@ -15,7 +17,10 @@ fun StockEntity.toStock() = Stock(
     companyName = companyName,
     logo = logo?.bytes?.let { Base64.getEncoder().encodeToString(it) },
     price = price,
-    dividendYield = dividendYield,
+    dividends = Dividends(
+        dividendYield = dividends.dividendYield,
+        payoutRatio = dividends.payoutRatio,
+    ),
     roe = roe,
     profitMargin = profitMargin,
     incomeStatement = IncomeStatement(
@@ -24,11 +29,11 @@ fun StockEntity.toStock() = Stock(
         revenueQuarterlyGrowth = incomeStatement.revenueQuarterlyGrowth,
     ),
     analysis = Analysis(
-        earningsEstimate = Analysis.Estimate(
+        earningsEstimate = Estimate(
             growthLow = analysis.earningsEstimate.growthLow,
             growthHigh = analysis.earningsEstimate.growthHigh,
         ),
-        revenueEstimate = Analysis.Estimate(
+        revenueEstimate = Estimate(
             growthLow = analysis.revenueEstimate.growthLow,
             growthHigh = analysis.revenueEstimate.growthHigh,
         ),
@@ -50,9 +55,12 @@ fun StockEntity.toStock() = Stock(
 fun Stock.toEntity() = StockEntity(
     symbol = symbol,
     companyName = companyName,
-    logo = logo?.let { StockEntity.Logo(Base64.getDecoder().decode(it)) },
+    logo = logo?.let { Logo(Base64.getDecoder().decode(it)) },
     price = price,
-    dividendYield = dividendYield,
+    dividends = StockEntity.Dividends(
+        dividendYield = dividends.dividendYield,
+        payoutRatio = dividends.payoutRatio,
+    ),
     roe = roe,
     profitMargin = profitMargin,
     incomeStatement = StockEntity.IncomeStatement(
