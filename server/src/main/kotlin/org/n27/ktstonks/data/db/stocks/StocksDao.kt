@@ -4,12 +4,8 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.n27.ktstonks.data.db.dbQuery
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
-import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.Analysis
+import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.*
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.Analysis.Estimate
-import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.BalanceSheet
-import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.Dividends
-import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.IncomeStatement
-import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.ValuationMeasures
 
 class StocksDao {
 

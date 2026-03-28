@@ -1,14 +1,8 @@
 package org.n27.ktstonks.data.yfinance.mapping
 
 import org.n27.ktstonks.data.yfinance.model.StockRaw
-import org.n27.ktstonks.domain.model.Stocks
-import org.n27.ktstonks.domain.model.Stocks.Analysis
+import org.n27.ktstonks.domain.model.Stocks.*
 import org.n27.ktstonks.domain.model.Stocks.Analysis.Estimate
-import org.n27.ktstonks.domain.model.Stocks.BalanceSheet
-import org.n27.ktstonks.domain.model.Stocks.Dividends
-import org.n27.ktstonks.domain.model.Stocks.IncomeStatement
-import org.n27.ktstonks.domain.model.Stocks.Stock
-import org.n27.ktstonks.domain.model.Stocks.ValuationMeasures
 
 internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
     symbol = symbol,
