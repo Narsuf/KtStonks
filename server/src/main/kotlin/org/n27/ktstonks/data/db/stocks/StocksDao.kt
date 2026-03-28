@@ -34,7 +34,7 @@ class StocksDao {
                 StocksTable.update(where = { StocksTable.symbol eq stock.symbol }) {
                     val valuationFloor = stock.valuationMeasures.valuationFloor
                         ?: existingStock.valuationMeasures.valuationFloor
-                        ?: 1.0
+                        ?: 15.0
 
                     it.fromStockEntity(
                         stock.copy(
