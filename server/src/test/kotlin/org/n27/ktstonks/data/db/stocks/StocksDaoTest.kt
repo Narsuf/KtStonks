@@ -11,6 +11,7 @@ import org.junit.Before
 import org.junit.Test
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
 import org.n27.ktstonks.test_data.data.getStockEntity
+import org.n27.ktstonks.test_data.data.getStockEntityValuationMeasures
 import java.util.*
 
 class StocksDaoTest {
@@ -117,6 +118,17 @@ class StocksDaoTest {
         dao.saveStock(stock.copy(price = null, valuationMeasures = stock.valuationMeasures.copy(valuationFloor = 12.5)))
 
         assertEquals(0.0, dao.getStock("AAPL")?.valuationMeasures?.intrinsicValue)
+    }
+
+    @Test
+    fun `getIntrinsicValue with pe 0 should return low value`() = runBlocking {
+        val stock = getStockEntity(valuationMeasures = getStockEntityValuationMeasures(pe = 0.0))
+        dao.saveStock(stock)
+
+        dao.saveStock(stock.copy(valuationMeasures = stock.valuationMeasures.copy(valuationFloor = 12.5)))
+
+        val expected = 0.0
+        assertEquals(expected, dao.getStock("AAPL")?.valuationMeasures?.intrinsicValue)
     }
 
     @Test
