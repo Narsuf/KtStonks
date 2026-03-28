@@ -11,8 +11,6 @@ data class StockRaw(
     val dividendYield: Double?,
     val eps: Double?,
     val pe: Double?,
-    val pb: Double?,
-    val ps: Double?,
     val earningsQuarterlyGrowth: Double?,
     val revenueQuarterlyGrowth: Double?,
     val revenueEstimateGrowthLow: Double?,

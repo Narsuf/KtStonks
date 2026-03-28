@@ -21,8 +21,6 @@ internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
     ),
     valuationMeasures = Stocks.ValuationMeasures(
         pe = pe,
-        pb = pb,
-        ps = ps,
         valuationFloor = null,
         intrinsicValue = null,
     ),

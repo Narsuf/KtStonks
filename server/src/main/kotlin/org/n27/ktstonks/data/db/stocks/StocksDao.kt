@@ -77,16 +77,14 @@ class StocksDao {
         this[StocksTable.logo] = stock.logo?.bytes
         this[StocksTable.price] = stock.price
         this[StocksTable.dividendYield] = stock.dividendYield
-        this[StocksTable.eps] = stock.incomeStatement?.eps
-        this[StocksTable.earningsQuarterlyGrowth] = stock.incomeStatement?.earningsQuarterlyGrowth
-        this[StocksTable.revenueQuarterlyGrowth] = stock.incomeStatement?.revenueQuarterlyGrowth
+        this[StocksTable.eps] = stock.incomeStatement.eps
+        this[StocksTable.earningsQuarterlyGrowth] = stock.incomeStatement.earningsQuarterlyGrowth
+        this[StocksTable.revenueQuarterlyGrowth] = stock.incomeStatement.revenueQuarterlyGrowth
         this[StocksTable.pe] = stock.valuationMeasures.pe
-        this[StocksTable.pb] = stock.valuationMeasures.pb
-        this[StocksTable.ps] = stock.valuationMeasures.ps
-        this[StocksTable.revenueEstimateGrowthLow] = stock.analysis?.revenueEstimate?.growthLow
-        this[StocksTable.revenueEstimateGrowthHigh] = stock.analysis?.revenueEstimate?.growthHigh
-        this[StocksTable.earningsEstimateGrowthLow] = stock.analysis?.earningsEstimate?.growthLow
-        this[StocksTable.earningsEstimateGrowthHigh] = stock.analysis?.earningsEstimate?.growthHigh
+        this[StocksTable.revenueEstimateGrowthLow] = stock.analysis.revenueEstimate.growthLow
+        this[StocksTable.revenueEstimateGrowthHigh] = stock.analysis.revenueEstimate.growthHigh
+        this[StocksTable.earningsEstimateGrowthLow] = stock.analysis.earningsEstimate.growthLow
+        this[StocksTable.earningsEstimateGrowthHigh] = stock.analysis.earningsEstimate.growthHigh
         this[StocksTable.valuationFloor] = stock.valuationMeasures.valuationFloor
         this[StocksTable.intrinsicValue] = stock.valuationMeasures.intrinsicValue
         this[StocksTable.currency] = stock.currency
@@ -128,8 +126,6 @@ class StocksDao {
         ),
         valuationMeasures = StockEntity.ValuationMeasures(
             pe = this[StocksTable.pe],
-            pb = this[StocksTable.pb],
-            ps = this[StocksTable.ps],
             valuationFloor = this[StocksTable.valuationFloor],
             intrinsicValue = this[StocksTable.intrinsicValue],
         ),
@@ -140,5 +136,5 @@ class StocksDao {
 
     private fun StockEntity.getIntrinsicValue(
         valuationFloor: Double,
-    ) = valuationMeasures.ps?.let { (price ?: 0.0) * (valuationFloor / it) } ?: 0.0
+    ) = valuationMeasures.pe?.let { (price ?: 0.0) * (valuationFloor / it) } ?: 0.0
 }

@@ -33,8 +33,6 @@ data class Stocks(
     @Serializable
     data class ValuationMeasures(
         val pe: Double?,
-        val pb: Double?,
-        val ps: Double?,
         val valuationFloor: Double?,
         val intrinsicValue: Double?,
     )

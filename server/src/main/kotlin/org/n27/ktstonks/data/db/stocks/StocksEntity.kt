@@ -27,8 +27,6 @@ data class StocksEntity(
 
         data class ValuationMeasures(
             val pe: Double?,
-            val pb: Double?,
-            val ps: Double?,
             val valuationFloor: Double?,
             val intrinsicValue: Double?,
         )

@@ -77,7 +77,7 @@ class StocksDaoTest {
             price = 200.0,
             dividendYield = 1.0,
             incomeStatement = stock.incomeStatement.copy(eps = 2.0, earningsQuarterlyGrowth = 5.0),
-            valuationMeasures = stock.valuationMeasures.copy(pe = 3.0, pb = 4.0, intrinsicValue = 6.0),
+            valuationMeasures = stock.valuationMeasures.copy(pe = 3.0, intrinsicValue = 6.0),
             currency = "EUR",
             lastUpdated = 7L,
             isWatchlisted = true,
@@ -89,7 +89,7 @@ class StocksDaoTest {
     }
 
     @Test
-    fun `getIntrinsicValue should calculate current intrinsic value based on ps and price`() = runBlocking {
+    fun `getIntrinsicValue should calculate current intrinsic value based on pe and price`() = runBlocking {
         val stock = getStockEntity()
         dao.saveStock(stock)
 
@@ -100,11 +100,11 @@ class StocksDaoTest {
     }
 
     @Test
-    fun `getIntrinsicValue with null ps should return 0`() = runBlocking {
+    fun `getIntrinsicValue with null pe should return 0`() = runBlocking {
         val stock = getStockEntity()
         dao.saveStock(stock)
 
-        dao.saveStock(stock.copy(valuationMeasures = stock.valuationMeasures.copy(ps = null, valuationFloor = 12.5)))
+        dao.saveStock(stock.copy(valuationMeasures = stock.valuationMeasures.copy(pe = null, valuationFloor = 12.5)))
 
         assertEquals(0.0, dao.getStock("AAPL")?.valuationMeasures?.intrinsicValue)
     }

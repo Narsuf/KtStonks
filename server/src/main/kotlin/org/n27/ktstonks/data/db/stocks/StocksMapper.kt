@@ -33,8 +33,6 @@ fun StockEntity.toStock() = Stock(
     ),
     valuationMeasures = ValuationMeasures(
         pe = valuationMeasures.pe,
-        pb = valuationMeasures.pb,
-        ps = valuationMeasures.ps,
         valuationFloor = valuationMeasures.valuationFloor,
         intrinsicValue = valuationMeasures.intrinsicValue,
     ),
@@ -66,8 +64,6 @@ fun Stock.toEntity() = StockEntity(
     ),
     valuationMeasures = StockEntity.ValuationMeasures(
         pe = valuationMeasures.pe,
-        pb = valuationMeasures.pb,
-        ps = valuationMeasures.ps,
         valuationFloor = valuationMeasures.valuationFloor,
         intrinsicValue = valuationMeasures.intrinsicValue,
     ),

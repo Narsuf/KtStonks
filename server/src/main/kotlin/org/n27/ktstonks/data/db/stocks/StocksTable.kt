@@ -10,8 +10,6 @@ object StocksTable : Table("stocks") {
     val dividendYield = double("dividend_yield").nullable()
     val eps = double("eps").nullable()
     val pe = double("pe").nullable()
-    val pb = double("pb").nullable()
-    val ps = double("ps").nullable()
     val earningsQuarterlyGrowth = double("earnings_quarterly_growth").nullable()
     val revenueQuarterlyGrowth = double("revenue_quarterly_growth").nullable()
     val revenueEstimateGrowthLow = double("revenue_estimate_growth_low").nullable()

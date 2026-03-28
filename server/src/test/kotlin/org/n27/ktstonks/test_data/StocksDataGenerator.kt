@@ -61,8 +61,6 @@ fun getStockAnalysisEstimate(
 
 fun getStockValuationMeasures() = ValuationMeasures(
     pe = 34.7215522245231,
-    pb = 51.967537,
-    ps = 8.78231,
     valuationFloor = null,
     intrinsicValue = null,
 )

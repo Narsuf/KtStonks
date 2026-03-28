@@ -25,9 +25,9 @@ val mainModule = module {
     single {
         HttpClient(CIO) {
             install(HttpTimeout) {
-                requestTimeoutMillis = 30_000
-                connectTimeoutMillis = 10_000
-                socketTimeoutMillis = 30_000
+                connectTimeoutMillis = 5_000
+                socketTimeoutMillis = 20_000
+                requestTimeoutMillis = 20_000
             }
             install(ContentNegotiation) {
                 json(
