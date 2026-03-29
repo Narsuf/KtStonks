@@ -42,6 +42,7 @@ data class StocksEntity(
         data class BalanceSheet(
             val totalCashPerShare: Double?,
             val de: Double?,
+            val currentRatio: Double?,
         )
 
         data class Analysis(
@@ -52,6 +53,7 @@ data class StocksEntity(
             data class Estimate(
                 val growthLow: Double?,
                 val growthHigh: Double?,
+                val growthAvg: Double?,
             )
         }
 

@@ -61,6 +61,7 @@ fun getStockEntityAnalysis(
     revenueEstimate: Estimate = getStockEntityAnalysisEstimate(
         growthLow = 5.60331523810161,
         growthHigh = 10.2768231268171,
+        growthAvg = 5.53740676977713,
     ),
 ) = Analysis(
     earningsEstimate = earningsEstimate,
@@ -70,9 +71,11 @@ fun getStockEntityAnalysis(
 fun getStockEntityAnalysisEstimate(
     growthLow: Double = 2.57668711656441,
     growthHigh: Double = 15.7190635451505,
+    growthAvg: Double = 8.65392250039098,
 ) = Estimate(
     growthLow = growthLow,
     growthHigh = growthHigh,
+    growthAvg = growthAvg,
 )
 
 fun getStockEntityValuationMeasures(
@@ -96,7 +99,9 @@ fun getStockEntityDividends(
 fun getStockEntityBalanceSheet(
     totalCashPerShare: Double = 4.557,
     de: Double = 102.63,
+    currentRatio: Double? = 1.5,
 ) = BalanceSheet(
     totalCashPerShare = totalCashPerShare,
     de = de,
+    currentRatio = currentRatio,
 )

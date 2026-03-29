@@ -21,8 +21,8 @@ internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
         revenueQuarterlyGrowth = revenueQuarterlyGrowth,
     ),
     analysis = Analysis(
-        earningsEstimate = Estimate(earningsEstimateGrowthLow, earningsEstimateGrowthHigh),
-        revenueEstimate = Estimate(revenueEstimateGrowthLow, revenueEstimateGrowthHigh),
+        earningsEstimate = Estimate(earningsEstimateGrowthLow, earningsEstimateGrowthHigh, earningsEstimateGrowthAvg),
+        revenueEstimate = Estimate(revenueEstimateGrowthLow, revenueEstimateGrowthHigh, revenueEstimateGrowthAvg),
     ),
     valuationMeasures = ValuationMeasures(
         pe = pe,
@@ -32,6 +32,7 @@ internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
     balanceSheet = BalanceSheet(
         totalCashPerShare = totalCashPerShare,
         de = de,
+        currentRatio = currentRatio,
     ),
     currency = currency,
     lastUpdated = System.currentTimeMillis(),

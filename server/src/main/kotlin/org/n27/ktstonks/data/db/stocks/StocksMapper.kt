@@ -32,10 +32,12 @@ fun StockEntity.toStock() = Stock(
         earningsEstimate = Estimate(
             growthLow = analysis.earningsEstimate.growthLow,
             growthHigh = analysis.earningsEstimate.growthHigh,
+            growthAvg = analysis.earningsEstimate.growthAvg,
         ),
         revenueEstimate = Estimate(
             growthLow = analysis.revenueEstimate.growthLow,
             growthHigh = analysis.revenueEstimate.growthHigh,
+            growthAvg = analysis.revenueEstimate.growthAvg,
         ),
     ),
     valuationMeasures = ValuationMeasures(
@@ -46,6 +48,7 @@ fun StockEntity.toStock() = Stock(
     balanceSheet = BalanceSheet(
         totalCashPerShare = balanceSheet.totalCashPerShare,
         de = balanceSheet.de,
+        currentRatio = balanceSheet.currentRatio,
     ),
     currency = currency,
     lastUpdated = lastUpdated,
@@ -72,10 +75,12 @@ fun Stock.toEntity() = StockEntity(
         earningsEstimate = StockEntity.Analysis.Estimate(
             growthLow = analysis.earningsEstimate.growthLow,
             growthHigh = analysis.earningsEstimate.growthHigh,
+            growthAvg = analysis.earningsEstimate.growthAvg,
         ),
         revenueEstimate = StockEntity.Analysis.Estimate(
             growthLow = analysis.revenueEstimate.growthLow,
             growthHigh = analysis.revenueEstimate.growthHigh,
+            growthAvg = analysis.revenueEstimate.growthAvg,
         ),
     ),
     valuationMeasures = StockEntity.ValuationMeasures(
@@ -86,6 +91,7 @@ fun Stock.toEntity() = StockEntity(
     balanceSheet = StockEntity.BalanceSheet(
         totalCashPerShare = balanceSheet.totalCashPerShare,
         de = balanceSheet.de,
+        currentRatio = balanceSheet.currentRatio,
     ),
     currency = currency,
     lastUpdated = lastUpdated,

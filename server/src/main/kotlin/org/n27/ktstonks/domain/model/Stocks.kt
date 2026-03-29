@@ -50,6 +50,7 @@ data class Stocks(
     data class BalanceSheet(
         val totalCashPerShare: Double?,
         val de: Double?,
+        val currentRatio: Double?,
     )
 
     @Serializable
@@ -62,6 +63,7 @@ data class Stocks(
         data class Estimate(
             val growthLow: Double?,
             val growthHigh: Double?,
+            val growthAvg: Double?,
         )
     }
 }

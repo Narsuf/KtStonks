@@ -86,14 +86,17 @@ class StocksDao {
         this[StocksTable.pe] = stock.valuationMeasures.pe
         this[StocksTable.revenueEstimateGrowthLow] = stock.analysis.revenueEstimate.growthLow
         this[StocksTable.revenueEstimateGrowthHigh] = stock.analysis.revenueEstimate.growthHigh
+        this[StocksTable.revenueEstimateGrowthAvg] = stock.analysis.revenueEstimate.growthAvg
         this[StocksTable.earningsEstimateGrowthLow] = stock.analysis.earningsEstimate.growthLow
         this[StocksTable.earningsEstimateGrowthHigh] = stock.analysis.earningsEstimate.growthHigh
+        this[StocksTable.earningsEstimateGrowthAvg] = stock.analysis.earningsEstimate.growthAvg
         this[StocksTable.valuationFloor] = stock.valuationMeasures.valuationFloor
         this[StocksTable.intrinsicValue] = stock.valuationMeasures.intrinsicValue
         this[StocksTable.roe] = stock.roe
         this[StocksTable.profitMargin] = stock.profitMargin
         this[StocksTable.totalCashPerShare] = stock.balanceSheet.totalCashPerShare
         this[StocksTable.de] = stock.balanceSheet.de
+        this[StocksTable.currentRatio] = stock.balanceSheet.currentRatio
         this[StocksTable.currency] = stock.currency
         this[StocksTable.lastUpdated] = stock.lastUpdated
         this[StocksTable.isWatchlisted] = stock.isWatchlisted
@@ -130,10 +133,12 @@ class StocksDao {
             earningsEstimate = Estimate(
                 growthLow = this[StocksTable.earningsEstimateGrowthLow],
                 growthHigh = this[StocksTable.earningsEstimateGrowthHigh],
+                growthAvg = this[StocksTable.earningsEstimateGrowthAvg],
             ),
             revenueEstimate = Estimate(
                 growthLow = this[StocksTable.revenueEstimateGrowthLow],
                 growthHigh = this[StocksTable.revenueEstimateGrowthHigh],
+                growthAvg = this[StocksTable.revenueEstimateGrowthAvg],
             ),
         ),
         valuationMeasures = ValuationMeasures(
@@ -144,6 +149,7 @@ class StocksDao {
         balanceSheet = BalanceSheet(
             totalCashPerShare = this[StocksTable.totalCashPerShare],
             de = this[StocksTable.de],
+            currentRatio = this[StocksTable.currentRatio],
         ),
         currency = this[StocksTable.currency],
         lastUpdated = this[StocksTable.lastUpdated],
