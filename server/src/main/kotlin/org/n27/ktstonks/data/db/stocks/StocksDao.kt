@@ -82,12 +82,7 @@ class StocksDao {
         this[StocksTable.payoutRatio] = stock.dividends.payoutRatio
         this[StocksTable.eps] = stock.incomeStatement.eps
         this[StocksTable.earningsQuarterlyGrowth] = stock.incomeStatement.earningsQuarterlyGrowth
-        this[StocksTable.revenueQuarterlyGrowth] = stock.incomeStatement.revenueQuarterlyGrowth
         this[StocksTable.pe] = stock.valuationMeasures.pe
-        this[StocksTable.revenueEstimateGrowthLow] = stock.analysis.revenueEstimate.growthLow
-        this[StocksTable.revenueEstimateGrowthHigh] = stock.analysis.revenueEstimate.growthHigh
-        this[StocksTable.revenueEstimateGrowthAvg] = stock.analysis.revenueEstimate.growthAvg
-        this[StocksTable.earningsEstimateGrowthLow] = stock.analysis.earningsEstimate.growthLow
         this[StocksTable.earningsEstimateGrowthHigh] = stock.analysis.earningsEstimate.growthHigh
         this[StocksTable.earningsEstimateGrowthAvg] = stock.analysis.earningsEstimate.growthAvg
         this[StocksTable.valuationFloor] = stock.valuationMeasures.valuationFloor
@@ -127,18 +122,11 @@ class StocksDao {
         incomeStatement = IncomeStatement(
             eps = this[StocksTable.eps],
             earningsQuarterlyGrowth = this[StocksTable.earningsQuarterlyGrowth],
-            revenueQuarterlyGrowth = this[StocksTable.revenueQuarterlyGrowth],
         ),
         analysis = Analysis(
             earningsEstimate = Estimate(
-                growthLow = this[StocksTable.earningsEstimateGrowthLow],
                 growthHigh = this[StocksTable.earningsEstimateGrowthHigh],
                 growthAvg = this[StocksTable.earningsEstimateGrowthAvg],
-            ),
-            revenueEstimate = Estimate(
-                growthLow = this[StocksTable.revenueEstimateGrowthLow],
-                growthHigh = this[StocksTable.revenueEstimateGrowthHigh],
-                growthAvg = this[StocksTable.revenueEstimateGrowthAvg],
             ),
         ),
         valuationMeasures = ValuationMeasures(

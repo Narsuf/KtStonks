@@ -49,31 +49,21 @@ fun getStocksEntity(
 fun getStockEntityIncomeStatement(
     eps: Double = 7.47,
     earningsQuarterlyGrowth: Double = 86.4,
-    revenueQuarterlyGrowth: Double = 5.2,
 ) = IncomeStatement(
     eps = eps,
     earningsQuarterlyGrowth = earningsQuarterlyGrowth,
-    revenueQuarterlyGrowth = revenueQuarterlyGrowth,
 )
 
 fun getStockEntityAnalysis(
     earningsEstimate: Estimate = getStockEntityAnalysisEstimate(),
-    revenueEstimate: Estimate = getStockEntityAnalysisEstimate(
-        growthLow = 5.60331523810161,
-        growthHigh = 10.2768231268171,
-        growthAvg = 5.53740676977713,
-    ),
 ) = Analysis(
     earningsEstimate = earningsEstimate,
-    revenueEstimate = revenueEstimate,
 )
 
 fun getStockEntityAnalysisEstimate(
-    growthLow: Double = 2.57668711656441,
     growthHigh: Double = 15.7190635451505,
     growthAvg: Double = 8.65392250039098,
 ) = Estimate(
-    growthLow = growthLow,
     growthHigh = growthHigh,
     growthAvg = growthAvg,
 )

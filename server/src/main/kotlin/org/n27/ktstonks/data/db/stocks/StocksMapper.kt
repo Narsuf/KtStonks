@@ -26,18 +26,11 @@ fun StockEntity.toStock() = Stock(
     incomeStatement = IncomeStatement(
         eps = incomeStatement.eps,
         earningsQuarterlyGrowth = incomeStatement.earningsQuarterlyGrowth,
-        revenueQuarterlyGrowth = incomeStatement.revenueQuarterlyGrowth,
     ),
     analysis = Analysis(
         earningsEstimate = Estimate(
-            growthLow = analysis.earningsEstimate.growthLow,
             growthHigh = analysis.earningsEstimate.growthHigh,
             growthAvg = analysis.earningsEstimate.growthAvg,
-        ),
-        revenueEstimate = Estimate(
-            growthLow = analysis.revenueEstimate.growthLow,
-            growthHigh = analysis.revenueEstimate.growthHigh,
-            growthAvg = analysis.revenueEstimate.growthAvg,
         ),
     ),
     valuationMeasures = ValuationMeasures(
@@ -69,18 +62,11 @@ fun Stock.toEntity() = StockEntity(
     incomeStatement = StockEntity.IncomeStatement(
         eps = incomeStatement.eps,
         earningsQuarterlyGrowth = incomeStatement.earningsQuarterlyGrowth,
-        revenueQuarterlyGrowth = incomeStatement.revenueQuarterlyGrowth,
     ),
     analysis = StockEntity.Analysis(
         earningsEstimate = StockEntity.Analysis.Estimate(
-            growthLow = analysis.earningsEstimate.growthLow,
             growthHigh = analysis.earningsEstimate.growthHigh,
             growthAvg = analysis.earningsEstimate.growthAvg,
-        ),
-        revenueEstimate = StockEntity.Analysis.Estimate(
-            growthLow = analysis.revenueEstimate.growthLow,
-            growthHigh = analysis.revenueEstimate.growthHigh,
-            growthAvg = analysis.revenueEstimate.growthAvg,
         ),
     ),
     valuationMeasures = StockEntity.ValuationMeasures(

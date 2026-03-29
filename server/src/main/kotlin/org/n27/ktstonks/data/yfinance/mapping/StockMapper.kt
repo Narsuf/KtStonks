@@ -18,11 +18,9 @@ internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
     incomeStatement = IncomeStatement(
         eps = eps,
         earningsQuarterlyGrowth = earningsQuarterlyGrowth,
-        revenueQuarterlyGrowth = revenueQuarterlyGrowth,
     ),
     analysis = Analysis(
-        earningsEstimate = Estimate(earningsEstimateGrowthLow, earningsEstimateGrowthHigh, earningsEstimateGrowthAvg),
-        revenueEstimate = Estimate(revenueEstimateGrowthLow, revenueEstimateGrowthHigh, revenueEstimateGrowthAvg),
+        earningsEstimate = Estimate(earningsEstimateGrowthHigh, earningsEstimateGrowthAvg),
     ),
     valuationMeasures = ValuationMeasures(
         pe = pe,

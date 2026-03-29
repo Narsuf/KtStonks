@@ -30,19 +30,12 @@ Returns a paginated list of stocks.
       "profitMargin": 0.27037,
       "incomeStatement": {
         "eps": 7.42,
-        "earningsQuarterlyGrowth": 91.2,
-        "revenueQuarterlyGrowth": 5.2
+        "earningsQuarterlyGrowth": 91.2
       },
       "analysis": {
         "earningsEstimate": {
-          "growthLow": 5.56,
           "growthHigh": 11.43,
           "growthAvg": 8.65
-        },
-        "revenueEstimate": {
-          "growthLow": 2.83,
-          "growthHigh": 7.22,
-          "growthAvg": 5.54
         }
       },
       "valuationMeasures": {

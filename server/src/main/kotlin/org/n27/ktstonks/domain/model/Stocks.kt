@@ -36,7 +36,6 @@ data class Stocks(
     data class IncomeStatement(
         val eps: Double?,
         val earningsQuarterlyGrowth: Double?,
-        val revenueQuarterlyGrowth: Double?,
     )
 
     @Serializable
@@ -56,12 +55,10 @@ data class Stocks(
     @Serializable
     data class Analysis(
         val earningsEstimate: Estimate,
-        val revenueEstimate: Estimate,
     ) {
 
         @Serializable
         data class Estimate(
-            val growthLow: Double?,
             val growthHigh: Double?,
             val growthAvg: Double?,
         )

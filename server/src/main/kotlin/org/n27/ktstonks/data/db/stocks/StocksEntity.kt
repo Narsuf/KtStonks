@@ -30,7 +30,6 @@ data class StocksEntity(
         data class IncomeStatement(
             val eps: Double?,
             val earningsQuarterlyGrowth: Double?,
-            val revenueQuarterlyGrowth: Double?,
         )
 
         data class ValuationMeasures(
@@ -47,11 +46,9 @@ data class StocksEntity(
 
         data class Analysis(
             val earningsEstimate: Estimate,
-            val revenueEstimate: Estimate,
         ) {
 
             data class Estimate(
-                val growthLow: Double?,
                 val growthHigh: Double?,
                 val growthAvg: Double?,
             )
