@@ -14,7 +14,12 @@ Returns all the information available from a specific stock.
   "companyName": "Apple Inc",
   "logo": "/9j/2wCEAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB...", // Base64 encoded image
   "price": 284.15,
-  "dividendYield": 0.0036,
+  "dividends": {
+    "dividendYield": 0.0036,
+    "payoutRatio": 0.1476
+  },
+  "roe": 1.5202099,
+  "profitMargin": 0.27037,
   "incomeStatement": {
     "eps": 7.42,
     "earningsQuarterlyGrowth": 91.2,
@@ -23,19 +28,24 @@ Returns all the information available from a specific stock.
   "analysis": {
     "earningsEstimate": {
       "growthLow": 5.56,
-      "growthHigh": 11.43
+      "growthHigh": 11.43,
+      "growthAvg": 8.65
     },
     "revenueEstimate": {
       "growthLow": 2.83,
-      "growthHigh": 7.22
+      "growthHigh": 7.22,
+      "growthAvg": 5.54
     }
   },
   "valuationMeasures": {
     "pe": 38.2951482479784,
-    "pb": 52.58265,
-    "ps": 8.78231,
     "valuationFloor": 12.5,
     "intrinsicValue": 119.2
+  },
+  "balanceSheet": {
+    "totalCashPerShare": 4.557,
+    "de": 102.63,
+    "currentRatio": 1.5
   },
   "currency": "USD",
   "lastUpdated": 1764872173179,
