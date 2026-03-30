@@ -10,39 +10,44 @@ data class StocksEntity(
         val companyName: String,
         val logo: Logo?,
         val price: Double?,
-        val dividendYield: Double?,
+        val dividends: Dividends,
+        val roe: Double?,
+        val profitMargin: Double?,
         val incomeStatement: IncomeStatement,
-        val analysis: Analysis,
+        val earningsEstimate: Estimate,
         val valuationMeasures: ValuationMeasures,
+        val balanceSheet: BalanceSheet,
         val currency: String?,
         val lastUpdated: Long,
         val isWatchlisted: Boolean,
     ) {
 
+        data class Dividends(
+            val dividendYield: Double?,
+            val payoutRatio: Double?,
+        )
+
         data class IncomeStatement(
             val eps: Double?,
             val earningsQuarterlyGrowth: Double?,
-            val revenueQuarterlyGrowth: Double?,
         )
 
         data class ValuationMeasures(
             val pe: Double?,
-            val pb: Double?,
-            val ps: Double?,
             val valuationFloor: Double?,
             val intrinsicValue: Double?,
         )
 
-        data class Analysis(
-            val earningsEstimate: Estimate,
-            val revenueEstimate: Estimate,
-        ) {
+        data class BalanceSheet(
+            val totalCashPerShare: Double?,
+            val de: Double?,
+            val currentRatio: Double?,
+        )
 
-            data class Estimate(
-                val growthLow: Double?,
-                val growthHigh: Double?,
-            )
-        }
+        data class Estimate(
+            val growthHigh: Double?,
+            val growthAvg: Double?,
+        )
 
         data class Logo(val bytes: ByteArray) {
 

@@ -1,6 +1,7 @@
 package org.n27.ktstonks.data.db.stocks
 
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
+import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.Logo
 import org.n27.ktstonks.domain.model.Stocks
 import org.n27.ktstonks.domain.model.Stocks.*
 import java.util.*
@@ -15,28 +16,29 @@ fun StockEntity.toStock() = Stock(
     companyName = companyName,
     logo = logo?.bytes?.let { Base64.getEncoder().encodeToString(it) },
     price = price,
-    dividendYield = dividendYield,
+    dividends = Dividends(
+        dividendYield = dividends.dividendYield,
+        payoutRatio = dividends.payoutRatio,
+    ),
+    roe = roe,
+    profitMargin = profitMargin,
     incomeStatement = IncomeStatement(
         eps = incomeStatement.eps,
         earningsQuarterlyGrowth = incomeStatement.earningsQuarterlyGrowth,
-        revenueQuarterlyGrowth = incomeStatement.revenueQuarterlyGrowth,
     ),
-    analysis = Analysis(
-        earningsEstimate = Analysis.Estimate(
-            growthLow = analysis.earningsEstimate.growthLow,
-            growthHigh = analysis.earningsEstimate.growthHigh,
-        ),
-        revenueEstimate = Analysis.Estimate(
-            growthLow = analysis.revenueEstimate.growthLow,
-            growthHigh = analysis.revenueEstimate.growthHigh,
-        ),
+    earningsEstimate = Estimate(
+        growthHigh = earningsEstimate.growthHigh,
+        growthAvg = earningsEstimate.growthAvg,
     ),
     valuationMeasures = ValuationMeasures(
         pe = valuationMeasures.pe,
-        pb = valuationMeasures.pb,
-        ps = valuationMeasures.ps,
         valuationFloor = valuationMeasures.valuationFloor,
         intrinsicValue = valuationMeasures.intrinsicValue,
+    ),
+    balanceSheet = BalanceSheet(
+        totalCashPerShare = balanceSheet.totalCashPerShare,
+        de = balanceSheet.de,
+        currentRatio = balanceSheet.currentRatio,
     ),
     currency = currency,
     lastUpdated = lastUpdated,
@@ -46,30 +48,31 @@ fun StockEntity.toStock() = Stock(
 fun Stock.toEntity() = StockEntity(
     symbol = symbol,
     companyName = companyName,
-    logo = logo?.let { StockEntity.Logo(Base64.getDecoder().decode(it)) },
+    logo = logo?.let { Logo(Base64.getDecoder().decode(it)) },
     price = price,
-    dividendYield = dividendYield,
+    dividends = StockEntity.Dividends(
+        dividendYield = dividends.dividendYield,
+        payoutRatio = dividends.payoutRatio,
+    ),
+    roe = roe,
+    profitMargin = profitMargin,
     incomeStatement = StockEntity.IncomeStatement(
         eps = incomeStatement.eps,
         earningsQuarterlyGrowth = incomeStatement.earningsQuarterlyGrowth,
-        revenueQuarterlyGrowth = incomeStatement.revenueQuarterlyGrowth,
     ),
-    analysis = StockEntity.Analysis(
-        earningsEstimate = StockEntity.Analysis.Estimate(
-            growthLow = analysis.earningsEstimate.growthLow,
-            growthHigh = analysis.earningsEstimate.growthHigh,
-        ),
-        revenueEstimate = StockEntity.Analysis.Estimate(
-            growthLow = analysis.revenueEstimate.growthLow,
-            growthHigh = analysis.revenueEstimate.growthHigh,
-        ),
+    earningsEstimate = StockEntity.Estimate(
+        growthHigh = earningsEstimate.growthHigh,
+        growthAvg = earningsEstimate.growthAvg,
     ),
     valuationMeasures = StockEntity.ValuationMeasures(
         pe = valuationMeasures.pe,
-        pb = valuationMeasures.pb,
-        ps = valuationMeasures.ps,
         valuationFloor = valuationMeasures.valuationFloor,
         intrinsicValue = valuationMeasures.intrinsicValue,
+    ),
+    balanceSheet = StockEntity.BalanceSheet(
+        totalCashPerShare = balanceSheet.totalCashPerShare,
+        de = balanceSheet.de,
+        currentRatio = balanceSheet.currentRatio,
     ),
     currency = currency,
     lastUpdated = lastUpdated,

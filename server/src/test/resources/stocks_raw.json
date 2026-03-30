@@ -7,14 +7,15 @@
     "dividendYield": 0.4,
     "eps": 7.47,
     "pe": 34.7215522245231,
-    "pb": 51.967537,
-    "ps": 8.78231,
     "earningsQuarterlyGrowth": 86.4,
-    "revenueQuarterlyGrowth": 5.2,
-    "revenueEstimateGrowthLow": 5.60331523810161,
-    "revenueEstimateGrowthHigh": 10.2768231268171,
-    "earningsEstimateGrowthLow": 2.57668711656441,
     "earningsEstimateGrowthHigh": 15.7190635451505,
-    "currency": "USD"
+    "earningsEstimateGrowthAvg": 8.65392250039098,
+    "currency": "USD",
+    "payoutRatio": 0.1476,
+    "roe": 1.5202099,
+    "profitMargin": 0.27037,
+    "totalCashPerShare": 4.557,
+    "de": 102.63,
+    "currentRatio": 1.5
   }
 ]

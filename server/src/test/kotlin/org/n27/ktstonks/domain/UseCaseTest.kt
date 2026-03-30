@@ -73,8 +73,6 @@ class UseCaseTest {
         val expectedStock = getStock(
             valuationMeasures = ValuationMeasures(
                 pe = 34.7215522245231,
-                pb = 51.967537,
-                ps = 8.78231,
                 valuationFloor = 12.5,
                 intrinsicValue = null,
             ),

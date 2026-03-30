@@ -4,6 +4,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.n27.ktstonks.data.db.dbQuery
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
+import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.*
 
 class StocksDao {
 
@@ -32,7 +33,7 @@ class StocksDao {
                 StocksTable.update(where = { StocksTable.symbol eq stock.symbol }) {
                     val valuationFloor = stock.valuationMeasures.valuationFloor
                         ?: existingStock.valuationMeasures.valuationFloor
-                        ?: 1.0
+                        ?: 15.0
 
                     it.fromStockEntity(
                         stock.copy(
@@ -76,19 +77,20 @@ class StocksDao {
         this[StocksTable.companyName] = stock.companyName
         this[StocksTable.logo] = stock.logo?.bytes
         this[StocksTable.price] = stock.price
-        this[StocksTable.dividendYield] = stock.dividendYield
-        this[StocksTable.eps] = stock.incomeStatement?.eps
-        this[StocksTable.earningsQuarterlyGrowth] = stock.incomeStatement?.earningsQuarterlyGrowth
-        this[StocksTable.revenueQuarterlyGrowth] = stock.incomeStatement?.revenueQuarterlyGrowth
+        this[StocksTable.dividendYield] = stock.dividends.dividendYield
+        this[StocksTable.payoutRatio] = stock.dividends.payoutRatio
+        this[StocksTable.eps] = stock.incomeStatement.eps
+        this[StocksTable.earningsQuarterlyGrowth] = stock.incomeStatement.earningsQuarterlyGrowth
         this[StocksTable.pe] = stock.valuationMeasures.pe
-        this[StocksTable.pb] = stock.valuationMeasures.pb
-        this[StocksTable.ps] = stock.valuationMeasures.ps
-        this[StocksTable.revenueEstimateGrowthLow] = stock.analysis?.revenueEstimate?.growthLow
-        this[StocksTable.revenueEstimateGrowthHigh] = stock.analysis?.revenueEstimate?.growthHigh
-        this[StocksTable.earningsEstimateGrowthLow] = stock.analysis?.earningsEstimate?.growthLow
-        this[StocksTable.earningsEstimateGrowthHigh] = stock.analysis?.earningsEstimate?.growthHigh
+        this[StocksTable.earningsEstimateGrowthHigh] = stock.earningsEstimate.growthHigh
+        this[StocksTable.earningsEstimateGrowthAvg] = stock.earningsEstimate.growthAvg
         this[StocksTable.valuationFloor] = stock.valuationMeasures.valuationFloor
         this[StocksTable.intrinsicValue] = stock.valuationMeasures.intrinsicValue
+        this[StocksTable.roe] = stock.roe
+        this[StocksTable.profitMargin] = stock.profitMargin
+        this[StocksTable.totalCashPerShare] = stock.balanceSheet.totalCashPerShare
+        this[StocksTable.de] = stock.balanceSheet.de
+        this[StocksTable.currentRatio] = stock.balanceSheet.currentRatio
         this[StocksTable.currency] = stock.currency
         this[StocksTable.lastUpdated] = stock.lastUpdated
         this[StocksTable.isWatchlisted] = stock.isWatchlisted
@@ -110,28 +112,29 @@ class StocksDao {
         companyName = this[StocksTable.companyName],
         logo = this[StocksTable.logo]?.let { StockEntity.Logo(it) },
         price = this[StocksTable.price],
-        dividendYield = this[StocksTable.dividendYield],
-        incomeStatement = StockEntity.IncomeStatement(
+        dividends = Dividends(
+            dividendYield = this[StocksTable.dividendYield],
+            payoutRatio = this[StocksTable.payoutRatio],
+        ),
+        roe = this[StocksTable.roe],
+        profitMargin = this[StocksTable.profitMargin],
+        incomeStatement = IncomeStatement(
             eps = this[StocksTable.eps],
             earningsQuarterlyGrowth = this[StocksTable.earningsQuarterlyGrowth],
-            revenueQuarterlyGrowth = this[StocksTable.revenueQuarterlyGrowth],
         ),
-        analysis = StockEntity.Analysis(
-            earningsEstimate = StockEntity.Analysis.Estimate(
-                growthLow = this[StocksTable.earningsEstimateGrowthLow],
-                growthHigh = this[StocksTable.earningsEstimateGrowthHigh],
-            ),
-            revenueEstimate = StockEntity.Analysis.Estimate(
-                growthLow = this[StocksTable.revenueEstimateGrowthLow],
-                growthHigh = this[StocksTable.revenueEstimateGrowthHigh],
-            ),
+        earningsEstimate = Estimate(
+            growthHigh = this[StocksTable.earningsEstimateGrowthHigh],
+            growthAvg = this[StocksTable.earningsEstimateGrowthAvg],
         ),
-        valuationMeasures = StockEntity.ValuationMeasures(
+        valuationMeasures = ValuationMeasures(
             pe = this[StocksTable.pe],
-            pb = this[StocksTable.pb],
-            ps = this[StocksTable.ps],
             valuationFloor = this[StocksTable.valuationFloor],
             intrinsicValue = this[StocksTable.intrinsicValue],
+        ),
+        balanceSheet = BalanceSheet(
+            totalCashPerShare = this[StocksTable.totalCashPerShare],
+            de = this[StocksTable.de],
+            currentRatio = this[StocksTable.currentRatio],
         ),
         currency = this[StocksTable.currency],
         lastUpdated = this[StocksTable.lastUpdated],
@@ -140,5 +143,7 @@ class StocksDao {
 
     private fun StockEntity.getIntrinsicValue(
         valuationFloor: Double,
-    ) = valuationMeasures.ps?.let { (price ?: 0.0) * (valuationFloor / it) } ?: 0.0
+    ) = valuationMeasures.pe
+        ?.takeIf { it > 0 }
+        ?.let { (price ?: 0.0) * (valuationFloor / it) } ?: 0.0
 }
