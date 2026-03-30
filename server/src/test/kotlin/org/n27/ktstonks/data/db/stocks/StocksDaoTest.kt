@@ -76,9 +76,13 @@ class StocksDaoTest {
             companyName = "A",
             logo = StockEntity.Logo(Base64.getDecoder().decode("/9j/2wCEAAEBAQEBAQEBAQEBAQEC")),
             price = 200.0,
-            dividends = stock.dividends.copy(dividendYield = 1.0),
+            dividends = stock.dividends.copy(dividendYield = 1.0, payoutRatio = 0.5),
+            roe = 2.5,
+            profitMargin = 0.35,
             incomeStatement = stock.incomeStatement.copy(eps = 2.0, earningsQuarterlyGrowth = 5.0),
-            valuationMeasures = stock.valuationMeasures.copy(pe = 3.0, intrinsicValue = 6.0),
+            earningsEstimate = stock.earningsEstimate.copy(growthHigh = 20.0, growthAvg = 10.0),
+            valuationMeasures = stock.valuationMeasures.copy(pe = 3.0, valuationFloor = 8.0, intrinsicValue = 6.0),
+            balanceSheet = stock.balanceSheet.copy(totalCashPerShare = 9.0, de = 50.0, currentRatio = 2.0),
             currency = "EUR",
             lastUpdated = 7L,
             isWatchlisted = true,
@@ -121,7 +125,7 @@ class StocksDaoTest {
     }
 
     @Test
-    fun `getIntrinsicValue with pe 0 should return low value`() = runBlocking {
+    fun `getIntrinsicValue with pe 0 should return 0`() = runBlocking {
         val stock = getStockEntity(valuationMeasures = getStockEntityValuationMeasures(pe = 0.0))
         dao.saveStock(stock)
 
