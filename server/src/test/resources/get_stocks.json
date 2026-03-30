@@ -15,11 +15,9 @@
         "eps": 7.47,
         "earningsQuarterlyGrowth": 86.4
       },
-      "analysis": {
-        "earningsEstimate": {
-          "growthHigh": 15.7190635451505,
-          "growthAvg": 8.65392250039098
-        }
+      "earningsEstimate": {
+        "growthHigh": 15.7190635451505,
+        "growthAvg": 8.65392250039098
       },
       "valuationMeasures": {
         "pe": 34.7215522245231,

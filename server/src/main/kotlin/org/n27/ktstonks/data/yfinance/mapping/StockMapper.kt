@@ -2,7 +2,6 @@ package org.n27.ktstonks.data.yfinance.mapping
 
 import org.n27.ktstonks.data.yfinance.model.StockRaw
 import org.n27.ktstonks.domain.model.Stocks.*
-import org.n27.ktstonks.domain.model.Stocks.Analysis.Estimate
 
 internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
     symbol = symbol,
@@ -19,8 +18,9 @@ internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
         eps = eps,
         earningsQuarterlyGrowth = earningsQuarterlyGrowth,
     ),
-    analysis = Analysis(
-        earningsEstimate = Estimate(earningsEstimateGrowthHigh, earningsEstimateGrowthAvg),
+    earningsEstimate = Estimate(
+        growthHigh = earningsEstimateGrowthHigh,
+        growthAvg = earningsEstimateGrowthAvg,
     ),
     valuationMeasures = ValuationMeasures(
         pe = pe,

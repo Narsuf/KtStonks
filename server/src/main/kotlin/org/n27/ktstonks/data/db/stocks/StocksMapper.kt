@@ -4,7 +4,6 @@ import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.Logo
 import org.n27.ktstonks.domain.model.Stocks
 import org.n27.ktstonks.domain.model.Stocks.*
-import org.n27.ktstonks.domain.model.Stocks.Analysis.Estimate
 import java.util.*
 
 fun StocksEntity.toStocks() = Stocks(
@@ -27,11 +26,9 @@ fun StockEntity.toStock() = Stock(
         eps = incomeStatement.eps,
         earningsQuarterlyGrowth = incomeStatement.earningsQuarterlyGrowth,
     ),
-    analysis = Analysis(
-        earningsEstimate = Estimate(
-            growthHigh = analysis.earningsEstimate.growthHigh,
-            growthAvg = analysis.earningsEstimate.growthAvg,
-        ),
+    earningsEstimate = Estimate(
+        growthHigh = earningsEstimate.growthHigh,
+        growthAvg = earningsEstimate.growthAvg,
     ),
     valuationMeasures = ValuationMeasures(
         pe = valuationMeasures.pe,
@@ -63,11 +60,9 @@ fun Stock.toEntity() = StockEntity(
         eps = incomeStatement.eps,
         earningsQuarterlyGrowth = incomeStatement.earningsQuarterlyGrowth,
     ),
-    analysis = StockEntity.Analysis(
-        earningsEstimate = StockEntity.Analysis.Estimate(
-            growthHigh = analysis.earningsEstimate.growthHigh,
-            growthAvg = analysis.earningsEstimate.growthAvg,
-        ),
+    earningsEstimate = StockEntity.Estimate(
+        growthHigh = earningsEstimate.growthHigh,
+        growthAvg = earningsEstimate.growthAvg,
     ),
     valuationMeasures = StockEntity.ValuationMeasures(
         pe = valuationMeasures.pe,

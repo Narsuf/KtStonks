@@ -2,7 +2,6 @@ package org.n27.ktstonks.test_data
 
 import org.n27.ktstonks.domain.model.Stocks
 import org.n27.ktstonks.domain.model.Stocks.*
-import org.n27.ktstonks.domain.model.Stocks.Analysis.Estimate
 
 fun getStocks(
     items: List<Stock> = listOf(getStock()),
@@ -21,7 +20,7 @@ fun getStock(
     roe: Double? = 1.5202099,
     profitMargin: Double? = 0.27037,
     incomeStatement: IncomeStatement = getStockIncomeStatement(),
-    analysis: Analysis = getStockAnalysis(),
+    earningsEstimate: Estimate = getStockEarningsEstimate(),
     valuationMeasures: ValuationMeasures = getStockValuationMeasures(),
     balanceSheet: BalanceSheet = getStockBalanceSheet(),
     currency: String = "USD",
@@ -36,7 +35,7 @@ fun getStock(
     roe = roe,
     profitMargin = profitMargin,
     incomeStatement = incomeStatement,
-    analysis = analysis,
+    earningsEstimate = earningsEstimate,
     valuationMeasures = valuationMeasures,
     balanceSheet = balanceSheet,
     currency = currency,
@@ -52,13 +51,7 @@ fun getStockIncomeStatement(
     earningsQuarterlyGrowth = earningsQuarterlyGrowth,
 )
 
-fun getStockAnalysis(
-    earningsEstimate: Estimate = getStockAnalysisEstimate(),
-) = Analysis(
-    earningsEstimate = earningsEstimate,
-)
-
-fun getStockAnalysisEstimate(
+fun getStockEarningsEstimate(
     growthHigh: Double = 15.7190635451505,
     growthAvg: Double = 8.65392250039098,
 ) = Estimate(

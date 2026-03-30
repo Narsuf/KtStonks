@@ -18,7 +18,7 @@ data class Stocks(
         val roe: Double?,
         val profitMargin: Double?,
         val incomeStatement: IncomeStatement,
-        val analysis: Analysis,
+        val earningsEstimate: Estimate,
         val valuationMeasures: ValuationMeasures,
         val balanceSheet: BalanceSheet,
         val currency: String?,
@@ -53,14 +53,8 @@ data class Stocks(
     )
 
     @Serializable
-    data class Analysis(
-        val earningsEstimate: Estimate,
-    ) {
-
-        @Serializable
-        data class Estimate(
-            val growthHigh: Double?,
-            val growthAvg: Double?,
-        )
-    }
+    data class Estimate(
+        val growthHigh: Double?,
+        val growthAvg: Double?,
+    )
 }

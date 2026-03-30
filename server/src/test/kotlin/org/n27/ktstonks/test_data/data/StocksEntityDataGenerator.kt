@@ -3,7 +3,6 @@ package org.n27.ktstonks.test_data.data
 import org.n27.ktstonks.data.db.stocks.StocksEntity
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.*
-import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.Analysis.Estimate
 import java.util.*
 
 fun getStockEntity(
@@ -15,7 +14,7 @@ fun getStockEntity(
     roe: Double? = 1.5202099,
     profitMargin: Double? = 0.27037,
     incomeStatement: IncomeStatement = getStockEntityIncomeStatement(),
-    analysis: Analysis = getStockEntityAnalysis(),
+    earningsEstimate: Estimate = getStockEntityEarningsEstimate(),
     valuationMeasures: ValuationMeasures = getStockEntityValuationMeasures(),
     balanceSheet: BalanceSheet = getStockEntityBalanceSheet(),
     currency: String = "USD",
@@ -30,7 +29,7 @@ fun getStockEntity(
     roe = roe,
     profitMargin = profitMargin,
     incomeStatement = incomeStatement,
-    analysis = analysis,
+    earningsEstimate = earningsEstimate,
     valuationMeasures = valuationMeasures,
     balanceSheet = balanceSheet,
     currency = currency,
@@ -54,13 +53,7 @@ fun getStockEntityIncomeStatement(
     earningsQuarterlyGrowth = earningsQuarterlyGrowth,
 )
 
-fun getStockEntityAnalysis(
-    earningsEstimate: Estimate = getStockEntityAnalysisEstimate(),
-) = Analysis(
-    earningsEstimate = earningsEstimate,
-)
-
-fun getStockEntityAnalysisEstimate(
+fun getStockEntityEarningsEstimate(
     growthHigh: Double = 15.7190635451505,
     growthAvg: Double = 8.65392250039098,
 ) = Estimate(

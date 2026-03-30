@@ -24,11 +24,9 @@ Returns all the information available from a specific stock.
     "eps": 7.42,
     "earningsQuarterlyGrowth": 91.2
   },
-  "analysis": {
-    "earningsEstimate": {
-      "growthHigh": 11.43,
-      "growthAvg": 8.65
-    }
+  "earningsEstimate": {
+    "growthHigh": 11.43,
+    "growthAvg": 8.65
   },
   "valuationMeasures": {
     "pe": 38.2951482479784,

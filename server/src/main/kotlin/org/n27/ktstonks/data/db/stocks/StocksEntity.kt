@@ -14,7 +14,7 @@ data class StocksEntity(
         val roe: Double?,
         val profitMargin: Double?,
         val incomeStatement: IncomeStatement,
-        val analysis: Analysis,
+        val earningsEstimate: Estimate,
         val valuationMeasures: ValuationMeasures,
         val balanceSheet: BalanceSheet,
         val currency: String?,
@@ -44,15 +44,10 @@ data class StocksEntity(
             val currentRatio: Double?,
         )
 
-        data class Analysis(
-            val earningsEstimate: Estimate,
-        ) {
-
-            data class Estimate(
-                val growthHigh: Double?,
-                val growthAvg: Double?,
-            )
-        }
+        data class Estimate(
+            val growthHigh: Double?,
+            val growthAvg: Double?,
+        )
 
         data class Logo(val bytes: ByteArray) {
 

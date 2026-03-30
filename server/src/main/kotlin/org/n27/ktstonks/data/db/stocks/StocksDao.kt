@@ -5,7 +5,6 @@ import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.n27.ktstonks.data.db.dbQuery
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.*
-import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.Analysis.Estimate
 
 class StocksDao {
 
@@ -83,8 +82,8 @@ class StocksDao {
         this[StocksTable.eps] = stock.incomeStatement.eps
         this[StocksTable.earningsQuarterlyGrowth] = stock.incomeStatement.earningsQuarterlyGrowth
         this[StocksTable.pe] = stock.valuationMeasures.pe
-        this[StocksTable.earningsEstimateGrowthHigh] = stock.analysis.earningsEstimate.growthHigh
-        this[StocksTable.earningsEstimateGrowthAvg] = stock.analysis.earningsEstimate.growthAvg
+        this[StocksTable.earningsEstimateGrowthHigh] = stock.earningsEstimate.growthHigh
+        this[StocksTable.earningsEstimateGrowthAvg] = stock.earningsEstimate.growthAvg
         this[StocksTable.valuationFloor] = stock.valuationMeasures.valuationFloor
         this[StocksTable.intrinsicValue] = stock.valuationMeasures.intrinsicValue
         this[StocksTable.roe] = stock.roe
@@ -123,11 +122,9 @@ class StocksDao {
             eps = this[StocksTable.eps],
             earningsQuarterlyGrowth = this[StocksTable.earningsQuarterlyGrowth],
         ),
-        analysis = Analysis(
-            earningsEstimate = Estimate(
-                growthHigh = this[StocksTable.earningsEstimateGrowthHigh],
-                growthAvg = this[StocksTable.earningsEstimateGrowthAvg],
-            ),
+        earningsEstimate = Estimate(
+            growthHigh = this[StocksTable.earningsEstimateGrowthHigh],
+            growthAvg = this[StocksTable.earningsEstimateGrowthAvg],
         ),
         valuationMeasures = ValuationMeasures(
             pe = this[StocksTable.pe],
