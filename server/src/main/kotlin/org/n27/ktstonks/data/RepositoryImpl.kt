@@ -4,6 +4,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import org.n27.ktstonks.data.db.stocks.StocksDao
+import org.n27.ktstonks.data.LogoApi
 import org.n27.ktstonks.data.db.stocks.toEntity
 import org.n27.ktstonks.data.db.stocks.toStock
 import org.n27.ktstonks.data.db.stocks.toStocks
@@ -17,6 +18,7 @@ import org.n27.ktstonks.extensions.isToday
 
 class RepositoryImpl(
     private val api: YfinanceApi,
+    private val logoApi: LogoApi,
     private val stocksDao: StocksDao,
     private val symbolReader: SymbolReader,
 ) : Repository {
@@ -63,13 +65,17 @@ class RepositoryImpl(
         page: Int,
         pageSize: Int,
     ): Result<Stocks> = runCatching {
-        val watchlist = stocksDao.getWatchlist(page, pageSize)
-        val stocksToUpdate = watchlist.items.filter { !it.lastUpdated.isToday() }
-        val symbols = stocksToUpdate.joinToString(separator = ",") { it.symbol }
+        var watchlist = stocksDao.getWatchlist(page, pageSize)
+        val symbols = watchlist.items
+            .filter { !it.lastUpdated.isToday() }
+            .joinToString(",") { it.symbol }
 
-        getAndSaveRemoteStocks(symbols, ignoreLogo = true)
+        if (symbols.isNotEmpty()) {
+            getAndSaveRemoteStocks(symbols, ignoreLogo = true)
+            watchlist = stocksDao.getWatchlist(page, pageSize)
+        }
 
-        stocksDao.getWatchlist(page, pageSize).toStocks()
+        watchlist.toStocks()
     }
 
     private suspend fun getAndSaveRemoteStocks(params: String, ignoreLogo: Boolean = false): List<Stock> {
@@ -80,7 +86,7 @@ class RepositoryImpl(
                     stock.toDomainEntity(
                         logo = stock.logoUrl
                             ?.takeUnless { ignoreLogo }
-                            ?.let { api.downloadImage(it) }
+                            ?.let { logoApi.downloadLogo(it) }
                     ).also { stocksDao.saveStock(it.toEntity()) }
                 }
             }.awaitAll()

@@ -9,6 +9,7 @@ import org.mockito.Mockito.*
 import org.n27.ktstonks.data.db.stocks.StocksDao
 import org.n27.ktstonks.data.json.SymbolReader
 import org.n27.ktstonks.data.yfinance.YfinanceApi
+import org.n27.ktstonks.data.LogoApi
 import org.n27.ktstonks.domain.Repository
 import org.n27.ktstonks.test_data.data.getStockEntity
 import org.n27.ktstonks.test_data.data.getStockRaw
@@ -20,15 +21,17 @@ class RepositoryImplTest {
 
     private lateinit var repository: Repository
     private lateinit var api: YfinanceApi
+    private lateinit var logoApi: LogoApi
     private lateinit var stocksDao: StocksDao
     private lateinit var symbolReader: SymbolReader
 
     @Before
     fun setUp() {
         api = mock(YfinanceApi::class.java)
+        logoApi = mock(LogoApi::class.java)
         stocksDao = mock(StocksDao::class.java)
         symbolReader = mock(SymbolReader::class.java)
-        repository = RepositoryImpl(api, stocksDao, symbolReader)
+        repository = RepositoryImpl(api, logoApi, stocksDao, symbolReader)
     }
 
     @Test
@@ -77,9 +80,8 @@ class RepositoryImplTest {
 
     @Test
     fun `getStocks should return remote stocks filtered by watchlist`() = runBlocking {
-        val watchlist = getStocksEntity(items = listOf(getStockEntity(isWatchlisted = true)))
         `when`(symbolReader.getSymbols(null)).thenReturn(listOf("AAPL"))
-        `when`(stocksDao.getWatchlist(anyInt(), anyInt())).thenReturn(watchlist)
+        `when`(stocksDao.getWatchlistSymbols()).thenReturn(listOf(getStockEntity().symbol))
         `when`(stocksDao.getStocks(emptyList())).thenReturn(emptyList())
         `when`(api.getStocks("")).thenReturn(emptyList())
 
@@ -89,27 +91,6 @@ class RepositoryImplTest {
             getStocks(
                 items = emptyList(),
                 nextPage = null,
-            ),
-            result.getOrNull(),
-        )
-    }
-
-    @Test
-    fun `getStocks should return remote stocks with query`() = runBlocking {
-        `when`(symbolReader.getSymbols(anyString())).thenReturn(listOf("AAPL"))
-        `when`(stocksDao.getStocks(anyList())).thenReturn(emptyList())
-        `when`(api.getStocks(anyString())).thenReturn(listOf(getStockRaw()))
-
-        val result = repository.getStocks(0, 1, false, "AAPL")
-
-        assertEquals(
-            getStocks(
-                items = listOf(
-                    getStock(
-                        logo = null,
-                        lastUpdated = result.getOrNull()?.items[0]!!.lastUpdated,
-                    ),
-                ),
             ),
             result.getOrNull(),
         )
@@ -141,15 +122,32 @@ class RepositoryImplTest {
     }
 
     @Test
-    fun `getWatchlist should return watchlist`() = runBlocking {
+    fun `getWatchlist should return watchlist without remote call if all updated`() = runBlocking {
         val now = System.currentTimeMillis()
         val watchlist = getStocksEntity(items = listOf(getStockEntity(lastUpdated = now)))
         `when`(stocksDao.getWatchlist(anyInt(), anyInt())).thenReturn(watchlist)
 
         val result = repository.getWatchlist(0, 1)
 
+        verify(api, never()).getStocks(anyString())
         assertEquals(
             getStocks(items = listOf(getStock(lastUpdated = now))),
+            result.getOrNull(),
+        )
+    }
+
+    @Test
+    fun `getWatchlist should refresh outdated stocks from remote`() = runBlocking {
+        val outdated = getStocksEntity(items = listOf(getStockEntity(lastUpdated = 0)))
+        val updated = getStocksEntity(items = listOf(getStockEntity(lastUpdated = System.currentTimeMillis())))
+        `when`(stocksDao.getWatchlist(anyInt(), anyInt())).thenReturn(outdated, updated)
+        `when`(api.getStocks(anyString())).thenReturn(listOf(getStockRaw()))
+
+        val result = repository.getWatchlist(0, 1)
+
+        verify(api).getStocks(anyString())
+        assertEquals(
+            getStocks(items = listOf(getStock(lastUpdated = updated.items[0].lastUpdated))),
             result.getOrNull(),
         )
     }
