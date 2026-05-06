@@ -46,15 +46,13 @@ class RepositoryImplTest {
 
     @Test
     fun `getStock should return remote stock if not updated`() = runBlocking {
-        `when`(stocksDao.getStock(anyString())).thenReturn(getStockEntity())
+        val now = System.currentTimeMillis()
+        `when`(stocksDao.getStock(anyString())).thenReturn(getStockEntity(), getStockEntity(lastUpdated = now))
         `when`(api.getStock(anyString())).thenReturn(getStockRaw())
 
         val result = repository.getStock("AAPL")
 
-        assertEquals(
-            getStock(lastUpdated = result.getOrNull()!!.lastUpdated),
-            result.getOrNull(),
-        )
+        assertEquals(getStock(lastUpdated = now), result.getOrNull())
     }
 
     @Test

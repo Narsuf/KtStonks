@@ -15,6 +15,7 @@ import org.n27.ktstonks.data.db.stocks.StocksDao
 import org.n27.ktstonks.data.db.stocks.StocksTable
 import org.n27.ktstonks.data.json.JsonReader
 import org.n27.ktstonks.data.json.SymbolReader
+import org.n27.ktstonks.data.LogoApi
 import org.n27.ktstonks.data.yfinance.YfinanceApi
 import org.n27.ktstonks.domain.Repository
 import org.n27.ktstonks.domain.UseCase
@@ -46,9 +47,10 @@ val mainModule = module {
     single { JsonReader() }
     single { SymbolReader(get()) }
     single { YfinanceApi(BASE_URL, get()) }
+    single { LogoApi(get()) }
     single { UseCase(get()) }
 
-    single<Repository> { RepositoryImpl(get(), get(), get()) }
+    single<Repository> { RepositoryImpl(get(), get(), get(), get()) }
 }
 
 private fun initDatabase(): Database {
