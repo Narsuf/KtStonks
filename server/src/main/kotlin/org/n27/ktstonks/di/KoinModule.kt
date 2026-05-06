@@ -18,12 +18,12 @@ import org.n27.ktstonks.data.json.SymbolReader
 import org.n27.ktstonks.data.LogoApi
 import org.n27.ktstonks.data.yfinance.YfinanceApi
 import org.n27.ktstonks.domain.Repository
-import org.n27.ktstonks.domain.usecases.AddCustomValuationUseCase
-import org.n27.ktstonks.domain.usecases.AddToWatchlistUseCase
-import org.n27.ktstonks.domain.usecases.GetStockUseCase
-import org.n27.ktstonks.domain.usecases.GetStocksUseCase
-import org.n27.ktstonks.domain.usecases.GetWatchlistUseCase
-import org.n27.ktstonks.domain.usecases.RemoveFromWatchlistUseCase
+import org.n27.ktstonks.domain.usecase.AddCustomValuationUseCase
+import org.n27.ktstonks.domain.usecase.AddToWatchlistUseCase
+import org.n27.ktstonks.domain.usecase.GetStockUseCase
+import org.n27.ktstonks.domain.usecase.GetStocksUseCase
+import org.n27.ktstonks.domain.usecase.GetWatchlistUseCase
+import org.n27.ktstonks.domain.usecase.RemoveFromWatchlistUseCase
 
 const val BASE_URL = "http://localhost:8000"
 

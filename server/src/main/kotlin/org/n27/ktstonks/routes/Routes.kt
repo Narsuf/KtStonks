@@ -5,12 +5,12 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.n27.ktstonks.DEFAULT_PAGE_SIZE
-import org.n27.ktstonks.domain.usecases.AddCustomValuationUseCase
-import org.n27.ktstonks.domain.usecases.AddToWatchlistUseCase
-import org.n27.ktstonks.domain.usecases.GetStockUseCase
-import org.n27.ktstonks.domain.usecases.GetStocksUseCase
-import org.n27.ktstonks.domain.usecases.GetWatchlistUseCase
-import org.n27.ktstonks.domain.usecases.RemoveFromWatchlistUseCase
+import org.n27.ktstonks.domain.usecase.AddCustomValuationUseCase
+import org.n27.ktstonks.domain.usecase.AddToWatchlistUseCase
+import org.n27.ktstonks.domain.usecase.GetStockUseCase
+import org.n27.ktstonks.domain.usecase.GetStocksUseCase
+import org.n27.ktstonks.domain.usecase.GetWatchlistUseCase
+import org.n27.ktstonks.domain.usecase.RemoveFromWatchlistUseCase
 import org.n27.ktstonks.extensions.respondError
 import org.n27.ktstonks.extensions.respondSuccess
 

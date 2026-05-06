@@ -1,4 +1,4 @@
-package org.n27.ktstonks.domain.usecases
+package org.n27.ktstonks.domain.usecase
 
 import org.n27.ktstonks.domain.Repository
 

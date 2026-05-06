@@ -1,27 +1,28 @@
-package org.n27.ktstonks.domain.usecases
+package org.n27.ktstonks.domain.usecase
 
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.n27.ktstonks.domain.Repository
 
-class RemoveFromWatchlistUseCaseTest {
+class AddToWatchlistUseCaseTest {
 
-    private lateinit var useCase: RemoveFromWatchlistUseCase
+    private lateinit var useCase: AddToWatchlistUseCase
     private lateinit var repository: Repository
 
     @Before
     fun setUp() {
         repository = mock(Repository::class.java)
-        useCase = RemoveFromWatchlistUseCase(repository)
+        useCase = AddToWatchlistUseCase(repository)
     }
 
     @Test
-    fun `removeFromWatchlist should call repository`(): Unit = runBlocking {
+    fun `addToWatchlist should call repository`(): Unit = runBlocking {
         useCase("AAPL")
 
-        verify(repository).removeFromWatchlist("AAPL")
+        verify(repository).addToWatchlist("AAPL")
     }
 }
