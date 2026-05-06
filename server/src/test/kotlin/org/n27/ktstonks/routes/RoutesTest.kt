@@ -15,7 +15,12 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import org.n27.ktstonks.domain.UseCase
+import org.n27.ktstonks.domain.usecases.AddCustomValuationUseCase
+import org.n27.ktstonks.domain.usecases.AddToWatchlistUseCase
+import org.n27.ktstonks.domain.usecases.GetStockUseCase
+import org.n27.ktstonks.domain.usecases.GetStocksUseCase
+import org.n27.ktstonks.domain.usecases.GetWatchlistUseCase
+import org.n27.ktstonks.domain.usecases.RemoveFromWatchlistUseCase
 import org.n27.ktstonks.test_data.getStock
 import org.n27.ktstonks.test_data.getStocks
 import kotlin.test.assertEquals
@@ -24,11 +29,16 @@ import io.ktor.server.plugins.contentnegotiation.ContentNegotiation as ServerCon
 
 class RoutesTest {
 
-    private val useCase: UseCase = mock()
+    private val getStockUseCase: GetStockUseCase = mock()
+    private val getStocksUseCase: GetStocksUseCase = mock()
+    private val getWatchlistUseCase: GetWatchlistUseCase = mock()
+    private val addToWatchlistUseCase: AddToWatchlistUseCase = mock()
+    private val removeFromWatchlistUseCase: RemoveFromWatchlistUseCase = mock()
+    private val addCustomValuationUseCase: AddCustomValuationUseCase = mock()
 
     @Test
     fun `test get stock by symbol success`() = testWithApplication { client ->
-        whenever(useCase.getStock(anyString())) doReturn Result.success(getStock("AAPL"))
+        whenever(getStockUseCase(anyString())) doReturn Result.success(getStock("AAPL"))
 
         val response = client.get("/stock/AAPL")
 
@@ -38,7 +48,7 @@ class RoutesTest {
 
     @Test
     fun `test get stock by symbol error`() = testWithApplication { client ->
-        whenever(useCase.getStock("AAPL")) doReturn Result.failure(Exception())
+        whenever(getStockUseCase("AAPL")) doReturn Result.failure(Exception())
 
         val response = client.get("/stock/AAPL")
 
@@ -47,7 +57,7 @@ class RoutesTest {
 
     @Test
     fun `test post valuation success`() = testWithApplication { client ->
-        whenever(useCase.addCustomValuation(anyString(), anyDouble())) doReturn Result.success(Unit)
+        whenever(addCustomValuationUseCase(anyString(), anyDouble())) doReturn Result.success(Unit)
 
         val response = client.post("/stock/AAPL/valuation?valuationFloor=1.0")
 
@@ -65,7 +75,7 @@ class RoutesTest {
 
     @Test
     fun `test post valuation error`() = testWithApplication { client ->
-        whenever(useCase.addCustomValuation(anyString(), anyDouble())) doReturn Result.failure(Exception())
+        whenever(addCustomValuationUseCase(anyString(), anyDouble())) doReturn Result.failure(Exception())
 
         val response = client.post("/stock/AAPL/valuation?valuationFloor=1.0")
 
@@ -74,7 +84,7 @@ class RoutesTest {
 
     @Test
     fun `test get stocks success`() = testWithApplication { client ->
-        whenever(useCase.getStocks(anyInt(), anyInt(), anyBoolean(), anyOrNull())) doReturn Result.success(getStocks())
+        whenever(getStocksUseCase(anyInt(), anyInt(), anyBoolean(), anyOrNull())) doReturn Result.success(getStocks())
 
         val response = client.get("/stocks")
 
@@ -84,7 +94,7 @@ class RoutesTest {
 
     @Test
     fun `test get stocks error`() = testWithApplication { client ->
-        whenever(useCase.getStocks(anyInt(), anyInt(), anyBoolean(), anyOrNull())) doReturn Result.failure(Exception())
+        whenever(getStocksUseCase(anyInt(), anyInt(), anyBoolean(), anyOrNull())) doReturn Result.failure(Exception())
 
         val response = client.get("/stocks")
 
@@ -93,7 +103,7 @@ class RoutesTest {
 
     @Test
     fun `test get watchlist success`() = testWithApplication { client ->
-        whenever(useCase.getWatchlist(anyInt(), anyInt())) doReturn Result.success(getStocks())
+        whenever(getWatchlistUseCase(anyInt(), anyInt())) doReturn Result.success(getStocks())
 
         val response = client.get("/watchlist")
 
@@ -103,7 +113,7 @@ class RoutesTest {
 
     @Test
     fun `test get watchlist error`() = testWithApplication { client ->
-        whenever(useCase.getWatchlist(anyInt(), anyInt())) doReturn Result.failure(Exception())
+        whenever(getWatchlistUseCase(anyInt(), anyInt())) doReturn Result.failure(Exception())
 
         val response = client.get("/watchlist")
 
@@ -112,7 +122,7 @@ class RoutesTest {
 
     @Test
     fun `test post watchlist success`() = testWithApplication { client ->
-        whenever(useCase.addToWatchlist(anyString())) doReturn Result.success(Unit)
+        whenever(addToWatchlistUseCase(anyString())) doReturn Result.success(Unit)
 
         val response = client.post("/watchlist/AAPL")
 
@@ -122,7 +132,7 @@ class RoutesTest {
 
     @Test
     fun `test post watchlist error`() = testWithApplication { client ->
-        whenever(useCase.addToWatchlist(anyString())) doReturn Result.failure(Exception())
+        whenever(addToWatchlistUseCase(anyString())) doReturn Result.failure(Exception())
 
         val response = client.post("/watchlist/AAPL")
 
@@ -131,7 +141,7 @@ class RoutesTest {
 
     @Test
     fun `test delete watchlist success`() = testWithApplication { client ->
-        whenever(useCase.removeFromWatchlist(anyString())) doReturn Result.success(Unit)
+        whenever(removeFromWatchlistUseCase(anyString())) doReturn Result.success(Unit)
 
         val response = client.delete("/watchlist/AAPL")
 
@@ -141,7 +151,7 @@ class RoutesTest {
 
     @Test
     fun `test delete watchlist error`() = testWithApplication { client ->
-        whenever(useCase.removeFromWatchlist(anyString())) doReturn Result.failure(Exception())
+        whenever(removeFromWatchlistUseCase(anyString())) doReturn Result.failure(Exception())
 
         val response = client.delete("/watchlist/AAPL")
 
@@ -153,7 +163,9 @@ class RoutesTest {
     ) = testApplication {
         application {
             install(ServerContentNegotiation) { json() }
-            routing { stockRoutes(useCase) }
+            routing {
+                stockRoutes(getStockUseCase, getStocksUseCase, getWatchlistUseCase, addToWatchlistUseCase, removeFromWatchlistUseCase, addCustomValuationUseCase)
+            }
         }
         val client = createClient {
             install(ClientContentNegotiation) { json() }

@@ -18,7 +18,12 @@ import org.n27.ktstonks.data.json.SymbolReader
 import org.n27.ktstonks.data.LogoApi
 import org.n27.ktstonks.data.yfinance.YfinanceApi
 import org.n27.ktstonks.domain.Repository
-import org.n27.ktstonks.domain.UseCase
+import org.n27.ktstonks.domain.usecases.AddCustomValuationUseCase
+import org.n27.ktstonks.domain.usecases.AddToWatchlistUseCase
+import org.n27.ktstonks.domain.usecases.GetStockUseCase
+import org.n27.ktstonks.domain.usecases.GetStocksUseCase
+import org.n27.ktstonks.domain.usecases.GetWatchlistUseCase
+import org.n27.ktstonks.domain.usecases.RemoveFromWatchlistUseCase
 
 const val BASE_URL = "http://localhost:8000"
 
@@ -48,7 +53,12 @@ val mainModule = module {
     single { SymbolReader(get()) }
     single { YfinanceApi(BASE_URL, get()) }
     single { LogoApi(get()) }
-    single { UseCase(get()) }
+    single { GetStockUseCase(get()) }
+    single { GetStocksUseCase(get()) }
+    single { GetWatchlistUseCase(get()) }
+    single { AddToWatchlistUseCase(get()) }
+    single { RemoveFromWatchlistUseCase(get()) }
+    single { AddCustomValuationUseCase(get()) }
 
     single<Repository> { RepositoryImpl(get(), get(), get(), get()) }
 }

@@ -8,6 +8,12 @@ import org.jetbrains.exposed.sql.Database
 import org.koin.ktor.ext.get
 import org.koin.ktor.plugin.Koin
 import org.n27.ktstonks.di.mainModule
+import org.n27.ktstonks.domain.usecases.AddCustomValuationUseCase
+import org.n27.ktstonks.domain.usecases.AddToWatchlistUseCase
+import org.n27.ktstonks.domain.usecases.GetStockUseCase
+import org.n27.ktstonks.domain.usecases.GetStocksUseCase
+import org.n27.ktstonks.domain.usecases.GetWatchlistUseCase
+import org.n27.ktstonks.domain.usecases.RemoveFromWatchlistUseCase
 import org.n27.ktstonks.routes.stockRoutes
 
 fun main() {
@@ -22,5 +28,5 @@ fun Application.module() {
 
     get<Database>()
 
-    routing { stockRoutes(get()) }
+    routing { stockRoutes(get(), get(), get(), get(), get(), get()) }
 }
