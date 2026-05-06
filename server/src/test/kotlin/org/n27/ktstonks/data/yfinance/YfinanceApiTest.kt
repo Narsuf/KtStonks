@@ -12,7 +12,6 @@ import org.junit.Test
 import org.n27.ktstonks.test_data.data.getStockRaw
 import org.n27.ktstonks.test_data.data.getStocksRaw
 import org.n27.ktstonks.utils.getJson
-import java.util.*
 import kotlin.test.assertEquals
 
 class YfinanceApiTest {
@@ -33,11 +32,6 @@ class YfinanceApiTest {
                     content = ByteReadChannel(getJson("stocks_raw.json")),
                     status = HttpStatusCode.OK,
                     headers = headersOf(HttpHeaders.ContentType, "application/json")
-                )
-                "/image.png" -> respond(
-                    content = byteArrayOf(1, 2, 3),
-                    status = HttpStatusCode.OK,
-                    headers = headersOf(HttpHeaders.ContentType, "image/png")
                 )
                 else -> error("Unhandled ${request.url.encodedPath}")
             }
@@ -66,12 +60,4 @@ class YfinanceApiTest {
         assertEquals(getStocksRaw(), actual)
     }
 
-    @Test
-    fun `downloadImage returns base64 string`() = runBlocking {
-        val expected = Base64.getEncoder().encodeToString(byteArrayOf(1, 2, 3))
-
-        val actual = api.downloadImage("http://localhost/image.png")
-
-        assertEquals(expected, actual)
-    }
 }

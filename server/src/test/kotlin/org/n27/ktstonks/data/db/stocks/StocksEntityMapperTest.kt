@@ -7,7 +7,7 @@ import org.n27.ktstonks.test_data.data.getStocksEntity
 import org.n27.ktstonks.test_data.getStock
 import org.n27.ktstonks.test_data.getStocks
 
-class StocksMapperTest {
+class StocksEntityMapperTest {
 
     @Test
     fun `toStocks should map StocksEntity to Stocks correctly`() {
