@@ -6,6 +6,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers.*
 import org.mockito.Mockito.*
+import org.mockito.kotlin.any
 import org.n27.ktstonks.domain.model.Stocks.ValuationMeasures
 import org.n27.ktstonks.test_data.getStock
 import org.n27.ktstonks.test_data.getStocks
@@ -68,20 +69,66 @@ class UseCaseTest {
     }
 
     @Test
-    fun `addCustomValuation should update stock with new values`(): Unit = runBlocking {
-        val stock = getStock()
-        val expectedStock = getStock(
-            valuationMeasures = ValuationMeasures(
-                pe = 34.7215522245231,
-                valuationFloor = 12.5,
-                intrinsicValue = null,
-            ),
-        )
-        `when`(repository.getStock(anyString())).thenReturn(success(stock))
-        `when`(repository.updateStock(getStock())).thenReturn(success(Unit))
+    fun `addCustomValuation should calculate intrinsic value`(): Unit = runBlocking {
+        `when`(repository.getStock(anyString())).thenReturn(success(getStock()))
+        `when`(repository.updateStock(any())).thenReturn(success(Unit))
 
         useCase.addCustomValuation("AAPL", 12.5)
 
-        verify(repository).updateStock(expectedStock)
+        verify(repository).updateStock(
+            getStock(valuationMeasures = ValuationMeasures(
+                pe = 34.7215522245231,
+                valuationFloor = 12.5,
+                intrinsicValue = 93.37500000000016,
+            ))
+        )
+    }
+
+    @Test
+    fun `addCustomValuation should return 0 intrinsic value when pe is null`(): Unit = runBlocking {
+        `when`(repository.getStock(anyString())).thenReturn(success(getStock(valuationMeasures = ValuationMeasures(pe = null, valuationFloor = null, intrinsicValue = null))))
+        `when`(repository.updateStock(any())).thenReturn(success(Unit))
+
+        useCase.addCustomValuation("AAPL", 12.5)
+
+        verify(repository).updateStock(
+            getStock(valuationMeasures = ValuationMeasures(
+                pe = null,
+                valuationFloor = 12.5,
+                intrinsicValue = 0.0,
+            ))
+        )
+    }
+
+    @Test
+    fun `addCustomValuation should return 0 intrinsic value when price is null`(): Unit = runBlocking {
+        `when`(repository.getStock(anyString())).thenReturn(success(getStock(price = null)))
+        `when`(repository.updateStock(any())).thenReturn(success(Unit))
+
+        useCase.addCustomValuation("AAPL", 12.5)
+
+        verify(repository).updateStock(
+            getStock(price = null, valuationMeasures = ValuationMeasures(
+                pe = 34.7215522245231,
+                valuationFloor = 12.5,
+                intrinsicValue = 0.0,
+            ))
+        )
+    }
+
+    @Test
+    fun `addCustomValuation should return 0 intrinsic value when pe is 0`(): Unit = runBlocking {
+        `when`(repository.getStock(anyString())).thenReturn(success(getStock(valuationMeasures = ValuationMeasures(pe = 0.0, valuationFloor = null, intrinsicValue = null))))
+        `when`(repository.updateStock(any())).thenReturn(success(Unit))
+
+        useCase.addCustomValuation("AAPL", 12.5)
+
+        verify(repository).updateStock(
+            getStock(valuationMeasures = ValuationMeasures(
+                pe = 0.0,
+                valuationFloor = 12.5,
+                intrinsicValue = 0.0,
+            ))
+        )
     }
 }

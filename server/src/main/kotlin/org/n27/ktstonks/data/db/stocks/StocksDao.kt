@@ -24,17 +24,13 @@ class StocksDao {
 
             if (existingStock != null) {
                 StocksTable.update(where = { StocksTable.symbol eq stock.symbol }) {
-                    val valuationFloor = stock.valuationMeasures.valuationFloor
-                        ?: existingStock.valuationMeasures.valuationFloor
-                        ?: 15.0
-
                     it.fromStockEntity(
                         stock.copy(
                             isWatchlisted = existingStock.isWatchlisted,
                             logo = existingStock.logo ?: stock.logo,
                             valuationMeasures = stock.valuationMeasures.copy(
-                                valuationFloor = valuationFloor,
-                                intrinsicValue = stock.getIntrinsicValue(valuationFloor),
+                                valuationFloor = stock.valuationMeasures.valuationFloor ?: existingStock.valuationMeasures.valuationFloor,
+                                intrinsicValue = stock.valuationMeasures.intrinsicValue ?: existingStock.valuationMeasures.intrinsicValue,
                             ),
                         )
                     )
@@ -78,9 +74,4 @@ class StocksDao {
         }
     }
 
-    private fun StockEntity.getIntrinsicValue(
-        valuationFloor: Double,
-    ) = valuationMeasures.pe
-        ?.takeIf { it > 0 }
-        ?.let { (price ?: 0.0) * (valuationFloor / it) } ?: 0.0
 }

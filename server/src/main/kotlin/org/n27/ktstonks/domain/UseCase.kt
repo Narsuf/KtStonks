@@ -23,12 +23,19 @@ class UseCase(private val repository: Repository) {
     suspend fun addCustomValuation(
         symbol: String,
         valuationFloor: Double,
-    ): Result<Unit> = repository.getStock(symbol).mapCatching {
-        val updatedStock = it.copy(
-            valuationMeasures = it.valuationMeasures.copy(
-                valuationFloor = valuationFloor,
-            ),
-        )
-        repository.updateStock(updatedStock).getOrThrow()
+    ): Result<Unit> = repository.getStock(symbol).mapCatching { stock ->
+        val intrinsicValue = stock.valuationMeasures.pe
+            ?.takeIf { it > 0 }
+            ?.let { (stock.price ?: 0.0) * (valuationFloor / it) }
+            ?: 0.0
+
+        repository.updateStock(
+            stock.copy(
+                valuationMeasures = stock.valuationMeasures.copy(
+                    valuationFloor = valuationFloor,
+                    intrinsicValue = intrinsicValue,
+                ),
+            )
+        ).getOrThrow()
     }
 }

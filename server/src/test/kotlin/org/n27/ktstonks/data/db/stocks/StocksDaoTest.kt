@@ -11,7 +11,6 @@ import org.junit.Before
 import org.junit.Test
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
 import org.n27.ktstonks.test_data.data.getStockEntity
-import org.n27.ktstonks.test_data.data.getStockEntityValuationMeasures
 import java.util.*
 
 class StocksDaoTest {
@@ -91,48 +90,6 @@ class StocksDaoTest {
         dao.saveStock(updatedStock)
 
         assertEquals(updatedStock, dao.getStock("APL"))
-    }
-
-    @Test
-    fun `getIntrinsicValue should calculate current intrinsic value based on pe and price`() = runBlocking {
-        val stock = getStockEntity()
-        dao.saveStock(stock)
-
-        dao.saveStock(stock.copy(valuationMeasures = stock.valuationMeasures.copy(valuationFloor = 12.5)))
-
-        val expected = 93.37500000000016
-        assertEquals(expected, dao.getStock("AAPL")?.valuationMeasures?.intrinsicValue)
-    }
-
-    @Test
-    fun `getIntrinsicValue with null pe should return 0`() = runBlocking {
-        val stock = getStockEntity()
-        dao.saveStock(stock)
-
-        dao.saveStock(stock.copy(valuationMeasures = stock.valuationMeasures.copy(pe = null, valuationFloor = 12.5)))
-
-        assertEquals(0.0, dao.getStock("AAPL")?.valuationMeasures?.intrinsicValue)
-    }
-
-    @Test
-    fun `getIntrinsicValue with null price should return 0`() = runBlocking {
-        val stock = getStockEntity()
-        dao.saveStock(stock)
-
-        dao.saveStock(stock.copy(price = null, valuationMeasures = stock.valuationMeasures.copy(valuationFloor = 12.5)))
-
-        assertEquals(0.0, dao.getStock("AAPL")?.valuationMeasures?.intrinsicValue)
-    }
-
-    @Test
-    fun `getIntrinsicValue with pe 0 should return 0`() = runBlocking {
-        val stock = getStockEntity(valuationMeasures = getStockEntityValuationMeasures(pe = 0.0))
-        dao.saveStock(stock)
-
-        dao.saveStock(stock.copy(valuationMeasures = stock.valuationMeasures.copy(valuationFloor = 12.5)))
-
-        val expected = 0.0
-        assertEquals(expected, dao.getStock("AAPL")?.valuationMeasures?.intrinsicValue)
     }
 
     @Test
