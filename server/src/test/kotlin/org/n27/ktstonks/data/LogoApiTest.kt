@@ -9,9 +9,9 @@ import org.junit.Test
 import java.util.*
 import kotlin.test.assertEquals
 
-class ImageApiTest {
+class LogoApiTest {
 
-    private lateinit var api: ImageApi
+    private lateinit var api: LogoApi
 
     @Before
     fun setup() {
@@ -26,14 +26,14 @@ class ImageApiTest {
             }
         }
 
-        api = ImageApi(HttpClient(mockEngine))
+        api = LogoApi(HttpClient(mockEngine))
     }
 
     @Test
-    fun `downloadImage returns base64 string`() = runBlocking {
+    fun `downloadLogo returns base64 string`() = runBlocking {
         val expected = Base64.getEncoder().encodeToString(byteArrayOf(1, 2, 3))
 
-        val actual = api.downloadImage("http://localhost/image.png")
+        val actual = api.downloadLogo("http://localhost/image.png")
 
         assertEquals(expected, actual)
     }
