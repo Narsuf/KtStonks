@@ -79,6 +79,7 @@ class RepositoryImpl(
     }
 
     private suspend fun getAndSaveRemoteStocks(params: String, ignoreLogo: Boolean = false): List<Stock> {
+        if (params.isEmpty()) return emptyList()
         val stocks = api.getStocks(params)
         return coroutineScope {
             stocks.map { stock ->

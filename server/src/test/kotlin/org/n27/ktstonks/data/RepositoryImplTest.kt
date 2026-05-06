@@ -95,6 +95,57 @@ class RepositoryImplTest {
     }
 
     @Test
+    fun `getStock should return remote stock if not in local`() = runBlocking {
+        val now = System.currentTimeMillis()
+        `when`(stocksDao.getStock(anyString())).thenReturn(null, getStockEntity(lastUpdated = now))
+        `when`(api.getStock(anyString())).thenReturn(getStockRaw())
+
+        val result = repository.getStock("AAPL")
+
+        assertEquals(getStock(lastUpdated = now), result.getOrNull())
+    }
+
+    @Test
+    fun `getStocks should return local stocks`() = runBlocking {
+        val now = System.currentTimeMillis()
+        `when`(symbolReader.getSymbols(null)).thenReturn(listOf("AAPL"))
+        `when`(stocksDao.getStocks(anyList())).thenReturn(listOf(getStockEntity(lastUpdated = now)))
+
+        val result = repository.getStocks(0, 1, false, null)
+
+        verify(api, never()).getStocks(anyString())
+        assertEquals(
+            getStocks(items = listOf(getStock(lastUpdated = now))),
+            result.getOrNull(),
+        )
+    }
+
+    @Test
+    fun `getStocks should return mix of local and remote stocks`() = runBlocking {
+        val now = System.currentTimeMillis()
+        `when`(symbolReader.getSymbols(null)).thenReturn(listOf("AAPL", "GOOG"))
+        `when`(stocksDao.getStocks(anyList())).thenReturn(listOf(getStockEntity(lastUpdated = now)))
+        `when`(api.getStocks("GOOG")).thenReturn(listOf(getStockRaw(symbol = "GOOG")))
+
+        val result = repository.getStocks(0, 2, false, null)
+
+        assertEquals(2, result.getOrNull()?.items?.size)
+        assertEquals("AAPL", result.getOrNull()?.items?.get(0)?.symbol)
+        assertEquals("GOOG", result.getOrNull()?.items?.get(1)?.symbol)
+    }
+
+    @Test
+    fun `getStocks should return nextPage when more results available`() = runBlocking {
+        `when`(symbolReader.getSymbols(null)).thenReturn(listOf("AAPL", "GOOG"))
+        `when`(stocksDao.getStocks(anyList())).thenReturn(listOf(getStockEntity()))
+        `when`(api.getStocks(anyString())).thenReturn(emptyList())
+
+        val result = repository.getStocks(0, 1, false, null)
+
+        assertEquals(1, result.getOrNull()?.nextPage)
+    }
+
+    @Test
     fun `updateStock should call dao`() = runBlocking {
         repository.updateStock(getStock())
 
