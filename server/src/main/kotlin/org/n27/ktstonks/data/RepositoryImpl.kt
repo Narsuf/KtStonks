@@ -1,9 +1,8 @@
 package org.n27.ktstonks.data
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.coroutineScope
 import org.n27.ktstonks.data.db.stocks.StocksDao
 import org.n27.ktstonks.data.db.stocks.toEntity
 import org.n27.ktstonks.data.db.stocks.toStock
@@ -36,8 +35,6 @@ class RepositoryImpl(
         }
     }
 
-    override suspend fun updateStock(stock: Stock): Result<Unit> = runCatching { stocksDao.saveStock(stock.toEntity()) }
-
     override suspend fun getStocks(
         page: Int,
         pageSize: Int,
@@ -46,48 +43,21 @@ class RepositoryImpl(
     ): Result<Stocks> = runCatching {
         val params = symbolReader.getSymbols(symbol)
         val filteredParams = if (filterWatchlist) params.filterWatchlist() else params
-        val paginatedParams = filteredParams
-            .drop(page)
-            .take(pageSize)
+        val paginatedParams = filteredParams.drop(page).take(pageSize)
 
         val localStocks = stocksDao.getStocks(paginatedParams).map { it.toStock() }
-        val localSymbols = localStocks.map { it.symbol }
-        val remoteParams = paginatedParams
-            .filter { it !in localSymbols }
-            .joinToString(separator = ",")
+        val remoteStocks = paginatedParams.missingFrom(localStocks)
+            .joinToString(",")
+            .let { getAndSaveRemoteStocks(it) }
 
-        val remoteStocks = getRemoteStocks(remoteParams)
-
-        val nextPage = page + pageSize
         Stocks(
             items = localStocks + remoteStocks,
-            nextPage = nextPage.takeIf { it <= filteredParams.size },
+            nextPage = (page + pageSize).takeIf { it <= filteredParams.size },
         )
     }
 
-    private suspend fun List<String>.filterWatchlist(): List<String> {
-        val watchlist = stocksDao.getWatchlist(0, Int.MAX_VALUE).items.map { it.symbol }
-        return filter { it !in watchlist }
-    }
-
-    private suspend fun getRemoteStocks(params: String, ignoreLogo: Boolean = false) = if (params.isNotEmpty()) {
-        val stocks = api.getStocks(params)
-        withContext(Dispatchers.IO) {
-            stocks.map { stock ->
-                async {
-                    stock.toDomainEntity(
-                        logo = stock.logoUrl
-                            ?.takeIf { !ignoreLogo }
-                            ?.let { api.downloadImage(it) }
-                    ).also { stocksDao.saveStock(it.toEntity()) }
-                }
-            }.awaitAll()
-        }
-    } else {
-        emptyList()
-    }
-
-    override suspend fun addToWatchlist(symbol: String): Result<Unit> = runCatching { stocksDao.addToWatchlist(symbol) }
+    private suspend fun List<String>.filterWatchlist() = filter { it !in stocksDao.getWatchlistSymbols() }
+    private fun List<String>.missingFrom(stocks: List<Stock>) = filter { it !in stocks.map { s -> s.symbol } }
 
     override suspend fun getWatchlist(
         page: Int,
@@ -97,12 +67,27 @@ class RepositoryImpl(
         val stocksToUpdate = watchlist.items.filter { !it.lastUpdated.isToday() }
         val symbols = stocksToUpdate.joinToString(separator = ",") { it.symbol }
 
-        getRemoteStocks(symbols, ignoreLogo = true)
+        getAndSaveRemoteStocks(symbols, ignoreLogo = true)
 
         stocksDao.getWatchlist(page, pageSize).toStocks()
     }
 
-    override suspend fun removeFromWatchlist(symbol: String): Result<Unit> = runCatching {
-        stocksDao.removeFromWatchlist(symbol)
+    private suspend fun getAndSaveRemoteStocks(params: String, ignoreLogo: Boolean = false): List<Stock> {
+        val stocks = api.getStocks(params)
+        return coroutineScope {
+            stocks.map { stock ->
+                async {
+                    stock.toDomainEntity(
+                        logo = stock.logoUrl
+                            ?.takeUnless { ignoreLogo }
+                            ?.let { api.downloadImage(it) }
+                    ).also { stocksDao.saveStock(it.toEntity()) }
+                }
+            }.awaitAll()
+        }
     }
+
+    override suspend fun updateStock(stock: Stock): Result<Unit> = runCatching { stocksDao.saveStock(stock.toEntity()) }
+    override suspend fun addToWatchlist(symbol: String): Result<Unit> = runCatching { stocksDao.addToWatchlist(symbol) }
+    override suspend fun removeFromWatchlist(symbol: String): Result<Unit> = runCatching { stocksDao.removeFromWatchlist(symbol) }
 }
