@@ -156,6 +156,16 @@ class StocksDaoTest {
     }
 
     @Test
+    fun `getWatchlistSymbols should return watchlisted symbols`() = runBlocking {
+        val stock = getStockEntity(isWatchlisted = true)
+        dao.saveStock(stock)
+
+        val result = dao.getWatchlistSymbols()
+
+        assertEquals(listOf(stock.symbol), result)
+    }
+
+    @Test
     fun `removeFromWatchlist should update isWatchlisted to false`() = runBlocking {
         val stock = getStockEntity(isWatchlisted = true)
         dao.saveStock(stock)
