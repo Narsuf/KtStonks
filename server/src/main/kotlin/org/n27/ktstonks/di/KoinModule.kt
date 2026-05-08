@@ -15,9 +15,15 @@ import org.n27.ktstonks.data.db.stocks.StocksDao
 import org.n27.ktstonks.data.db.stocks.StocksTable
 import org.n27.ktstonks.data.json.JsonReader
 import org.n27.ktstonks.data.json.SymbolReader
+import org.n27.ktstonks.data.LogoApi
 import org.n27.ktstonks.data.yfinance.YfinanceApi
 import org.n27.ktstonks.domain.Repository
-import org.n27.ktstonks.domain.UseCase
+import org.n27.ktstonks.domain.usecase.AddCustomValuationUseCase
+import org.n27.ktstonks.domain.usecase.AddToWatchlistUseCase
+import org.n27.ktstonks.domain.usecase.GetStockUseCase
+import org.n27.ktstonks.domain.usecase.GetStocksUseCase
+import org.n27.ktstonks.domain.usecase.GetWatchlistUseCase
+import org.n27.ktstonks.domain.usecase.RemoveFromWatchlistUseCase
 
 const val BASE_URL = "http://localhost:8000"
 
@@ -46,9 +52,15 @@ val mainModule = module {
     single { JsonReader() }
     single { SymbolReader(get()) }
     single { YfinanceApi(BASE_URL, get()) }
-    single { UseCase(get()) }
+    single { LogoApi(get()) }
+    single { GetStockUseCase(get()) }
+    single { GetStocksUseCase(get()) }
+    single { GetWatchlistUseCase(get()) }
+    single { AddToWatchlistUseCase(get()) }
+    single { RemoveFromWatchlistUseCase(get()) }
+    single { AddCustomValuationUseCase(get()) }
 
-    single<Repository> { RepositoryImpl(get(), get(), get()) }
+    single<Repository> { RepositoryImpl(get(), get(), get(), get()) }
 }
 
 private fun initDatabase(): Database {

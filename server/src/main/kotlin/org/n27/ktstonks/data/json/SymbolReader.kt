@@ -4,25 +4,13 @@ class SymbolReader(private val jsonReader: JsonReader) {
 
     private lateinit var symbols: List<String>
 
-    suspend fun getSymbols(symbol: String?): List<String> {
+    fun getSymbols(symbol: String?): List<String> {
         if (!this::symbols.isInitialized) {
-            val sp = readSymbols("/sp.json")
-            val stoxx = readSymbols("/stoxx.json")
-            val nikkei = readSymbols("/nikkei.json")
-            val ibex = readSymbols("/ibex.json")
-            val others = readSymbols("/others.json")
-
-            symbols = (sp + stoxx + nikkei + ibex + others).distinct()
+            symbols = listOf("/sp.json", "/stoxx.json", "/nikkei.json", "/ibex.json", "/others.json")
+                .flatMap { jsonReader.readJson<List<String>>(it) }
+                .distinct()
         }
 
-        return if (!symbol.isNullOrEmpty())
-            symbols.filter { it.contains(symbol) }
-        else
-            symbols
-    }
-
-    private suspend fun readSymbols(fileName: String): List<String> {
-        val symbols: List<String> = jsonReader.readJson(fileName)
-        return symbols
+        return if (!symbol.isNullOrEmpty()) symbols.filter { it.contains(symbol) } else symbols
     }
 }

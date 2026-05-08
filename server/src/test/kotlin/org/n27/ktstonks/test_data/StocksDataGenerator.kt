@@ -15,7 +15,7 @@ fun getStock(
     symbol: String = "AAPL",
     companyName: String = "Apple Inc.",
     logo: String? = "/9j/2wCEAAEBAQEBAQEBAQEBAQEB",
-    price: Double = 259.369995117188,
+    price: Double? = 259.369995117188,
     dividends: Dividends = getStockDividends(),
     roe: Double? = 1.5202099,
     profitMargin: Double? = 0.27037,
