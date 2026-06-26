@@ -58,7 +58,10 @@ class RepositoryImpl(
         )
     }
 
-    private suspend fun List<String>.filterWatchlist() = filter { it !in stocksDao.getWatchlistSymbols() }
+    private suspend fun List<String>.filterWatchlist(): List<String> {
+        val watchlistSymbols = stocksDao.getWatchlistSymbols()
+        return filter { it !in watchlistSymbols }
+    }
     private fun List<String>.missingFrom(stocks: List<Stock>) = filter { it !in stocks.map { s -> s.symbol } }
 
     override suspend fun getWatchlist(
