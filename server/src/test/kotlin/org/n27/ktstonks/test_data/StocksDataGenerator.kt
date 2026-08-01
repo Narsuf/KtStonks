@@ -53,10 +53,8 @@ fun getStockIncomeStatement(
 
 fun getStockEarningsEstimate(
     growthHigh: Double = 15.7190635451505,
-    growthAvg: Double = 8.65392250039098,
 ) = Estimate(
     growthHigh = growthHigh,
-    growthAvg = growthAvg,
 )
 
 fun getStockValuationMeasures(
@@ -71,18 +69,14 @@ fun getStockValuationMeasures(
 
 fun getStockDividends(
     dividendYield: Double = 0.4,
-    payoutRatio: Double = 0.1476,
 ) = Dividends(
     dividendYield = dividendYield,
-    payoutRatio = payoutRatio,
 )
 
 fun getStockBalanceSheet(
     totalCashPerShare: Double = 4.557,
     de: Double = 102.63,
-    currentRatio: Double? = 1.5,
 ) = BalanceSheet(
     totalCashPerShare = totalCashPerShare,
     de = de,
-    currentRatio = currentRatio,
 )

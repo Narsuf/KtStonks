@@ -29,7 +29,6 @@ data class Stocks(
     @Serializable
     data class Dividends(
         val dividendYield: Double?,
-        val payoutRatio: Double?,
     )
 
     @Serializable
@@ -49,12 +48,10 @@ data class Stocks(
     data class BalanceSheet(
         val totalCashPerShare: Double?,
         val de: Double?,
-        val currentRatio: Double?,
     )
 
     @Serializable
     data class Estimate(
         val growthHigh: Double?,
-        val growthAvg: Double?,
     )
 }
