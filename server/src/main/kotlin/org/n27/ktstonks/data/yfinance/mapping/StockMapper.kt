@@ -1,35 +1,25 @@
 package org.n27.ktstonks.data.yfinance.mapping
 
 import org.n27.ktstonks.data.yfinance.model.StockRaw
-import org.n27.ktstonks.domain.model.Stocks.*
+import org.n27.ktstonks.domain.mapping.mapToStock
 
-internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
+internal fun StockRaw.toDomainEntity(logo: String? = null) = mapToStock(
     symbol = symbol,
     companyName = companyName,
     logo = logo,
     price = price,
-    dividends = Dividends(
-        dividendYield = dividendYield,
-    ),
-    roe = roe,
-    profitMargin = profitMargin,
-    incomeStatement = IncomeStatement(
-        eps = eps,
-        earningsQuarterlyGrowth = earningsQuarterlyGrowth,
-    ),
-    earningsEstimate = Estimate(
-        growthHigh = earningsEstimateGrowthHigh,
-    ),
-    valuationMeasures = ValuationMeasures(
-        pe = pe,
-        valuationFloor = null,
-        intrinsicValue = null,
-    ),
-    balanceSheet = BalanceSheet(
-        totalCashPerShare = totalCashPerShare,
-        de = de,
-    ),
     currency = currency,
     lastUpdated = System.currentTimeMillis(),
     isWatchlisted = false,
+    dividendYield = dividendYield,
+    eps = eps,
+    earningsQuarterlyGrowth = earningsQuarterlyGrowth,
+    growthHigh = earningsEstimateGrowthHigh,
+    pe = pe,
+    valuationFloor = null,
+    intrinsicValue = null,
+    de = de,
+    totalCashPerShare = totalCashPerShare,
+    roe = roe,
+    profitMargin = profitMargin,
 )

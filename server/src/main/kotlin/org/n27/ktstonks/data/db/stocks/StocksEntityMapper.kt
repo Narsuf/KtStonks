@@ -2,8 +2,9 @@ package org.n27.ktstonks.data.db.stocks
 
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity
 import org.n27.ktstonks.data.db.stocks.StocksEntity.StockEntity.Logo
+import org.n27.ktstonks.domain.mapping.mapToStock
 import org.n27.ktstonks.domain.model.Stocks
-import org.n27.ktstonks.domain.model.Stocks.*
+import org.n27.ktstonks.domain.model.Stocks.Stock
 import java.util.*
 
 fun StocksEntity.toStocks() = Stocks(
@@ -11,35 +12,25 @@ fun StocksEntity.toStocks() = Stocks(
     nextPage = nextPage
 )
 
-fun StockEntity.toStock() = Stock(
+fun StockEntity.toStock() = mapToStock(
     symbol = symbol,
     companyName = companyName,
     logo = logo?.bytes?.let { Base64.getEncoder().encodeToString(it) },
     price = price,
-    dividends = Dividends(
-        dividendYield = dividends.dividendYield,
-    ),
-    roe = roe,
-    profitMargin = profitMargin,
-    incomeStatement = IncomeStatement(
-        eps = incomeStatement.eps,
-        earningsQuarterlyGrowth = incomeStatement.earningsQuarterlyGrowth,
-    ),
-    earningsEstimate = Estimate(
-        growthHigh = earningsEstimate.growthHigh,
-    ),
-    valuationMeasures = ValuationMeasures(
-        pe = valuationMeasures.pe,
-        valuationFloor = valuationMeasures.valuationFloor,
-        intrinsicValue = valuationMeasures.intrinsicValue,
-    ),
-    balanceSheet = BalanceSheet(
-        totalCashPerShare = balanceSheet.totalCashPerShare,
-        de = balanceSheet.de,
-    ),
     currency = currency,
     lastUpdated = lastUpdated,
     isWatchlisted = isWatchlisted,
+    dividendYield = dividends.dividendYield,
+    eps = incomeStatement.eps,
+    earningsQuarterlyGrowth = incomeStatement.earningsQuarterlyGrowth,
+    growthHigh = earningsEstimate.growthHigh,
+    pe = valuationMeasures.pe,
+    valuationFloor = valuationMeasures.valuationFloor,
+    intrinsicValue = valuationMeasures.intrinsicValue,
+    de = balanceSheet.de,
+    totalCashPerShare = balanceSheet.totalCashPerShare,
+    roe = roe,
+    profitMargin = profitMargin,
 )
 
 fun Stock.toEntity() = StockEntity(
@@ -50,23 +41,23 @@ fun Stock.toEntity() = StockEntity(
     dividends = StockEntity.Dividends(
         dividendYield = dividends.dividendYield,
     ),
-    roe = roe,
-    profitMargin = profitMargin,
+    roe = roe?.value,
+    profitMargin = profitMargin?.value,
     incomeStatement = StockEntity.IncomeStatement(
         eps = incomeStatement.eps,
         earningsQuarterlyGrowth = incomeStatement.earningsQuarterlyGrowth,
     ),
     earningsEstimate = StockEntity.Estimate(
-        growthHigh = earningsEstimate.growthHigh,
+        growthHigh = earningsEstimate?.value,
     ),
     valuationMeasures = StockEntity.ValuationMeasures(
-        pe = valuationMeasures.pe,
+        pe = valuationMeasures.pe?.value,
         valuationFloor = valuationMeasures.valuationFloor,
         intrinsicValue = valuationMeasures.intrinsicValue,
     ),
     balanceSheet = StockEntity.BalanceSheet(
         totalCashPerShare = balanceSheet.totalCashPerShare,
-        de = balanceSheet.de,
+        de = balanceSheet.de?.value,
     ),
     currency = currency,
     lastUpdated = lastUpdated,

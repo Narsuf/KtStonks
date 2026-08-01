@@ -8,7 +8,7 @@ class AddCustomValuationUseCase(private val repository: Repository) {
         symbol: String,
         valuationFloor: Double,
     ): Result<Unit> = repository.getStock(symbol).mapCatching { stock ->
-        val intrinsicValue = stock.valuationMeasures.pe
+        val intrinsicValue = stock.valuationMeasures.pe?.value
             ?.takeIf { it > 0 }
             ?.let { (stock.price ?: 0.0) * (valuationFloor / it) }
             ?: 0.0
