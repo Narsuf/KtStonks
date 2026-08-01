@@ -18,7 +18,6 @@ fun StockEntity.toStock() = Stock(
     price = price,
     dividends = Dividends(
         dividendYield = dividends.dividendYield,
-        payoutRatio = dividends.payoutRatio,
     ),
     roe = roe,
     profitMargin = profitMargin,
@@ -28,7 +27,6 @@ fun StockEntity.toStock() = Stock(
     ),
     earningsEstimate = Estimate(
         growthHigh = earningsEstimate.growthHigh,
-        growthAvg = earningsEstimate.growthAvg,
     ),
     valuationMeasures = ValuationMeasures(
         pe = valuationMeasures.pe,
@@ -38,7 +36,6 @@ fun StockEntity.toStock() = Stock(
     balanceSheet = BalanceSheet(
         totalCashPerShare = balanceSheet.totalCashPerShare,
         de = balanceSheet.de,
-        currentRatio = balanceSheet.currentRatio,
     ),
     currency = currency,
     lastUpdated = lastUpdated,
@@ -52,7 +49,6 @@ fun Stock.toEntity() = StockEntity(
     price = price,
     dividends = StockEntity.Dividends(
         dividendYield = dividends.dividendYield,
-        payoutRatio = dividends.payoutRatio,
     ),
     roe = roe,
     profitMargin = profitMargin,
@@ -62,7 +58,6 @@ fun Stock.toEntity() = StockEntity(
     ),
     earningsEstimate = StockEntity.Estimate(
         growthHigh = earningsEstimate.growthHigh,
-        growthAvg = earningsEstimate.growthAvg,
     ),
     valuationMeasures = StockEntity.ValuationMeasures(
         pe = valuationMeasures.pe,
@@ -72,7 +67,6 @@ fun Stock.toEntity() = StockEntity(
     balanceSheet = StockEntity.BalanceSheet(
         totalCashPerShare = balanceSheet.totalCashPerShare,
         de = balanceSheet.de,
-        currentRatio = balanceSheet.currentRatio,
     ),
     currency = currency,
     lastUpdated = lastUpdated,

@@ -10,7 +10,6 @@ internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
     price = price,
     dividends = Dividends(
         dividendYield = dividendYield,
-        payoutRatio = payoutRatio,
     ),
     roe = roe,
     profitMargin = profitMargin,
@@ -20,7 +19,6 @@ internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
     ),
     earningsEstimate = Estimate(
         growthHigh = earningsEstimateGrowthHigh,
-        growthAvg = earningsEstimateGrowthAvg,
     ),
     valuationMeasures = ValuationMeasures(
         pe = pe,
@@ -30,7 +28,6 @@ internal fun StockRaw.toDomainEntity(logo: String? = null) = Stock(
     balanceSheet = BalanceSheet(
         totalCashPerShare = totalCashPerShare,
         de = de,
-        currentRatio = currentRatio,
     ),
     currency = currency,
     lastUpdated = System.currentTimeMillis(),

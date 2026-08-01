@@ -24,7 +24,6 @@ data class StocksEntity(
 
         data class Dividends(
             val dividendYield: Double?,
-            val payoutRatio: Double?,
         )
 
         data class IncomeStatement(
@@ -41,12 +40,10 @@ data class StocksEntity(
         data class BalanceSheet(
             val totalCashPerShare: Double?,
             val de: Double?,
-            val currentRatio: Double?,
         )
 
         data class Estimate(
             val growthHigh: Double?,
-            val growthAvg: Double?,
         )
 
         data class Logo(val bytes: ByteArray) {

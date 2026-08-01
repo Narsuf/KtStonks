@@ -4,8 +4,7 @@
   "logo": "/9j/2wCEAAEBAQEBAQEBAQEBAQEB",
   "price": 259.369995117188,
   "dividends": {
-    "dividendYield": 0.4,
-    "payoutRatio": 0.1476
+    "dividendYield": 0.4
   },
   "roe": 1.5202099,
   "profitMargin": 0.27037,
@@ -14,8 +13,7 @@
     "earningsQuarterlyGrowth": 86.4
   },
   "earningsEstimate": {
-    "growthHigh": 15.7190635451505,
-    "growthAvg": 8.65392250039098
+    "growthHigh": 15.7190635451505
   },
   "valuationMeasures": {
     "pe": 34.7215522245231,
@@ -24,8 +22,7 @@
   },
   "balanceSheet": {
     "totalCashPerShare": 4.557,
-    "de": 102.63,
-    "currentRatio": 1.5
+    "de": 102.63
   },
   "currency": "USD",
   "lastUpdated": 0,

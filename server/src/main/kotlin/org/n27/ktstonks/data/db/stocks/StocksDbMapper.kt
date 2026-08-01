@@ -23,7 +23,6 @@ internal fun ResultRow.toStockEntity() = StockEntity(
     price = this[StocksTable.price],
     dividends = StockEntity.Dividends(
         dividendYield = this[StocksTable.dividendYield],
-        payoutRatio = this[StocksTable.payoutRatio],
     ),
     roe = this[StocksTable.roe],
     profitMargin = this[StocksTable.profitMargin],
@@ -33,7 +32,6 @@ internal fun ResultRow.toStockEntity() = StockEntity(
     ),
     earningsEstimate = StockEntity.Estimate(
         growthHigh = this[StocksTable.earningsEstimateGrowthHigh],
-        growthAvg = this[StocksTable.earningsEstimateGrowthAvg],
     ),
     valuationMeasures = StockEntity.ValuationMeasures(
         pe = this[StocksTable.pe],
@@ -43,7 +41,6 @@ internal fun ResultRow.toStockEntity() = StockEntity(
     balanceSheet = StockEntity.BalanceSheet(
         totalCashPerShare = this[StocksTable.totalCashPerShare],
         de = this[StocksTable.de],
-        currentRatio = this[StocksTable.currentRatio],
     ),
     currency = this[StocksTable.currency],
     lastUpdated = this[StocksTable.lastUpdated],
@@ -55,19 +52,16 @@ internal fun <T> UpdateBuilder<T>.fromStockEntity(stock: StockEntity) {
     this[StocksTable.logo] = stock.logo?.bytes
     this[StocksTable.price] = stock.price
     this[StocksTable.dividendYield] = stock.dividends.dividendYield
-    this[StocksTable.payoutRatio] = stock.dividends.payoutRatio
     this[StocksTable.eps] = stock.incomeStatement.eps
     this[StocksTable.earningsQuarterlyGrowth] = stock.incomeStatement.earningsQuarterlyGrowth
     this[StocksTable.pe] = stock.valuationMeasures.pe
     this[StocksTable.earningsEstimateGrowthHigh] = stock.earningsEstimate.growthHigh
-    this[StocksTable.earningsEstimateGrowthAvg] = stock.earningsEstimate.growthAvg
     this[StocksTable.valuationFloor] = stock.valuationMeasures.valuationFloor
     this[StocksTable.intrinsicValue] = stock.valuationMeasures.intrinsicValue
     this[StocksTable.roe] = stock.roe
     this[StocksTable.profitMargin] = stock.profitMargin
     this[StocksTable.totalCashPerShare] = stock.balanceSheet.totalCashPerShare
     this[StocksTable.de] = stock.balanceSheet.de
-    this[StocksTable.currentRatio] = stock.balanceSheet.currentRatio
     this[StocksTable.currency] = stock.currency
     this[StocksTable.lastUpdated] = stock.lastUpdated
     this[StocksTable.isWatchlisted] = stock.isWatchlisted
