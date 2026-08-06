@@ -70,8 +70,11 @@ class StocksDao {
     private fun StockEntity.Metric.updated(existing: StockEntity.Metric) =
         copy(variation = computeVariation(existing.value, value, existing.variation))
 
-    private fun computeVariation(old: Double?, new: Double?, previous: Double?): Double? =
-        if (old != null && new != null && old != new) new - old else previous
+    private fun computeVariation(old: Double?, new: Double?, previous: Double?): Double? = when {
+        new == null -> null
+        old != null && old != new -> new - old
+        else -> previous
+    }
 
     suspend fun getWatchlistSymbols(): List<String> = dbQuery {
         StocksTable

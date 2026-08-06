@@ -146,7 +146,7 @@ class StocksDaoTest {
     }
 
     @Test
-    fun `saveStock should keep previous variation when new value is null`() = runBlocking {
+    fun `saveStock should reset variation to null when new value is null`() = runBlocking {
         val stock = getStockEntity(roe = StockEntity.Metric(value = 100.0, variation = null))
         dao.saveStock(stock)
         dao.saveStock(stock.copy(roe = stock.roe.copy(value = 120.0)))
@@ -154,7 +154,7 @@ class StocksDaoTest {
 
         dao.saveStock(nullRoeStock)
 
-        assertEquals(20.0, dao.getStock("AAPL")?.roe?.variation)
+        assertNull(dao.getStock("AAPL")?.roe?.variation)
     }
 
     @Test
