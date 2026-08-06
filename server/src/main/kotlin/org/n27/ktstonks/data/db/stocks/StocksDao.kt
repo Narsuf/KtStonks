@@ -28,9 +28,27 @@ class StocksDao {
                         stock.copy(
                             isWatchlisted = existingStock.isWatchlisted,
                             logo = existingStock.logo ?: stock.logo,
+                            roe = stock.roe.updated(existingStock.roe),
+                            profitMargin = stock.profitMargin.updated(existingStock.profitMargin),
+                            dividends = stock.dividends.copy(
+                                dividendYield = stock.dividends.dividendYield.updated(existingStock.dividends.dividendYield),
+                            ),
+                            incomeStatement = stock.incomeStatement.copy(
+                                eps = stock.incomeStatement.eps.updated(existingStock.incomeStatement.eps),
+                                earningsQuarterlyGrowth = stock.incomeStatement.earningsQuarterlyGrowth
+                                    .updated(existingStock.incomeStatement.earningsQuarterlyGrowth),
+                            ),
+                            earningsEstimate = stock.earningsEstimate.copy(
+                                growthHigh = stock.earningsEstimate.growthHigh.updated(existingStock.earningsEstimate.growthHigh),
+                            ),
                             valuationMeasures = stock.valuationMeasures.copy(
                                 valuationFloor = stock.valuationMeasures.valuationFloor ?: existingStock.valuationMeasures.valuationFloor,
                                 intrinsicValue = stock.valuationMeasures.intrinsicValue ?: existingStock.valuationMeasures.intrinsicValue,
+                                pe = stock.valuationMeasures.pe.updated(existingStock.valuationMeasures.pe),
+                            ),
+                            balanceSheet = stock.balanceSheet.copy(
+                                totalCashPerShare = stock.balanceSheet.totalCashPerShare.updated(existingStock.balanceSheet.totalCashPerShare),
+                                de = stock.balanceSheet.de.updated(existingStock.balanceSheet.de),
                             ),
                         )
                     )
@@ -48,6 +66,12 @@ class StocksDao {
         .select { StocksTable.symbol eq symbol }
         .map { it.toStockEntity() }
         .singleOrNull()
+
+    private fun StockEntity.Metric.updated(existing: StockEntity.Metric) =
+        copy(variation = computeVariation(existing.value, value, existing.variation))
+
+    private fun computeVariation(old: Double?, new: Double?, previous: Double?): Double? =
+        if (old != null && new != null && old != new) new - old else previous
 
     suspend fun getWatchlistSymbols(): List<String> = dbQuery {
         StocksTable

@@ -15,10 +15,10 @@ data class Stocks(
         val logo: String?,
         val price: Double?,
         val dividends: Dividends,
-        val roe: RatedValue?,
-        val profitMargin: RatedValue?,
+        val roe: MetricValue?,
+        val profitMargin: MetricValue?,
         val incomeStatement: IncomeStatement,
-        val earningsEstimate: RatedValue?,
+        val earningsEstimate: MetricValue?,
         val valuationMeasures: ValuationMeasures,
         val balanceSheet: BalanceSheet,
         val computed: Computed?,
@@ -29,33 +29,33 @@ data class Stocks(
 
     @Serializable
     data class Dividends(
-        val dividendYield: Double?,
-        val payoutRatio: RatedValue?,
+        val dividendYield: MetricValue?,
+        val payoutRatio: MetricValue?,
     )
 
     @Serializable
     data class Computed(
         val earningsYield: Double?,
-        val peg: RatedValue?,
-        val dynamicPayback: RatedValue?,
+        val peg: MetricValue?,
+        val dynamicPayback: MetricValue?,
     )
 
     @Serializable
     data class IncomeStatement(
-        val eps: Double?,
-        val earningsQuarterlyGrowth: Double?,
+        val eps: MetricValue?,
+        val earningsQuarterlyGrowth: MetricValue?,
     )
 
     @Serializable
     data class ValuationMeasures(
-        val pe: RatedValue?,
+        val pe: MetricValue?,
         val valuationFloor: Double?,
         val intrinsicValue: Double?,
     )
 
     @Serializable
     data class BalanceSheet(
-        val totalCashPerShare: Double?,
-        val de: RatedValue?,
+        val totalCashPerShare: MetricValue?,
+        val de: MetricValue?,
     )
 }

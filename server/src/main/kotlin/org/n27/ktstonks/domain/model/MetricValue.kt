@@ -3,9 +3,10 @@ package org.n27.ktstonks.domain.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RatedValue(
+data class MetricValue(
     val value: Double,
     val rating: Rating?,
+    val variation: Double? = null,
 )
 
 @Serializable
