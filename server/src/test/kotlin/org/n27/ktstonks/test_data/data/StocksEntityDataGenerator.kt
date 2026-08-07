@@ -9,10 +9,10 @@ fun getStockEntity(
     symbol: String = "AAPL",
     companyName: String = "Apple Inc.",
     logo: String = "/9j/2wCEAAEBAQEBAQEBAQEBAQEB",
-    price: Double = 259.369995117188,
+    price: Double? = 259.369995117188,
     dividends: Dividends = getStockEntityDividends(),
-    roe: Double? = 1.5202099,
-    profitMargin: Double? = 0.27037,
+    roe: Metric = Metric(value = 1.5202099, variation = null),
+    profitMargin: Metric = Metric(value = 0.27037, variation = null),
     incomeStatement: IncomeStatement = getStockEntityIncomeStatement(),
     earningsEstimate: Estimate = getStockEntityEarningsEstimate(),
     valuationMeasures: ValuationMeasures = getStockEntityValuationMeasures(),
@@ -46,21 +46,21 @@ fun getStocksEntity(
 )
 
 fun getStockEntityIncomeStatement(
-    eps: Double = 7.47,
-    earningsQuarterlyGrowth: Double = 86.4,
+    eps: Metric = Metric(value = 7.47, variation = null),
+    earningsQuarterlyGrowth: Metric = Metric(value = 86.4, variation = null),
 ) = IncomeStatement(
     eps = eps,
     earningsQuarterlyGrowth = earningsQuarterlyGrowth,
 )
 
 fun getStockEntityEarningsEstimate(
-    growthHigh: Double = 15.7190635451505,
+    growthHigh: Metric = Metric(value = 15.7190635451505, variation = null),
 ) = Estimate(
     growthHigh = growthHigh,
 )
 
 fun getStockEntityValuationMeasures(
-    pe: Double = 34.7215522245231,
+    pe: Metric = Metric(value = 34.7215522245231, variation = null),
     valuationFloor: Double? = null,
     intrinsicValue: Double? = null,
 ) = ValuationMeasures(
@@ -70,14 +70,14 @@ fun getStockEntityValuationMeasures(
 )
 
 fun getStockEntityDividends(
-    dividendYield: Double = 0.4,
+    dividendYield: Metric = Metric(value = 0.4, variation = null),
 ) = Dividends(
     dividendYield = dividendYield,
 )
 
 fun getStockEntityBalanceSheet(
-    totalCashPerShare: Double = 4.557,
-    de: Double = 102.63,
+    totalCashPerShare: Metric = Metric(value = 4.557, variation = null),
+    de: Metric = Metric(value = 102.63, variation = null),
 ) = BalanceSheet(
     totalCashPerShare = totalCashPerShare,
     de = de,

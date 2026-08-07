@@ -9,7 +9,7 @@ import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.n27.ktstonks.domain.Repository
-import org.n27.ktstonks.domain.model.RatedValue
+import org.n27.ktstonks.domain.model.MetricValue
 import org.n27.ktstonks.domain.model.Rating
 import org.n27.ktstonks.domain.model.Stocks.ValuationMeasures
 import org.n27.ktstonks.test_data.getStock
@@ -35,7 +35,7 @@ class AddCustomValuationUseCaseTest {
 
         verify(repository).updateStock(
             getStock(valuationMeasures = ValuationMeasures(
-                pe = RatedValue(34.7215522245231, Rating.WARNING),
+                pe = MetricValue(34.7215522245231, Rating.WARNING),
                 valuationFloor = 12.5,
                 intrinsicValue = 93.37500000000016,
             ))
@@ -67,7 +67,7 @@ class AddCustomValuationUseCaseTest {
 
         verify(repository).updateStock(
             getStock(price = null, valuationMeasures = ValuationMeasures(
-                pe = RatedValue(34.7215522245231, Rating.WARNING),
+                pe = MetricValue(34.7215522245231, Rating.WARNING),
                 valuationFloor = 12.5,
                 intrinsicValue = 0.0,
             ))
@@ -76,14 +76,14 @@ class AddCustomValuationUseCaseTest {
 
     @Test
     fun `addCustomValuation should return 0 intrinsic value when pe is 0`(): Unit = runBlocking {
-        `when`(repository.getStock(anyString())).thenReturn(success(getStock(valuationMeasures = ValuationMeasures(pe = RatedValue(0.0, null), valuationFloor = null, intrinsicValue = null))))
+        `when`(repository.getStock(anyString())).thenReturn(success(getStock(valuationMeasures = ValuationMeasures(pe = MetricValue(0.0, null), valuationFloor = null, intrinsicValue = null))))
         `when`(repository.updateStock(any())).thenReturn(success(Unit))
 
         useCase("AAPL", 12.5)
 
         verify(repository).updateStock(
             getStock(valuationMeasures = ValuationMeasures(
-                pe = RatedValue(0.0, null),
+                pe = MetricValue(0.0, null),
                 valuationFloor = 12.5,
                 intrinsicValue = 0.0,
             ))
