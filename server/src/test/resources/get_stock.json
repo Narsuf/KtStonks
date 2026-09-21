@@ -38,7 +38,7 @@
   "valuationMeasures": {
     "pe": {
       "value": 34.7215522245231,
-      "rating": "WARNING"
+      "rating": "CAUTION"
     },
     "valuationFloor": null,
     "intrinsicValue": null
@@ -50,14 +50,13 @@
     },
     "de": {
       "value": 102.63,
-      "rating": "DANGER"
+      "rating": "CAUTION"
     }
   },
   "computed": {
-    "earningsYield": 2.880055573361496,
-    "peg": {
-      "value": 2.208881726623917,
-      "rating": "CAUTION"
+    "earningsYield": {
+      "value": 2.880055573361496,
+      "rating": null
     },
     "dynamicPayback": {
       "value": 12.776479013085757,

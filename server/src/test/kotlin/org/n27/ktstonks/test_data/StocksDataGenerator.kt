@@ -57,7 +57,7 @@ fun getStockIncomeStatement(
 )
 
 fun getStockValuationMeasures(
-    pe: MetricValue? = MetricValue(34.7215522245231, Rating.WARNING),
+    pe: MetricValue? = MetricValue(34.7215522245231, Rating.CAUTION),
     valuationFloor: Double? = null,
     intrinsicValue: Double? = null,
 ) = ValuationMeasures(
@@ -76,18 +76,16 @@ fun getStockDividends(
 
 fun getStockBalanceSheet(
     totalCashPerShare: MetricValue? = MetricValue(4.557, null),
-    de: MetricValue? = MetricValue(102.63, Rating.DANGER),
+    de: MetricValue? = MetricValue(102.63, Rating.CAUTION),
 ) = BalanceSheet(
     totalCashPerShare = totalCashPerShare,
     de = de,
 )
 
 fun getStockComputed(
-    earningsYield: Double? = 2.880055573361496,
-    peg: MetricValue? = MetricValue(2.208881726623917, Rating.CAUTION),
+    earningsYield: MetricValue? = MetricValue(2.880055573361496, null),
     dynamicPayback: MetricValue? = MetricValue(12.776479013085757, null),
 ) = Computed(
     earningsYield = earningsYield,
-    peg = peg,
     dynamicPayback = dynamicPayback,
 )

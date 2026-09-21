@@ -60,7 +60,6 @@ internal fun mapToStock(
     ),
     computed = Computed(
         earningsYield = computeEarningsYield(pe),
-        peg = computePeg(pe, growthHigh),
         dynamicPayback = computeDynamicPayback(price, eps, growthHigh),
     ),
     currency = currency,
@@ -76,13 +75,7 @@ internal fun computePayoutRatio(dividendYield: Double?, pe: Double?): Double? =
 
 internal fun computeEarningsYield(pe: Double?) = pe
     ?.takeIf { it != 0.0 }
-    ?.let { (1.0 / it) * 100 }
-
-internal fun computePeg(pe: Double?, growth: Double?) = pe?.let { p ->
-    growth
-        ?.takeIf { it > 0 }
-        ?.let { (p / it).toMetricValue(rating = StockRatingMapper::toPegRating) }
-}
+    ?.let { ((1.0 / it) * 100).toMetricValue(rating = StockRatingMapper::toRoeRating) }
 
 internal fun computeDynamicPayback(price: Double?, eps: Double?, growth: Double?): MetricValue? {
     if (price == null || eps == null || growth == null || eps <= 0 || growth <= 0) return null
@@ -91,5 +84,5 @@ internal fun computeDynamicPayback(price: Double?, eps: Double?, growth: Double?
     val denominator = ln(1 + g)
     return (numerator / denominator)
         .takeIf { numerator > 0 }
-        .toMetricValue(rating = StockRatingMapper::toDynamicPaybackRating)
+        .toMetricValue()
 }
