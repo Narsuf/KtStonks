@@ -20,7 +20,7 @@ fun getStock(
     logo: String? = "/9j/2wCEAAEBAQEBAQEBAQEBAQEB",
     price: Double? = 259.369995117188,
     dividends: Dividends = getStockDividends(),
-    roe: MetricValue? = MetricValue(1.5202099, Rating.CAUTION),
+    roe: MetricValue? = MetricValue(1.5202099, null),
     profitMargin: MetricValue? = MetricValue(0.27037, Rating.CAUTION),
     incomeStatement: IncomeStatement = getStockIncomeStatement(),
     earningsEstimate: MetricValue? = MetricValue(15.7190635451505, Rating.CAUTION),

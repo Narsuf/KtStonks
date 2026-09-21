@@ -77,16 +77,18 @@ class StockRatingMapperTest {
         @JvmStatic
         fun roeRatingCases() = listOf(
             Arguments.of(-5.0, Rating.DANGER),
-            Arguments.of(5.0, Rating.CAUTION),
-            Arguments.of(17.0, null),
+            Arguments.of(0.5, Rating.WARNING),
+            Arguments.of(2.0, null),
+            Arguments.of(5.0, Rating.POSITIVE),
             Arguments.of(25.0, Rating.POSITIVE),
         )
 
         @JvmStatic
         fun profitMarginRatingCases() = listOf(
             Arguments.of(-5.0, Rating.DANGER),
-            Arguments.of(3.0, Rating.CAUTION),
-            Arguments.of(15.0, null),
+            Arguments.of(1.0, Rating.CAUTION),
+            Arguments.of(3.0, null),
+            Arguments.of(7.0, Rating.POSITIVE),
             Arguments.of(25.0, Rating.POSITIVE),
         )
 

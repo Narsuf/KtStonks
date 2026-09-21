@@ -20,15 +20,15 @@ internal object StockRatingMapper {
 
     fun toRoeRating(value: Double): Rating? = when {
         value < 0 -> Rating.DANGER
-        value > 0 && value < 15 -> Rating.CAUTION
-        value > 20 -> Rating.POSITIVE
+        value > 0 && value < 1 -> Rating.CAUTION
+        value > 3 -> Rating.POSITIVE
         else -> null
     }
 
     fun toProfitMarginRating(value: Double): Rating? = when {
         value < 0 -> Rating.DANGER
-        value > 0 && value < 10 -> Rating.CAUTION
-        value > 20 -> Rating.POSITIVE
+        value > 0 && value < 2 -> Rating.CAUTION
+        value > 5 -> Rating.POSITIVE
         else -> null
     }
 
