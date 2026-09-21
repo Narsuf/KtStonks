@@ -23,7 +23,7 @@ fun getStock(
     roe: MetricValue? = MetricValue(1.5202099, null),
     profitMargin: MetricValue? = MetricValue(0.27037, Rating.CAUTION),
     incomeStatement: IncomeStatement = getStockIncomeStatement(),
-    earningsEstimate: MetricValue? = MetricValue(15.7190635451505, Rating.CAUTION),
+    earningsEstimate: MetricValue? = MetricValue(15.7190635451505, null),
     valuationMeasures: ValuationMeasures = getStockValuationMeasures(),
     balanceSheet: BalanceSheet = getStockBalanceSheet(),
     computed: Computed? = getStockComputed(),
