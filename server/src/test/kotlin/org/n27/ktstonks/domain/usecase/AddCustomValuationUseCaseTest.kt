@@ -35,7 +35,7 @@ class AddCustomValuationUseCaseTest {
 
         verify(repository).updateStock(
             getStock(valuationMeasures = ValuationMeasures(
-                pe = MetricValue(34.7215522245231, Rating.WARNING),
+                pe = MetricValue(34.7215522245231, Rating.CAUTION),
                 valuationFloor = 12.5,
                 intrinsicValue = 93.37500000000016,
             ))
@@ -67,7 +67,7 @@ class AddCustomValuationUseCaseTest {
 
         verify(repository).updateStock(
             getStock(price = null, valuationMeasures = ValuationMeasures(
-                pe = MetricValue(34.7215522245231, Rating.WARNING),
+                pe = MetricValue(34.7215522245231, Rating.CAUTION),
                 valuationFloor = 12.5,
                 intrinsicValue = 0.0,
             ))

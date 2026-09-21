@@ -35,8 +35,7 @@ data class Stocks(
 
     @Serializable
     data class Computed(
-        val earningsYield: Double?,
-        val peg: MetricValue?,
+        val earningsYield: MetricValue?,
         val dynamicPayback: MetricValue?,
     )
 

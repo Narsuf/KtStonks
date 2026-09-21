@@ -20,6 +20,12 @@ class StockRatingMapperTest {
         assertEquals(expected, StockRatingMapper.toDeRating(de))
     }
 
+    @ParameterizedTest(name = "earningsYield={0} → {1}")
+    @MethodSource("earningsYieldRatingCases")
+    fun `earnings yield rating`(earningsYield: Double, expected: Rating?) {
+        assertEquals(expected, StockRatingMapper.toEarningsYieldRating(earningsYield))
+    }
+
     @ParameterizedTest(name = "roe={0} → {1}")
     @MethodSource("roeRatingCases")
     fun `roe rating`(roe: Double, expected: Rating?) {
@@ -38,18 +44,6 @@ class StockRatingMapperTest {
         assertEquals(expected, StockRatingMapper.toForwardEarningsGrowthRating(growthHigh))
     }
 
-    @ParameterizedTest(name = "peg={0} → {1}")
-    @MethodSource("pegRatingCases")
-    fun `peg rating`(peg: Double, expected: Rating?) {
-        assertEquals(expected, StockRatingMapper.toPegRating(peg))
-    }
-
-    @ParameterizedTest(name = "dynamicPayback={0} → {1}")
-    @MethodSource("dynamicPaybackRatingCases")
-    fun `dynamicPayback rating`(dynamicPayback: Double, expected: Rating?) {
-        assertEquals(expected, StockRatingMapper.toDynamicPaybackRating(dynamicPayback))
-    }
-
     @ParameterizedTest(name = "payoutRatio={0} → {1}")
     @MethodSource("payoutRatioRatingCases")
     fun `payoutRatio rating`(payoutRatio: Double, expected: Rating?) {
@@ -61,9 +55,9 @@ class StockRatingMapperTest {
         fun peRatingCases() = listOf(
             Arguments.of(-1.0, Rating.DANGER),
             Arguments.of(12.0, null),
-            Arguments.of(22.0, Rating.CAUTION),
-            Arguments.of(27.0, Rating.WARNING),
-            Arguments.of(35.0, Rating.WARNING),
+            Arguments.of(22.0, null),
+            Arguments.of(33.0, null),
+            Arguments.of(35.0, Rating.CAUTION),
         )
 
         @JvmStatic
@@ -71,13 +65,21 @@ class StockRatingMapperTest {
             Arguments.of(0.2, Rating.POSITIVE),
             Arguments.of(0.4, null),
             Arguments.of(0.75, Rating.CAUTION),
-            Arguments.of(2.5, Rating.DANGER),
+            Arguments.of(2.5, Rating.CAUTION),
+        )
+
+        @JvmStatic
+        fun earningsYieldRatingCases() = listOf(
+            Arguments.of(-5.0, Rating.DANGER),
+            Arguments.of(0.5, Rating.CAUTION),
+            Arguments.of(2.0, null),
+            Arguments.of(5.0, null),
         )
 
         @JvmStatic
         fun roeRatingCases() = listOf(
             Arguments.of(-5.0, Rating.DANGER),
-            Arguments.of(0.5, Rating.WARNING),
+            Arguments.of(0.5, Rating.CAUTION),
             Arguments.of(2.0, null),
             Arguments.of(5.0, Rating.POSITIVE),
             Arguments.of(25.0, Rating.POSITIVE),
@@ -98,21 +100,6 @@ class StockRatingMapperTest {
             Arguments.of(3.0, Rating.CAUTION),
             Arguments.of(12.0, Rating.POSITIVE),
             Arguments.of(18.0, Rating.CAUTION),
-        )
-
-        @JvmStatic
-        fun pegRatingCases() = listOf(
-            Arguments.of(1.0, null),
-            Arguments.of(2.0, null),
-            Arguments.of(2.5, Rating.CAUTION),
-        )
-
-        @JvmStatic
-        fun dynamicPaybackRatingCases() = listOf(
-            Arguments.of(5.0, Rating.POSITIVE),
-            Arguments.of(12.0, null),
-            Arguments.of(18.0, Rating.CAUTION),
-            Arguments.of(25.0, Rating.DANGER),
         )
 
         @JvmStatic
