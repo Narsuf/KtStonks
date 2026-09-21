@@ -20,6 +20,12 @@ class StockRatingMapperTest {
         assertEquals(expected, StockRatingMapper.toDeRating(de))
     }
 
+    @ParameterizedTest(name = "earningsYield={0} → {1}")
+    @MethodSource("earningsYieldRatingCases")
+    fun `earnings yield rating`(earningsYield: Double, expected: Rating?) {
+        assertEquals(expected, StockRatingMapper.toEarningsYieldRating(earningsYield))
+    }
+
     @ParameterizedTest(name = "roe={0} → {1}")
     @MethodSource("roeRatingCases")
     fun `roe rating`(roe: Double, expected: Rating?) {
@@ -48,7 +54,7 @@ class StockRatingMapperTest {
         @JvmStatic
         fun peRatingCases() = listOf(
             Arguments.of(-1.0, Rating.DANGER),
-            Arguments.of(12.0, Rating.POSITIVE),
+            Arguments.of(12.0, null),
             Arguments.of(22.0, null),
             Arguments.of(33.0, null),
             Arguments.of(35.0, Rating.CAUTION),
@@ -60,6 +66,14 @@ class StockRatingMapperTest {
             Arguments.of(0.4, null),
             Arguments.of(0.75, Rating.CAUTION),
             Arguments.of(2.5, Rating.CAUTION),
+        )
+
+        @JvmStatic
+        fun earningsYieldRatingCases() = listOf(
+            Arguments.of(-5.0, Rating.DANGER),
+            Arguments.of(0.5, Rating.CAUTION),
+            Arguments.of(2.0, null),
+            Arguments.of(5.0, null),
         )
 
         @JvmStatic
