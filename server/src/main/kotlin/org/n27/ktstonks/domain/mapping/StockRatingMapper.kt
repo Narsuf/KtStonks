@@ -38,8 +38,6 @@ internal object StockRatingMapper {
 
     fun toForwardEarningsGrowthRating(value: Double): Rating? = when {
         value < 0 -> Rating.DANGER
-        value in 10.0..15.0 -> Rating.POSITIVE
-        value !in 5.0..15.0 -> Rating.CAUTION
         else -> null
     }
 

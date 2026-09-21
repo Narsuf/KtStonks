@@ -97,9 +97,9 @@ class StockRatingMapperTest {
         @JvmStatic
         fun earningsEstimateRatingCases() = listOf(
             Arguments.of(-1.0, Rating.DANGER),
-            Arguments.of(3.0, Rating.CAUTION),
-            Arguments.of(12.0, Rating.POSITIVE),
-            Arguments.of(18.0, Rating.CAUTION),
+            Arguments.of(3.0, null),
+            Arguments.of(12.0, null),
+            Arguments.of(18.0, null),
         )
 
         @JvmStatic
