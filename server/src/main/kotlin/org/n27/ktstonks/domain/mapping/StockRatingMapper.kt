@@ -6,33 +6,27 @@ internal object StockRatingMapper {
 
     fun toPeRating(value: Double): Rating? = when {
         value < 0 -> Rating.DANGER
-        value > 33.3 -> Rating.CAUTION
+        value > 25 -> Rating.CAUTION
         else -> null
     }
 
     fun toDeRating(value: Double): Rating? = when {
-        value < 0.3 -> Rating.POSITIVE
-        value > 0.5 -> Rating.CAUTION
+        value < 0.5 -> Rating.POSITIVE
+        value >= 2.0 -> Rating.CAUTION
         else -> null
     }
 
     fun toRoeRating(value: Double): Rating? = when {
         value < 0 -> Rating.DANGER
-        value > 0 && value < 1 -> Rating.CAUTION
-        value > 3 -> Rating.POSITIVE
-        else -> null
-    }
-
-    fun toEarningsYieldRating(value: Double): Rating? = when {
-        value < 0 -> Rating.DANGER
-        value > 0 && value < 1 -> Rating.CAUTION
+        value < 5 -> Rating.CAUTION
+        value > 15 -> Rating.POSITIVE
         else -> null
     }
 
     fun toProfitMarginRating(value: Double): Rating? = when {
         value < 0 -> Rating.DANGER
-        value > 0 && value < 2 -> Rating.CAUTION
-        value > 5 -> Rating.POSITIVE
+        value <= 5 -> Rating.CAUTION
+        value >= 20 -> Rating.POSITIVE
         else -> null
     }
 
@@ -43,7 +37,13 @@ internal object StockRatingMapper {
 
     fun toPayoutRatioRating(value: Double): Rating? = when {
         value in 75.0..90.0 -> Rating.CAUTION
-        value > 90 -> Rating.DANGER
+        value > 90 && value <= 100 -> Rating.WARNING
+        value > 100 -> Rating.DANGER
+        else -> null
+    }
+
+    fun toDynamicPaybackRating(value: Double): Rating? = when {
+        value > 10 -> Rating.CAUTION
         else -> null
     }
 }

@@ -75,15 +75,15 @@ internal fun computePayoutRatio(dividendYield: Double?, pe: Double?): Double? =
 
 internal fun computeEarningsYield(pe: Double?) = pe
     ?.takeIf { it != 0.0 }
-    ?.let { ((1.0 / it) * 100).toMetricValue(rating = StockRatingMapper::toEarningsYieldRating) }
+    ?.let { ((1.0 / it) * 100).toMetricValue() }
 
 internal fun computeDynamicPayback(price: Double?, eps: Double?, growth: Double?): MetricValue? {
     if (price == null || eps == null || growth == null || eps <= 0 || price <= 0) return null
     val g = growth / 100
     if (g <= -1) return null
-    if (g == 0.0) return (price / eps).toMetricValue()
+    if (g == 0.0) return (price / eps).toMetricValue(rating = StockRatingMapper::toDynamicPaybackRating)
     val argument = 1 + price * g / eps
     // With negative growth, earnings sum to at most eps / |g|; if that is below the price it never pays back.
     if (argument <= 0) return null
-    return (ln(argument) / ln(1 + g)).toMetricValue()
+    return (ln(argument) / ln(1 + g)).toMetricValue(rating = StockRatingMapper::toDynamicPaybackRating)
 }

@@ -15,7 +15,7 @@
   },
   "roe": {
     "value": 1.5202099,
-    "rating": null
+    "rating": "CAUTION"
   },
   "profitMargin": {
     "value": 0.27037,
@@ -60,7 +60,7 @@
     },
     "dynamicPayback": {
       "value": 12.776479013085757,
-      "rating": null
+      "rating": "CAUTION"
     }
   },
   "currency": "USD",
